@@ -14,9 +14,9 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: Setup Node.js environment
-        uses: actions/setup-node@v2.1.2
+        uses: actions/setup-node@v3
         with:
-          node-version: 12.x
+          node-version: 16
 
       - name: Get yarn cache directory path
         id: yarn-cache-dir-path
@@ -44,7 +44,7 @@ jobs:
           port: ${{ secrets.SSH_PORT }}
           password: ${{ secrets.SSH_PASSWORD }}
           source: ".,!node_modules"
-          target: "Gilberto-Back"
+          target: "~/Gilberto-Back"
 
       - name: Run production scripts on Digital Ocean
         uses: appleboy/ssh-action@master
@@ -59,4 +59,4 @@ jobs:
             npm --help
             cd ~/Gilberto-Back 
             yarn prisma migrate deploy
-            pm2 restart nome-do-seu-server
+            pm2 restart server
