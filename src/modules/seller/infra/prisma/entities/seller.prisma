@@ -2,6 +2,7 @@ model Seller {
   id           String     @id @default(uuid())
   image        String
   name         String
+  email        String     @unique
   created_at   DateTime   @default(now())
   supervisor   Supervisor @relation(fields: [supervisorId], references: [id])
   supervisorId String
@@ -9,9 +10,5 @@ model Seller {
 
 model Supervisor {
   id           String     @id @default(uuid())
-  image        String
-  name         String
-  email        String
-  created_at   DateTime   @default(now())
   seller       Seller[]
 }

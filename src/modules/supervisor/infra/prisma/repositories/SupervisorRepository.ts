@@ -40,7 +40,17 @@ export default class SupervisorRepository implements ISupervisorRepository {
   }
 
   public async getAll(): Promise<Supervisor[] | null> {
-    const supervisor = await this.ormRepository.findMany();
+    const supervisor = await this.ormRepository.findMany({
+      orderBy: {
+        name: 'asc',
+      },
+    });
+
+    return supervisor;
+  }
+
+  public async updateName(id: string, newName: string): Promise<Supervisor> {
+    const supervisor = await this.ormRepository.update({ where: { id }, data: { name: newName } });
 
     return supervisor;
   }

@@ -8,6 +8,7 @@ interface ISupervisorRepository {
   create(data: ICreateSupervisorDTO): Promise<Supervisor>;
   delete(id: string): Promise<Supervisor>;
   getAll(): Promise<Supervisor[] | null>;
+  updateName(id: string, newName: string): Promise<Supervisor>;
 }
 
 export default ISupervisorRepository;

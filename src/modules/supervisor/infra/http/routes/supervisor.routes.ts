@@ -9,5 +9,6 @@ const supervisorController = new SupervisorController();
 supervisorRoutes.post('/create', supervisorController.create);
 supervisorRoutes.delete('/delete/:id', supervisorController.delete);
 supervisorRoutes.get('/getAll', supervisorController.getAll);
+supervisorRoutes.patch('/updateName/:id', supervisorController.updateName);
 
 export default supervisorRoutes;
