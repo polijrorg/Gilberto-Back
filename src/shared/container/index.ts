@@ -2,8 +2,8 @@ import { container } from 'tsyringe';
 
 import './providers';
 
-// Users
-import IUsersRepository from '@modules/users/repositories/IUsersRepository';
-import UsersRepository from '@modules/users/infra/prisma/repositories/UsersRepository';
+// Supervisor
+import SupervisorRepository from '@modules/supervisor/infra/prisma/repositories/SupervisorRepository';
+import ISupervisorRepository from '@modules/supervisor/repositories/ISupervisorRepository';
 
-container.registerSingleton<IUsersRepository>('UsersRepository', UsersRepository);
+container.registerSingleton<ISupervisorRepository>('SupervisorRepository', SupervisorRepository);

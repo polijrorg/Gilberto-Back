@@ -1,6 +1,17 @@
 model Seller {
-  id         String   @id @default(uuid())
-  name       String
-  email      String
-  created_at DateTime @default(now())
+  id           String     @id @default(uuid())
+  image        String
+  name         String
+  created_at   DateTime   @default(now())
+  supervisor   Supervisor @relation(fields: [supervisorId], references: [id])
+  supervisorId String
+}
+
+model Supervisor {
+  id           String     @id @default(uuid())
+  image        String
+  name         String
+  email        String
+  created_at   DateTime   @default(now())
+  seller       Seller[]
 }

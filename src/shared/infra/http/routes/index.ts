@@ -1,13 +1,13 @@
 import { Router } from 'express';
 
-// Users
-import usersRoutes from '@modules/users/infra/http/routes/users.routes';
-import sessionsRoutes from '@modules/users/infra/http/routes/sessions.routes';
+// Supervisor
+import supervisorRoutes from '@modules/supervisor/infra/http/routes/supervisor.routes';
+import sessionsRoutes from '@modules/supervisor/infra/http/routes/sessions.routes';
 
 const routes = Router();
 
 // Users
-routes.use('', usersRoutes);
+routes.use('/supervisor', supervisorRoutes);
 routes.use('/sessions', sessionsRoutes);
 
 export default routes;
