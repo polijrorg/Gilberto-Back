@@ -1,0 +1,13 @@
+model Visit {
+  id           String    @id @default(uuid())
+  storeVisited String
+  dateVisited  DateTime
+  seller       Seller    @relation(fields: [sellerId], references: [id])
+  sellerId     String
+  created_at   DateTime  @default(now())
+}
+
+model Seller {
+  id           String    @id @default(uuid())
+  visit        Visit[]
+}

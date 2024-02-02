@@ -3,6 +3,7 @@ interface ICreateSellerDTO {
   name: string;
   email: string;
   supervisorId: string;
+  companyId: string;
 }
 
 export default ICreateSellerDTO;

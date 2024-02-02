@@ -3,8 +3,8 @@ model Supervisor {
   image        String
   name         String
   email        String
-  created_at   DateTime   @default(now())
   seller       Seller[]
+  created_at  DateTime   @default(now())
 }
 
 model Seller {

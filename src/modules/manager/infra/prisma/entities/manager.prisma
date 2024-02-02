@@ -1,0 +1,21 @@
+model Manager {
+  id          String     @id @default(uuid())
+  image       String
+  name        String
+  email       String
+  company     Company    @relation(fields: [companyId], references: [id])
+  companyId   String
+  supervisor  Supervisor[]
+  created_at  DateTime   @default(now())
+}
+
+model Company {
+  id          String     @id @default(uuid())
+  manager     Manager[]
+}
+
+model Supervisor {
+  id          String     @id @default(uuid())
+  manager     Manager    @relation(fields: [managerId], references: [id])
+  managerId   String
+}

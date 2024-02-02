@@ -11,6 +11,7 @@ interface IRequest {
   name: string;
   email: string;
   supervisorId: string;
+  companyId: string;
 }
 
 @injectable()
@@ -21,7 +22,7 @@ export default class CreateSellerService {
   ) { }
 
   public async execute({
-    image, email, name, supervisorId,
+    image, email, name, supervisorId, companyId,
   }: IRequest): Promise<Seller> {
     const emailAlreadyExists = await this.sellerRepository.findByEmail(email);
 
@@ -32,6 +33,7 @@ export default class CreateSellerService {
       name,
       email: email.toLowerCase(),
       supervisorId,
+      companyId,
     });
 
     return seller;

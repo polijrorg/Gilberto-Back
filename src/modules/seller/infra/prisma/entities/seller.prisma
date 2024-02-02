@@ -3,12 +3,19 @@ model Seller {
   image        String
   name         String
   email        String     @unique
-  created_at   DateTime   @default(now())
   supervisor   Supervisor @relation(fields: [supervisorId], references: [id])
   supervisorId String
+  company      Company    @relation(fields: [companyId], references: [id])
+  companyId String
+  created_at  DateTime   @default(now())
 }
 
 model Supervisor {
   id           String     @id @default(uuid())
   seller       Seller[]
+}
+
+model Company {
+  id          String      @id @default(uuid())
+  seller      Seller[]
 }

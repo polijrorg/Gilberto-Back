@@ -12,6 +12,7 @@ interface IRequest {
   image: string;
   name: string;
   email: string;
+  companyId: string;
 }
 
 @injectable()
@@ -22,12 +23,13 @@ export default class CreateSupervisorService {
   ) { }
 
   public async execute({
-    image, email, name,
+    image, email, name, companyId,
   }: IRequest): Promise<Supervisor> {
     const user = this.supervisorRepository.create({
       image,
       name,
       email: email.toLowerCase(),
+      companyId,
     });
 
     /*  const templateDataFile = path.resolve(__dirname, '..', 'views', 'create_account.hbs');

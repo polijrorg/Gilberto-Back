@@ -8,6 +8,16 @@ generator client {
   provider = "prisma-client-js"
 }
 
+model Company {
+  id         String       @id @default(uuid())
+  seller     Seller[]
+  manager    Manager[]
+  image      String
+  name       String
+  supervisor Supervisor[]
+  created_at DateTime     @default(now())
+}
+
 model Seller {
   id           String     @id @default(uuid())
   supervisor   Supervisor @relation(fields: [supervisorId], references: [id])
@@ -15,6 +25,8 @@ model Seller {
   image        String
   name         String
   email        String     @unique
+  company      Company    @relation(fields: [companyId], references: [id])
+  companyId    String
   created_at   DateTime   @default(now())
 }
 
@@ -23,6 +35,21 @@ model Supervisor {
   image      String
   name       String
   email      String
-  created_at DateTime @default(now())
   seller     Seller[]
+  created_at DateTime @default(now())
+  manager    Manager  @relation(fields: [managerId], references: [id])
+  managerId  String
+  company    Company  @relation(fields: [companyId], references: [id])
+  companyId  String
+}
+
+model Manager {
+  id         String       @id @default(uuid())
+  image      String
+  name       String
+  email      String
+  company    Company      @relation(fields: [companyId], references: [id])
+  companyId  String
+  supervisor Supervisor[]
+  created_at DateTime     @default(now())
 }
