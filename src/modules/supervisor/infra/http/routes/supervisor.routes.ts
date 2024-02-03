@@ -7,8 +7,11 @@ const supervisorRoutes = Router();
 const supervisorController = new SupervisorController();
 
 supervisorRoutes.post('/create', supervisorController.create);
+
 supervisorRoutes.delete('/delete/:id', supervisorController.delete);
-supervisorRoutes.get('/getAll', supervisorController.getAll);
-supervisorRoutes.patch('/updateName/:id', supervisorController.updateName);
+
+supervisorRoutes.get('/getAll/:id', supervisorController.getAll);
+
+supervisorRoutes.patch('/update/:id', supervisorController.update);
 
 export default supervisorRoutes;

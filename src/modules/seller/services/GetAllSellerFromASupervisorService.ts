@@ -4,10 +4,6 @@ import { Seller } from '@prisma/client';
 
 import ISellerRepository from '../repositories/ISellerRepository';
 
-interface IRequest {
-  supervisorId: string;
-}
-
 @injectable()
 export default class GetAllSellerFromASupervisorService {
   constructor(
@@ -15,7 +11,7 @@ export default class GetAllSellerFromASupervisorService {
     private sellerRepository: ISellerRepository,
   ) { }
 
-  public async execute({ supervisorId }: IRequest): Promise<Seller[] | null> {
+  public async execute(supervisorId: string): Promise<Seller[] | null> {
     const seller = await this.sellerRepository.getAllSellerFromASupervisor(supervisorId);
 
     return seller;

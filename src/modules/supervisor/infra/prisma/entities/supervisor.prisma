@@ -4,11 +4,18 @@ model Supervisor {
   name         String
   email        String
   seller       Seller[]
-  created_at  DateTime   @default(now())
+  manager      Manager @relation(fields: [managerId], references: [id])
+  managerId    String
+  created_at   DateTime   @default(now())
 }
 
 model Seller {
   id           String     @id @default(uuid())
   supervisor   Supervisor @relation(fields: [supervisorId], references: [id])
   supervisorId String
+}
+
+model Manager {
+  id           String      @id @default(uuid())
+  supervisor   Supervisor[]
 }

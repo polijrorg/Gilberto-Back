@@ -3,6 +3,7 @@ interface ICreateSupervisorDTO {
   name: string;
   email: string;
   companyId: string;
+  managerId: string;
 }
 
 export default ICreateSupervisorDTO;

@@ -2,6 +2,7 @@ model Company {
   id          String     @id @default(uuid())
   image       String
   name        String
+  manager     Manager[]
   supervisor  Supervisor[]
   seller      Seller[]
   created_at  DateTime   @default(now())
@@ -18,3 +19,8 @@ model Supervisor {
   companyId   String
 }
 
+model Manager {
+  id          String     @id @default(uuid())
+  company     Company    @relation(fields: [companyId], references: [id])
+  companyId   String
+}

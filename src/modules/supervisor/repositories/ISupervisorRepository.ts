@@ -1,14 +1,14 @@
 import { Supervisor } from '@prisma/client';
 
+import IUpdateSupervisorDTO from '@modules/supervisor/dtos/IUpdateSupervisorDTO';
 import ICreateSupervisorDTO from '../dtos/ICreateSupervisorDTO';
 
 interface ISupervisorRepository {
-  findByEmailWithRelations(email: string): Promise<Supervisor | null>;
-  findByEmailPhoneOrCpf(email: string, phone: string, cpf: string): Promise<Supervisor | null>;
+  findByEmail(email: string | undefined): Promise<Supervisor | null>;
   create(data: ICreateSupervisorDTO): Promise<Supervisor>;
   delete(id: string): Promise<Supervisor>;
-  getAll(): Promise<Supervisor[] | null>;
-  updateName(id: string, newName: string): Promise<Supervisor>;
+  getAll(companyId: string): Promise<Supervisor[] | null>;
+  update(id: string, data: IUpdateSupervisorDTO): Promise<Supervisor>;
 }
 
 export default ISupervisorRepository;

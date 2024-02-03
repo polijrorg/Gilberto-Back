@@ -3,6 +3,7 @@ import { Prisma, Company } from '@prisma/client';
 
 import ICompanyRepository from '@modules/company/repositories/ICompanyRepository';
 import ICreateCompanyDTO from '@modules/company/dtos/ICreateCompanyDTO';
+import IUpdateCompanyDTO from '@modules/company/dtos/IUpdateCompanyDTO';
 
 export default class CompanyRepository implements ICompanyRepository {
   private ormRepository: Prisma.CompanyDelegate<Prisma.RejectOnNotFound | Prisma.RejectPerOperation | undefined>
@@ -17,7 +18,8 @@ export default class CompanyRepository implements ICompanyRepository {
     return seller;
   }
 
-  public async findByName(name: string): Promise<Company | null> {
+  public async findByName(name: string | undefined): Promise<Company | null> {
+    if (!name) return null;
     const seller = await this.ormRepository.findFirst({ where: { name } });
 
     return seller;
@@ -39,5 +41,11 @@ export default class CompanyRepository implements ICompanyRepository {
     const seller = await this.ormRepository.findMany({ orderBy: { name: 'asc' } });
 
     return seller;
+  }
+
+  public async update(id: string, data: IUpdateCompanyDTO): Promise<Company> {
+    const company = await this.ormRepository.update({ where: { id }, data });
+
+    return company;
   }
 }

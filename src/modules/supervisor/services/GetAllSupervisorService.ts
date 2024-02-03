@@ -7,14 +7,14 @@ import { Supervisor } from '@prisma/client';
 import ISupervisorRepository from '../repositories/ISupervisorRepository';
 
 @injectable()
-export default class DeleteSupervisorService {
+export default class getAllSupervisorFromCompanyService {
   constructor(
     @inject('SupervisorRepository')
     private supervisorRepository: ISupervisorRepository,
   ) { }
 
-  public async execute(): Promise<Supervisor[] | null> {
-    const supervisor = this.supervisorRepository.getAll();
+  public async execute(companyId: string): Promise<Supervisor[] | null> {
+    const supervisor = this.supervisorRepository.getAll(companyId);
 
     return supervisor;
   }

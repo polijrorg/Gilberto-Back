@@ -3,6 +3,7 @@ import { Prisma, Seller } from '@prisma/client';
 
 import ISellerRepository from '@modules/seller/repositories/ISellerRepository';
 import ICreateSellerDTO from '@modules/seller/dtos/ICreateSellerDTO';
+import IUpdateSellerDTO from '@modules/seller/dtos/IUpdateSellerDTO';
 
 export default class SellerRepository implements ISellerRepository {
   private ormRepository: Prisma.SellerDelegate<Prisma.RejectOnNotFound | Prisma.RejectPerOperation | undefined>
@@ -37,6 +38,12 @@ export default class SellerRepository implements ISellerRepository {
 
   public async getAllSellerFromASupervisor(supervisorId: string): Promise<Seller[] | null> {
     const seller = await this.ormRepository.findMany({ where: { supervisorId }, orderBy: { name: 'asc' } });
+
+    return seller;
+  }
+
+  public async updateSeller(id: string, data : IUpdateSellerDTO): Promise<Seller> {
+    const seller = await this.ormRepository.update({ where: { id }, data });
 
     return seller;
   }

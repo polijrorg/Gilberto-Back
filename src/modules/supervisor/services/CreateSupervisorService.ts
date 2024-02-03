@@ -1,10 +1,8 @@
 import { inject, injectable } from 'tsyringe';
 
-// import path from 'path';
-
 import { Supervisor } from '@prisma/client';
 
-// import AppError from '@shared/errors/AppError';
+import AppError from '@shared/errors/AppError';
 
 import ISupervisorRepository from '../repositories/ISupervisorRepository';
 
@@ -13,6 +11,7 @@ interface IRequest {
   name: string;
   email: string;
   companyId: string;
+  managerId: string;
 }
 
 @injectable()
@@ -23,13 +22,18 @@ export default class CreateSupervisorService {
   ) { }
 
   public async execute({
-    image, email, name, companyId,
+    image, email, name, companyId, managerId,
   }: IRequest): Promise<Supervisor> {
+    const emailExists = await this.supervisorRepository.findByEmail(email);
+
+    if (emailExists) throw new AppError('Supervisor with this email already exists');
+
     const user = this.supervisorRepository.create({
       image,
       name,
       email: email.toLowerCase(),
       companyId,
+      managerId,
     });
 
     /*  const templateDataFile = path.resolve(__dirname, '..', 'views', 'create_account.hbs');

@@ -20,6 +20,7 @@ model Company {
 
 model Seller {
   id           String     @id @default(uuid())
+  visit        Visit[]
   supervisor   Supervisor @relation(fields: [supervisorId], references: [id])
   supervisorId String
   image        String
@@ -28,6 +29,7 @@ model Seller {
   company      Company    @relation(fields: [companyId], references: [id])
   companyId    String
   created_at   DateTime   @default(now())
+  module       Module[]
 }
 
 model Supervisor {
@@ -36,20 +38,41 @@ model Supervisor {
   name       String
   email      String
   seller     Seller[]
-  created_at DateTime @default(now())
   manager    Manager  @relation(fields: [managerId], references: [id])
   managerId  String
+  created_at DateTime @default(now())
   company    Company  @relation(fields: [companyId], references: [id])
   companyId  String
 }
 
 model Manager {
   id         String       @id @default(uuid())
+  supervisor Supervisor[]
   image      String
   name       String
   email      String
   company    Company      @relation(fields: [companyId], references: [id])
   companyId  String
-  supervisor Supervisor[]
   created_at DateTime     @default(now())
+}
+
+model Module {
+  id                  String   @id @default(uuid())
+  moduleNumber        Int
+  moduleName          String
+  implementationScore Float
+  knowledgeScore      Float
+  supervisorComment   String
+  seller              Seller   @relation(fields: [sellerId], references: [id])
+  sellerId            String
+  created_at          DateTime @default(now())
+}
+
+model Visit {
+  id           String   @id @default(uuid())
+  storeVisited String
+  dateVisited  DateTime
+  seller       Seller   @relation(fields: [sellerId], references: [id])
+  sellerId     String
+  created_at   DateTime @default(now())
 }

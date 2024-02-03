@@ -3,6 +3,7 @@ import { Prisma, Supervisor } from '@prisma/client';
 
 import ISupervisorRepository from '@modules/supervisor/repositories/ISupervisorRepository';
 import ICreateSupervisorDTO from '@modules/supervisor/dtos/ICreateSupervisorDTO';
+import IUpdateSupervisorDTO from '@modules/supervisor/dtos/IUpdateSupervisorDTO';
 
 export default class SupervisorRepository implements ISupervisorRepository {
   private ormRepository: Prisma.SupervisorDelegate<Prisma.RejectOnNotFound | Prisma.RejectPerOperation | undefined>
@@ -11,17 +12,9 @@ export default class SupervisorRepository implements ISupervisorRepository {
     this.ormRepository = prisma.supervisor;
   }
 
-  public async findByEmailWithRelations(email: string): Promise<Supervisor | null> {
+  public async findByEmail(email: string): Promise<Supervisor | null> {
     const user = await this.ormRepository.findFirst({
       where: { email },
-    });
-
-    return user;
-  }
-
-  public async findByEmailPhoneOrCpf(email: string): Promise<Supervisor | null> {
-    const user = await this.ormRepository.findFirst({
-      where: { OR: { email } },
     });
 
     return user;
@@ -39,8 +32,9 @@ export default class SupervisorRepository implements ISupervisorRepository {
     return supervisor;
   }
 
-  public async getAll(): Promise<Supervisor[] | null> {
+  public async getAll(companyId: string): Promise<Supervisor[] | null> {
     const supervisor = await this.ormRepository.findMany({
+      where: { companyId },
       orderBy: {
         name: 'asc',
       },
@@ -49,8 +43,8 @@ export default class SupervisorRepository implements ISupervisorRepository {
     return supervisor;
   }
 
-  public async updateName(id: string, newName: string): Promise<Supervisor> {
-    const supervisor = await this.ormRepository.update({ where: { id }, data: { name: newName } });
+  public async update(id: string, data: IUpdateSupervisorDTO): Promise<Supervisor> {
+    const supervisor = await this.ormRepository.update({ where: { id }, data });
 
     return supervisor;
   }

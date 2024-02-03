@@ -7,7 +7,11 @@ const sellerRoutes = Router();
 const sellerController = new SellerController();
 
 sellerRoutes.post('/create', sellerController.create);
+
 sellerRoutes.delete('/delete/:id', sellerController.delete);
+
 sellerRoutes.get('/getAll', sellerController.getAll);
+
+sellerRoutes.patch('/update/:id', sellerController.update);
 
 export default sellerRoutes;
