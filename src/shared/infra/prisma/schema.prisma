@@ -8,20 +8,71 @@ generator client {
   provider = "prisma-client-js"
 }
 
-model Seller {
-  id         String   @id @default(uuid())
+model Company {
+  id         String       @id @default(uuid())
+  seller     Seller[]
+  manager    Manager[]
+  image      String
   name       String
-  email      String
-  created_at DateTime @default(now())
+  supervisor Supervisor[]
+  created_at DateTime     @default(now())
 }
 
-model Users {
+model Seller {
+  id           String     @id @default(uuid())
+  visit        Visit[]
+  supervisor   Supervisor @relation(fields: [supervisorId], references: [id])
+  supervisorId String
+  image        String
+  name         String
+  email        String     @unique
+  company      Company    @relation(fields: [companyId], references: [id])
+  companyId    String
+  created_at   DateTime   @default(now())
+  module       Module[]
+}
+
+model Supervisor {
   id         String   @id @default(uuid())
-  name       String   @unique
+  image      String
+  name       String
   email      String
-  cpf        String
-  phone      String
-  password   String
+  seller     Seller[]
+  manager    Manager  @relation(fields: [managerId], references: [id])
+  managerId  String
   created_at DateTime @default(now())
-  updated_at DateTime @default(now())
+  company    Company  @relation(fields: [companyId], references: [id])
+  companyId  String
+}
+
+model Manager {
+  id         String       @id @default(uuid())
+  supervisor Supervisor[]
+  image      String
+  name       String
+  email      String
+  company    Company      @relation(fields: [companyId], references: [id])
+  companyId  String
+  created_at DateTime     @default(now())
+}
+
+model Module {
+  id                  String   @id @default(uuid())
+  moduleNumber        Int
+  moduleName          String
+  implementationScore Float
+  knowledgeScore      Float
+  supervisorComment   String
+  seller              Seller   @relation(fields: [sellerId], references: [id])
+  sellerId            String
+  created_at          DateTime @default(now())
+}
+
+model Visit {
+  id           String   @id @default(uuid())
+  storeVisited String
+  dateVisited  DateTime
+  seller       Seller   @relation(fields: [sellerId], references: [id])
+  sellerId     String
+  created_at   DateTime @default(now())
 }

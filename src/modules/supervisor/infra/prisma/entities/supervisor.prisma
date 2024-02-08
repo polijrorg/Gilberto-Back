@@ -1,8 +1,21 @@
-model Users {
-  id         String   @id @default(uuid())
-  name       String   @unique
-  email      String
-  cpf        String
-  password   String
-  created_at DateTime @default(now())
+model Supervisor {
+  id           String     @id @default(uuid())
+  image        String
+  name         String
+  email        String
+  seller       Seller[]
+  manager      Manager @relation(fields: [managerId], references: [id])
+  managerId    String
+  created_at   DateTime   @default(now())
+}
+
+model Seller {
+  id           String     @id @default(uuid())
+  supervisor   Supervisor @relation(fields: [supervisorId], references: [id])
+  supervisorId String
+}
+
+model Manager {
+  id           String      @id @default(uuid())
+  supervisor   Supervisor[]
 }

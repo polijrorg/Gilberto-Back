@@ -1,0 +1,16 @@
+model Module {
+  id                  String     @id @default(uuid())
+  moduleNumber        Int
+  moduleName          String
+  implementationScore Float
+  knowledgeScore      Float
+  supervisorComment   String
+  seller              Seller     @relation(fields: [sellerId], references: [id])
+  sellerId            String
+  created_at          DateTime   @default(now())
+}
+
+model Seller {
+  id                  String     @id @default(uuid())
+  module              Module[]
+}
