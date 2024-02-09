@@ -37,6 +37,7 @@ model Supervisor {
   image      String
   name       String
   email      String
+  password   String   @default("defaultPassword")
   seller     Seller[]
   manager    Manager  @relation(fields: [managerId], references: [id])
   managerId  String
