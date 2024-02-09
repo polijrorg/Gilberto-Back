@@ -3,6 +3,7 @@ import { Prisma, Manager } from '@prisma/client';
 
 import IManagerRepository from '@modules/manager/repositories/IManagerRepository';
 import ICreateManagerDTO from '@modules/manager/dtos/ICreateManagerDTO';
+import IUpdateManagerDTO from '@modules/manager/dtos/IUpdateManagerDTO';
 
 export default class ManagerRepository implements IManagerRepository {
   private ormRepository: Prisma.ManagerDelegate<Prisma.RejectOnNotFound | Prisma.RejectPerOperation | undefined>
@@ -37,6 +38,12 @@ export default class ManagerRepository implements IManagerRepository {
 
   public async getAllManagerByCompany(companyId: string): Promise<Manager[] | null> {
     const seller = await this.ormRepository.findMany({ where: { companyId }, orderBy: { name: 'asc' } });
+
+    return seller;
+  }
+
+  public async update(id: string, data: IUpdateManagerDTO): Promise<Manager> {
+    const seller = await this.ormRepository.update({ where: { id }, data });
 
     return seller;
   }

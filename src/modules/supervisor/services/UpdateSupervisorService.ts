@@ -19,9 +19,11 @@ export default class UpdateSupervisorService {
   ) { }
 
   public async execute(id: string, data: IUpdateSupervisorDTO): Promise<Supervisor> {
-    const emailExists = await this.supervisorRepository.findByEmail(data.email);
+    if (data.email) {
+      const emailExists = await this.supervisorRepository.findByEmail(data.email);
 
-    if (emailExists) throw new AppError('Supervisor with this email already exists');
+      if (emailExists) throw new AppError('Supervisor with this email already exists');
+    }
 
     if (data.password) {
       const hashedPassword = await this.hashProvider.generateHash(data.password);

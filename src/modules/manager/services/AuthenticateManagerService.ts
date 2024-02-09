@@ -1,13 +1,13 @@
 import { inject, injectable } from 'tsyringe';
 import { sign } from 'jsonwebtoken';
 
-import { Supervisor } from '@prisma/client';
+import { Manager } from '@prisma/client';
 
 import AppError from '@shared/errors/AppError';
 import authConfig from '@config/auth';
 
 import IHashProvider from '@shared/container/providers/HashProvider/models/IHashProvider';
-import ISupervisorRepository from '../repositories/ISupervisorRepository';
+import IManagerRepository from '../repositories/IManagerRepository';
 
 interface IRequest {
   email: string;
@@ -15,17 +15,17 @@ interface IRequest {
 }
 
 @injectable()
-export default class AuthenticateSupervisorService {
+export default class AuthenticateManagerService {
   constructor(
-    @inject('SupervisorRepository')
-    private supervisorRepository: ISupervisorRepository,
+    @inject('ManagerRepository')
+    private managerRepository: IManagerRepository,
 
     @inject('HashProvider')
     private hashProvider: IHashProvider,
   ) { }
 
-  public async execute({ email, password }: IRequest): Promise<{ user: Supervisor, token: string }> {
-    const user = await this.supervisorRepository.findByEmail(email);
+  public async execute({ email, password }: IRequest): Promise<{ user: Manager, token: string }> {
+    const user = await this.managerRepository.findByEmail(email);
 
     if (!user) {
       throw new AppError('Incorrect email', 401);

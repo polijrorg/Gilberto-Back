@@ -20,7 +20,7 @@ export default class DeleteManagerService {
   public async execute({ id }: IRequest): Promise<Manager> {
     const sellerExists = await this.managerRepository.findById(id);
 
-    if (!sellerExists) throw new AppError('This manager does not exist');
+    if (!sellerExists) throw new AppError('This id does not exist');
 
     const seller = await this.managerRepository.delete(id);
 

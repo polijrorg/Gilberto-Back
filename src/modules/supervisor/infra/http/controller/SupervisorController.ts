@@ -58,13 +58,13 @@ export default class SupervisorController {
   public async update(req: Request, res: Response): Promise<Response> {
     const { id } = req.params;
     const {
-      image, name, email, password, companyId, managerId,
+      image, name, email, password, managerId,
     } = req.body;
 
     const updateSupervisor = container.resolve(UpdateSupervisorService);
 
     const supervisor = await updateSupervisor.execute(id, {
-      image, name, email, password, companyId, managerId,
+      image, name, email, password, managerId,
     });
 
     return res.status(200).json(supervisor);

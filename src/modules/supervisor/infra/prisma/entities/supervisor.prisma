@@ -3,10 +3,10 @@ model Supervisor {
   image        String
   name         String
   email        String
-  password     String     @default("defaultPassword")
+  password     String
   seller       Seller[]
-  manager      Manager    @relation(fields: [managerId], references: [id])
-  managerId    String
+  manager      Manager?   @relation(fields: [managerId], references: [id])
+  managerId    String?
   created_at   DateTime   @default(now())
 }
 

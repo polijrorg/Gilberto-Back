@@ -3,6 +3,7 @@ model Manager {
   image       String
   name        String
   email       String
+  password    String     
   company     Company    @relation(fields: [companyId], references: [id])
   companyId   String
   supervisor  Supervisor[]
