@@ -4,37 +4,31 @@ import { Supervisor } from '@prisma/client';
 
 import AppError from '@shared/errors/AppError';
 
+import IHashProvider from '@shared/container/providers/HashProvider/models/IHashProvider';
 import ISupervisorRepository from '../repositories/ISupervisorRepository';
-
-interface IRequest {
-  image: string;
-  name: string;
-  email: string;
-  companyId: string;
-  managerId: string;
-}
+import ICreateSupervisorDTO from '../dtos/ICreateSupervisorDTO';
 
 @injectable()
 export default class CreateSupervisorService {
   constructor(
     @inject('SupervisorRepository')
     private supervisorRepository: ISupervisorRepository,
+
+    @inject('HashProvider')
+    private hashProvider: IHashProvider,
   ) { }
 
-  public async execute({
-    image, email, name, companyId, managerId,
-  }: IRequest): Promise<Supervisor> {
-    const emailExists = await this.supervisorRepository.findByEmail(email);
+  public async execute(data: ICreateSupervisorDTO): Promise<Supervisor> {
+    const emailExists = await this.supervisorRepository.findByEmail(data.email);
 
     if (emailExists) throw new AppError('Supervisor with this email already exists');
 
-    const user = this.supervisorRepository.create({
-      image,
-      name,
-      email: email.toLowerCase(),
-      companyId,
-      managerId,
-    });
+    const hashedPassword = await this.hashProvider.generateHash(data.password);
+
+    // eslint-disable-next-line no-param-reassign
+    data.password = hashedPassword;
+
+    const user = this.supervisorRepository.create(data);
 
     /*  const templateDataFile = path.resolve(__dirname, '..', 'views', 'create_account.hbs');
 

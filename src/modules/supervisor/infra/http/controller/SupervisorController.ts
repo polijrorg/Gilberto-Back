@@ -5,17 +5,31 @@ import CreateSupervisorService from '@modules/supervisor/services/CreateSupervis
 import DeleteSupervisorService from '@modules/supervisor/services/DeleteSupervisorService';
 import GetAllSupervisorService from '@modules/supervisor/services/GetAllSupervisorService';
 import UpdateSupervisorService from '@modules/supervisor/services/UpdateSupervisorService';
+import AuthenticateSupervisorService from '@modules/supervisor/services/AuthenticateSupervisorService';
 
 export default class SupervisorController {
+  public async login(req: Request, res: Response): Promise<Response> {
+    const {
+      email,
+      password,
+    } = req.body;
+
+    const authenticateSupervisor = container.resolve(AuthenticateSupervisorService);
+
+    const { user, token } = await authenticateSupervisor.execute({ email, password });
+
+    return res.json({ user, token });
+  }
+
   public async create(req: Request, res: Response): Promise<Response> {
     const {
-      name, email, image, managerId, companyId,
+      name, email, password, image, managerId, companyId,
     } = req.body;
 
     const createSupervisor = container.resolve(CreateSupervisorService);
 
     const supervisor = await createSupervisor.execute({
-      name, email, image, managerId, companyId,
+      name, email, password, image, managerId, companyId,
     });
 
     return res.status(201).json(supervisor);
@@ -44,13 +58,13 @@ export default class SupervisorController {
   public async update(req: Request, res: Response): Promise<Response> {
     const { id } = req.params;
     const {
-      image, name, email, companyId, managerId,
+      image, name, email, password, managerId,
     } = req.body;
 
     const updateSupervisor = container.resolve(UpdateSupervisorService);
 
     const supervisor = await updateSupervisor.execute(id, {
-      image, name, email, companyId, managerId,
+      image, name, email, password, managerId,
     });
 
     return res.status(200).json(supervisor);

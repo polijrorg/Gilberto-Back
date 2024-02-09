@@ -5,13 +5,7 @@ import { Manager } from '@prisma/client';
 import AppError from '@shared/errors/AppError';
 
 import IManagerRepository from '../repositories/IManagerRepository';
-
-interface IRequest {
-  image: string
-  name: string;
-  email: string;
-  companyId: string;
-}
+import ICreateManagerDTO from '../dtos/ICreateManagerDTO';
 
 @injectable()
 export default class CreateManagerService {
@@ -20,19 +14,12 @@ export default class CreateManagerService {
     private managerRepository: IManagerRepository,
   ) { }
 
-  public async execute({
-    image, name, email, companyId,
-  }: IRequest): Promise<Manager> {
-    const emailAlreadyExists = await this.managerRepository.findByEmail(email);
+  public async execute(data: ICreateManagerDTO): Promise<Manager> {
+    const emailAlreadyExists = await this.managerRepository.findByEmail(data.email);
 
     if (emailAlreadyExists) throw new AppError('A manager with this email already exists');
 
-    const seller = await this.managerRepository.create({
-      image,
-      name,
-      email,
-      companyId,
-    });
+    const seller = await this.managerRepository.create(data);
 
     return seller;
   }

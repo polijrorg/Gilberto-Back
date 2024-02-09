@@ -2,7 +2,7 @@ interface IUpdateSupervisorDTO {
   image?: string;
   name?: string;
   email?: string;
-  companyId?: string;
+  password?: string;
   managerId?: string;
 }
 
