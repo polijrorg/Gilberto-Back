@@ -5,8 +5,10 @@ model Company {
   manager     Manager[]
   supervisor  Supervisor[]
   seller      Seller[]
+  modules     ModuleCompany[]
   created_at  DateTime   @default(now())
 }
+
 model Seller {
   id          String     @id @default(uuid())
   company     Company    @relation(fields: [companyId], references: [id])
@@ -23,4 +25,17 @@ model Manager {
   id          String     @id @default(uuid())
   company     Company    @relation(fields: [companyId], references: [id])
   companyId   String
+}
+
+model Module {
+  id          String     @id @default(uuid())
+  companies   ModuleCompany[]
+}
+
+model ModuleCompany {
+  id          String     @id @default(uuid())
+  companyId   String
+  company     Company    @relation(fields: [companyId], references: [id])
+  moduleId    String
+  module      Module     @relation(fields: [moduleId], references: [id])
 }

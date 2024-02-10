@@ -9,27 +9,28 @@ generator client {
 }
 
 model Company {
-  id         String       @id @default(uuid())
+  id         String          @id @default(uuid())
   seller     Seller[]
+  modules    ModuleCompany[]
   manager    Manager[]
   image      String
   name       String
   supervisor Supervisor[]
-  created_at DateTime     @default(now())
+  created_at DateTime        @default(now())
 }
 
 model Seller {
-  id           String     @id @default(uuid())
+  id           String         @id @default(uuid())
   visit        Visit[]
-  supervisor   Supervisor @relation(fields: [supervisorId], references: [id])
+  supervisor   Supervisor     @relation(fields: [supervisorId], references: [id])
   supervisorId String
   image        String
   name         String
-  email        String     @unique
-  company      Company    @relation(fields: [companyId], references: [id])
+  email        String         @unique
+  company      Company        @relation(fields: [companyId], references: [id])
   companyId    String
-  created_at   DateTime   @default(now())
-  module       Module[]
+  moduleGrades ModuleGrades[]
+  created_at   DateTime       @default(now())
 }
 
 model Supervisor {
@@ -59,14 +60,30 @@ model Manager {
 }
 
 model Module {
+  id           String          @id @default(uuid())
+  sellerGrades ModuleGrades[]
+  name         String
+  companies    ModuleCompany[]
+  created_at   DateTime        @default(now())
+}
+
+model ModuleCompany {
+  id        String  @id @default(uuid())
+  companyId String
+  company   Company @relation(fields: [companyId], references: [id])
+  moduleId  String
+  module    Module  @relation(fields: [moduleId], references: [id])
+}
+
+model ModuleGrades {
   id                  String   @id @default(uuid())
-  moduleNumber        Int
-  moduleName          String
+  seller              Seller   @relation(fields: [sellerId], references: [id])
+  sellerId            String
   implementationScore Float
   knowledgeScore      Float
   supervisorComment   String
-  seller              Seller   @relation(fields: [sellerId], references: [id])
-  sellerId            String
+  module              Module   @relation(fields: [moduleId], references: [id])
+  moduleId            String
   created_at          DateTime @default(now())
 }
 

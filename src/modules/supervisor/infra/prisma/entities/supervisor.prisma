@@ -4,6 +4,7 @@ model Supervisor {
   name         String
   email        String
   password     String
+  job          String     @default("Supervisor")
   seller       Seller[]
   manager      Manager?   @relation(fields: [managerId], references: [id])
   managerId    String?

@@ -3,11 +3,14 @@ model Seller {
   image        String
   name         String
   email        String     @unique
+  job          String     @default("Vendedor")
   supervisor   Supervisor @relation(fields: [supervisorId], references: [id])
   supervisorId String
   company      Company    @relation(fields: [companyId], references: [id])
-  companyId String
-  created_at  DateTime   @default(now())
+  companyId    String
+  moduleGrades ModuleGrades[]
+  visit        Visit[]
+  created_at   DateTime   @default(now())
 }
 
 model Supervisor {
@@ -18,4 +21,16 @@ model Supervisor {
 model Company {
   id          String      @id @default(uuid())
   seller      Seller[]
+}
+
+model ModuleGrades {
+  id          String     @id @default(uuid())
+  seller      Seller     @relation(fields: [sellerId], references: [id])
+  sellerId    String
+}
+
+model Visit {
+  id          String     @id @default(uuid())
+  seller      Seller     @relation(fields: [sellerId], references: [id])
+  sellerId    String
 }
