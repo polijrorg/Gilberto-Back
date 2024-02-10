@@ -27,6 +27,7 @@ model Seller {
   image        String
   name         String
   email        String         @unique
+  job          String         @default("Vendedor")
   company      Company        @relation(fields: [companyId], references: [id])
   companyId    String
   moduleGrades ModuleGrades[]
@@ -39,6 +40,7 @@ model Supervisor {
   name       String
   email      String
   password   String
+  job        String   @default("Supervisor")
   seller     Seller[]
   manager    Manager? @relation(fields: [managerId], references: [id])
   managerId  String?
@@ -54,6 +56,7 @@ model Manager {
   name       String
   email      String
   password   String
+  job        String       @default("Gerente")
   company    Company      @relation(fields: [companyId], references: [id])
   companyId  String
   created_at DateTime     @default(now())
