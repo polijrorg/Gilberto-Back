@@ -6,6 +6,7 @@ import companyRoutes from '@modules/company/infra/http/routes/company.routes';
 import managerRoutes from '@modules/manager/infra/http/routes/manager.routes';
 import moduleRoutes from '@modules/module/infra/http/routes/module.routes';
 import moduleGradesRoutes from '@modules/module/infra/http/routes/moduleGrades.routes';
+import moduleCompanyRoutes from '@modules/company/infra/http/routes/moduleCompany.routes';
 
 const routes = Router();
 
@@ -15,8 +16,9 @@ routes.use('/supervisor', supervisorRoutes);
 // Seller
 routes.use('/seller', sellerRoutes);
 
-// Company
+// Company and ModuleCompany
 routes.use('/company', companyRoutes);
+routes.use('/moduleCompany', moduleCompanyRoutes);
 
 // Manager
 routes.use('/manager', managerRoutes);

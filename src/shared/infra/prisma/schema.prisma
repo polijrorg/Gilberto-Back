@@ -11,8 +11,8 @@ generator client {
 model Company {
   id         String          @id @default(uuid())
   seller     Seller[]
-  modules    ModuleCompany[]
   manager    Manager[]
+  modules    ModuleCompany[]
   image      String
   name       String
   supervisor Supervisor[]
@@ -62,20 +62,20 @@ model Manager {
   created_at DateTime     @default(now())
 }
 
+model ModuleCompany {
+  id        String  @id @default(uuid())
+  moduleId  String
+  module    Module  @relation(fields: [moduleId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  companyId String
+  company   Company @relation(fields: [companyId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+}
+
 model Module {
   id           String          @id @default(uuid())
   sellerGrades ModuleGrades[]
   name         String
   companies    ModuleCompany[]
   created_at   DateTime        @default(now())
-}
-
-model ModuleCompany {
-  id        String  @id @default(uuid())
-  companyId String
-  company   Company @relation(fields: [companyId], references: [id])
-  moduleId  String
-  module    Module  @relation(fields: [moduleId], references: [id])
 }
 
 model ModuleGrades {

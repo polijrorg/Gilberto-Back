@@ -10,7 +10,7 @@ sellerRoutes.post('/create', sellerController.create);
 
 sellerRoutes.delete('/delete/:id', sellerController.delete);
 
-sellerRoutes.get('/getAll', sellerController.getAll);
+sellerRoutes.get('/getAll/:id', sellerController.getAll);
 
 sellerRoutes.patch('/update/:id', sellerController.update);
 
