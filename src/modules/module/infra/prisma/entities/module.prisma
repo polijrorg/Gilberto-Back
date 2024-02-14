@@ -1,16 +1,19 @@
 model Module {
   id                  String     @id @default(uuid())
-  moduleNumber        Int
-  moduleName          String
-  implementationScore Float
-  knowledgeScore      Float
-  supervisorComment   String
-  seller              Seller     @relation(fields: [sellerId], references: [id])
-  sellerId            String
+  name                String
+  companies           ModuleCompany[]
+  sellerGrades        ModuleGrades[]
   created_at          DateTime   @default(now())
 }
 
-model Seller {
+model ModuleGrades {
   id                  String     @id @default(uuid())
-  module              Module[]
+  module              Module     @relation(fields: [moduleId], references: [id])
+  moduleId            String
+}
+
+model ModuleCompany {
+  id                  String     @id @default(uuid())
+  moduleId            String
+  module              Module     @relation(fields: [moduleId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 }

@@ -9,27 +9,29 @@ generator client {
 }
 
 model Company {
-  id         String       @id @default(uuid())
+  id         String          @id @default(uuid())
   seller     Seller[]
   manager    Manager[]
+  modules    ModuleCompany[]
   image      String
   name       String
   supervisor Supervisor[]
-  created_at DateTime     @default(now())
+  created_at DateTime        @default(now())
 }
 
 model Seller {
-  id           String     @id @default(uuid())
+  id           String         @id @default(uuid())
   visit        Visit[]
-  supervisor   Supervisor @relation(fields: [supervisorId], references: [id])
+  supervisor   Supervisor     @relation(fields: [supervisorId], references: [id])
   supervisorId String
   image        String
   name         String
-  email        String     @unique
-  company      Company    @relation(fields: [companyId], references: [id])
+  email        String         @unique
+  job          String         @default("Vendedor")
+  company      Company        @relation(fields: [companyId], references: [id])
   companyId    String
-  created_at   DateTime   @default(now())
-  module       Module[]
+  moduleGrades ModuleGrades[]
+  created_at   DateTime       @default(now())
 }
 
 model Supervisor {
@@ -38,6 +40,7 @@ model Supervisor {
   name       String
   email      String
   password   String
+  job        String   @default("Supervisor")
   seller     Seller[]
   manager    Manager? @relation(fields: [managerId], references: [id])
   managerId  String?
@@ -53,20 +56,37 @@ model Manager {
   name       String
   email      String
   password   String
+  job        String       @default("Gerente")
   company    Company      @relation(fields: [companyId], references: [id])
   companyId  String
   created_at DateTime     @default(now())
 }
 
+model ModuleCompany {
+  id        String  @id @default(uuid())
+  moduleId  String
+  module    Module  @relation(fields: [moduleId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  companyId String
+  company   Company @relation(fields: [companyId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+}
+
 model Module {
+  id           String          @id @default(uuid())
+  sellerGrades ModuleGrades[]
+  name         String
+  companies    ModuleCompany[]
+  created_at   DateTime        @default(now())
+}
+
+model ModuleGrades {
   id                  String   @id @default(uuid())
-  moduleNumber        Int
-  moduleName          String
+  seller              Seller   @relation(fields: [sellerId], references: [id])
+  sellerId            String
   implementationScore Float
   knowledgeScore      Float
   supervisorComment   String
-  seller              Seller   @relation(fields: [sellerId], references: [id])
-  sellerId            String
+  module              Module   @relation(fields: [moduleId], references: [id])
+  moduleId            String
   created_at          DateTime @default(now())
 }
 

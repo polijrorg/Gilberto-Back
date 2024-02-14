@@ -3,7 +3,8 @@ model Manager {
   image       String
   name        String
   email       String
-  password    String     
+  password    String
+  job         String     @default("Gerente")
   company     Company    @relation(fields: [companyId], references: [id])
   companyId   String
   supervisor  Supervisor[]
