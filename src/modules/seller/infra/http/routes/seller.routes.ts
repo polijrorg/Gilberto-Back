@@ -10,7 +10,9 @@ sellerRoutes.post('/create', sellerController.create);
 
 sellerRoutes.delete('/delete/:id', sellerController.delete);
 
-sellerRoutes.get('/getAll/:id', sellerController.getAll);
+sellerRoutes.get('/getAllFromASupervisor/:supervisorId', sellerController.getAllFromASupervisor);
+
+sellerRoutes.get('/getAllFromACompany/:companyId', sellerController.getAllFromACompany);
 
 sellerRoutes.patch('/update/:id', sellerController.update);
 

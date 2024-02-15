@@ -3,9 +3,10 @@ import { container } from 'tsyringe';
 
 import CreateSupervisorService from '@modules/supervisor/services/CreateSupervisorService';
 import DeleteSupervisorService from '@modules/supervisor/services/DeleteSupervisorService';
-import GetAllSupervisorService from '@modules/supervisor/services/GetAllSupervisorService';
 import UpdateSupervisorService from '@modules/supervisor/services/UpdateSupervisorService';
 import AuthenticateSupervisorService from '@modules/supervisor/services/AuthenticateSupervisorService';
+import GetAllSupervisorFromAManagerService from '@modules/supervisor/services/GetAllSupervisorFromAManagerService';
+import GetAllSupervisorFromACompanyService from '@modules/supervisor/services/GetAllSupervisorFromACompanyService';
 
 export default class SupervisorController {
   public async login(req: Request, res: Response): Promise<Response> {
@@ -45,12 +46,22 @@ export default class SupervisorController {
     return res.status(200).json(supervisor);
   }
 
-  public async getAll(req: Request, res: Response): Promise<Response> {
-    const { id } = req.params;
+  public async getAllSupervisorFromACompany(req: Request, res: Response): Promise<Response> {
+    const { companyId } = req.params;
 
-    const getSupervisor = container.resolve(GetAllSupervisorService);
+    const getSupervisor = container.resolve(GetAllSupervisorFromACompanyService);
 
-    const supervisor = await getSupervisor.execute(id);
+    const supervisor = await getSupervisor.execute(companyId);
+
+    return res.status(200).json(supervisor);
+  }
+
+  public async getAllSupervisorFromAManager(req: Request, res: Response): Promise<Response> {
+    const { managerId } = req.params;
+
+    const getSupervisor = container.resolve(GetAllSupervisorFromAManagerService);
+
+    const supervisor = await getSupervisor.execute(managerId);
 
     return res.status(200).json(supervisor);
   }

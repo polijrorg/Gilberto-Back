@@ -84,6 +84,7 @@ model ModuleGrades {
   sellerId            String
   implementationScore Float
   knowledgeScore      Float
+  media               Float
   supervisorComment   String
   module              Module   @relation(fields: [moduleId], references: [id])
   moduleId            String

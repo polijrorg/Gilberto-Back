@@ -12,10 +12,12 @@ export default class ModuleController {
       implementationScore, knowledgeScore, supervisorComment, moduleId, sellerId,
     } = req.body;
 
+    const media = (implementationScore + knowledgeScore) / 2;
+
     const createModule = container.resolve(CreateModuleGradesService);
 
     const module = await createModule.execute({
-      implementationScore, knowledgeScore, supervisorComment, moduleId, sellerId,
+      implementationScore, knowledgeScore, media, supervisorComment, moduleId, sellerId,
     });
 
     return res.status(201).json(module);
@@ -44,10 +46,13 @@ export default class ModuleController {
   public async update(req: Request, res: Response): Promise<Response> {
     const { id } = req.params;
     const { implementationScore, knowledgeScore, supervisorComment } = req.body;
+    const media = (knowledgeScore + implementationScore) / 2;
 
     const UpdateModuleGrades = container.resolve(UpdateModuleGradesService);
 
-    const module = await UpdateModuleGrades.execute(id, { implementationScore, knowledgeScore, supervisorComment });
+    const module = await UpdateModuleGrades.execute(id, {
+      implementationScore, knowledgeScore, supervisorComment, media,
+    });
 
     return res.status(200).json(module);
   }

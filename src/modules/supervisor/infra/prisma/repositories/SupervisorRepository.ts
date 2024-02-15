@@ -12,6 +12,14 @@ export default class SupervisorRepository implements ISupervisorRepository {
     this.ormRepository = prisma.supervisor;
   }
 
+  public async findById(id: string): Promise<Supervisor | null> {
+    const user = await this.ormRepository.findFirst({
+      where: { id },
+    });
+
+    return user;
+  }
+
   public async findByEmail(email: string): Promise<Supervisor | null> {
     const user = await this.ormRepository.findFirst({
       where: { email },
@@ -32,9 +40,20 @@ export default class SupervisorRepository implements ISupervisorRepository {
     return supervisor;
   }
 
-  public async getAll(companyId: string): Promise<Supervisor[] | null> {
+  public async getAllSupervidorFromACompany(companyId: string): Promise<Supervisor[] | null> {
     const supervisor = await this.ormRepository.findMany({
       where: { companyId },
+      orderBy: {
+        name: 'asc',
+      },
+    });
+
+    return supervisor;
+  }
+
+  public async getAllSupervidorFromAManager(managerId: string): Promise<Supervisor[] | null> {
+    const supervisor = await this.ormRepository.findMany({
+      where: { managerId },
       orderBy: {
         name: 'asc',
       },

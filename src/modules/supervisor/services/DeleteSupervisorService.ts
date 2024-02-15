@@ -18,7 +18,7 @@ export default class DeleteSupervisorService {
   ) { }
 
   public async execute({ id }: IRequest): Promise<Supervisor> {
-    const supervisor = this.supervisorRepository.delete(id);
+    const supervisor = await this.supervisorRepository.delete(id);
 
     return supervisor;
   }
