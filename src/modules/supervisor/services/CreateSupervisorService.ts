@@ -28,7 +28,7 @@ export default class CreateSupervisorService {
     // eslint-disable-next-line no-param-reassign
     data.password = hashedPassword;
 
-    const user = this.supervisorRepository.create(data);
+    const user = await this.supervisorRepository.create(data);
 
     /*  const templateDataFile = path.resolve(__dirname, '..', 'views', 'create_account.hbs');
 

@@ -42,6 +42,12 @@ export default class SellerRepository implements ISellerRepository {
     return seller;
   }
 
+  public async getAllSellerFromACompany(companyId: string): Promise<Seller[] | null> {
+    const seller = await this.ormRepository.findMany({ where: { companyId }, orderBy: { name: 'asc' } });
+
+    return seller;
+  }
+
   public async updateSeller(id: string, data : IUpdateSellerDTO): Promise<Seller> {
     const seller = await this.ormRepository.update({ where: { id }, data });
 

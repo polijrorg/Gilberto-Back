@@ -1,7 +1,8 @@
 interface IUpdateModuleGradesDTO {
-  implementationScore?: number;
-  knowledgeScore?: number;
+  implementationScore: number;
+  knowledgeScore: number;
   supervisorComment?: string;
+  media: number;
 }
 
 export default IUpdateModuleGradesDTO;

@@ -19,6 +19,10 @@ export default class UpdateSupervisorService {
   ) { }
 
   public async execute(id: string, data: IUpdateSupervisorDTO): Promise<Supervisor> {
+    const supervisorExists = await this.supervisorRepository.findById(id);
+
+    if (!supervisorExists) throw new AppError('A supervisor with this Id does not exist');
+
     if (data.email) {
       const emailExists = await this.supervisorRepository.findByEmail(data.email);
 
@@ -31,7 +35,7 @@ export default class UpdateSupervisorService {
       // eslint-disable-next-line no-param-reassign
       data.password = hashedPassword;
     }
-    const supervisor = this.supervisorRepository.update(id, data);
+    const supervisor = await this.supervisorRepository.update(id, data);
 
     return supervisor;
   }

@@ -12,7 +12,9 @@ supervisorRoutes.post('/create', supervisorController.create);
 
 supervisorRoutes.delete('/delete/:id', supervisorController.delete);
 
-supervisorRoutes.get('/getAll/:id', supervisorController.getAll);
+supervisorRoutes.get('/getAllFromACompany/:companyId', supervisorController.getAllSupervisorFromACompany);
+
+supervisorRoutes.get('/getAllFromAManager/:managerId', supervisorController.getAllSupervisorFromAManager);
 
 supervisorRoutes.patch('/update/:id', supervisorController.update);
 

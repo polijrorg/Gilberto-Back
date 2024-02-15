@@ -4,6 +4,7 @@ import { container } from 'tsyringe';
 import CreateSellerService from '@modules/seller/services/CreateSellerService';
 import DeleteSellerService from '@modules/seller/services/DeleteSellerService';
 import GetAllSellerFromASupervisorService from '@modules/seller/services/GetAllSellerFromASupervisorService';
+import GetAllSellerFromACompanyService from '@modules/seller/services/GetAllSellerFromACompanyService';
 import UpdateSellerService from '@modules/seller/services/UpdateSellerService';
 
 export default class SellerController {
@@ -31,12 +32,22 @@ export default class SellerController {
     return res.status(200).json(seller);
   }
 
-  public async getAll(req: Request, res: Response): Promise<Response> {
-    const { id } = req.params;
+  public async getAllFromASupervisor(req: Request, res: Response): Promise<Response> {
+    const { supervisorId } = req.params;
 
     const getAllSeller = container.resolve(GetAllSellerFromASupervisorService);
 
-    const seller = await getAllSeller.execute(id);
+    const seller = await getAllSeller.execute(supervisorId);
+
+    return res.status(200).json(seller);
+  }
+
+  public async getAllFromACompany(req: Request, res: Response): Promise<Response> {
+    const { companyId } = req.params;
+
+    const getAllSeller = container.resolve(GetAllSellerFromACompanyService);
+
+    const seller = await getAllSeller.execute(companyId);
 
     return res.status(200).json(seller);
   }
