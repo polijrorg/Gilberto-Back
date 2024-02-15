@@ -4,7 +4,7 @@ import { Seller } from '@prisma/client';
 
 import AppError from '@shared/errors/AppError';
 
-import ISupervisorRepository from 'modules/supervisor/repositories/ISupervisorRepository';
+import ISupervisorRepository from '@modules/supervisor/repositories/ISupervisorRepository';
 import ISellerRepository from '../repositories/ISellerRepository';
 
 @injectable()
