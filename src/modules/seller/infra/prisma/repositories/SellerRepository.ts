@@ -1,5 +1,5 @@
 import prisma from '@shared/infra/prisma/client';
-import { Prisma, Seller, Supervisor } from '@prisma/client';
+import { Prisma, Seller } from '@prisma/client';
 
 import ISellerRepository from '@modules/seller/repositories/ISellerRepository';
 import ICreateSellerDTO from '@modules/seller/dtos/ICreateSellerDTO';
@@ -50,9 +50,38 @@ export default class SellerRepository implements ISellerRepository {
       },
     });
 
-    const sellers = supervisors.flatMap(supervisor => supervisor.sellers);
+    const sellers: Seller[] = supervisors
+      .map((supervisor) => supervisor.seller)
+      .reduce((acc, sellerArray) => acc.concat(sellerArray), []);
 
-    return sellers.length > 0 ? sellers : null;
+    const sortedSellers = sellers.sort((a, b) => a.name.localeCompare(b.name));
+
+    return sortedSellers.length > 0 ? sortedSellers : null;
+  }
+
+  public async getAllSellerFromADirector(directorId: string): Promise<Seller[] | null> {
+    const managers = await prisma.manager.findMany({
+      where: { directorId },
+      include: {
+        supervisor: {
+          include: {
+            seller: true,
+          },
+        },
+      },
+    });
+
+    const sellers: Seller[] = [];
+
+    managers.forEach((manager) => {
+      manager.supervisor.forEach((supervisor) => {
+        sellers.push(...supervisor.seller);
+      });
+    });
+
+    const sortedSellers = sellers.sort((a, b) => a.name.localeCompare(b.name));
+
+    return sortedSellers.length > 0 ? sortedSellers : null;
   }
 
   public async getAllSellerFromACompany(companyId: string): Promise<Seller[] | null> {

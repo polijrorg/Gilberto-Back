@@ -14,6 +14,8 @@ supervisorRoutes.delete('/delete/:id', supervisorController.delete);
 
 supervisorRoutes.get('/getAllFromACompany/:companyId', supervisorController.getAllSupervisorFromACompany);
 
+supervisorRoutes.get('/getAllFromADirector/:directorId', supervisorController.getAllSupervisorFromADirector);
+
 supervisorRoutes.get('/getAllFromAManager/:managerId', supervisorController.getAllSupervisorFromAManager);
 
 supervisorRoutes.patch('/update/:id', supervisorController.update);

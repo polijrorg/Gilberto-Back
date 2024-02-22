@@ -8,6 +8,7 @@ interface ISellerRepository {
   delete(id: string): Promise<Seller>;
   getAllSellerFromASupervisor(supervisorId: string): Promise<Seller[] | null>;
   getAllSellerFromAManager(managerId: string): Promise<Seller[] | null>;
+  getAllSellerFromADirector(directorId: string): Promise<Seller[] | null>;
   getAllSellerFromACompany(companyId: string): Promise<Seller[] | null>;
   updateSeller(id: string, data: IUpdateSellerDTO): Promise<Seller>;
   findByEmail(email: string): Promise<Seller | null>;

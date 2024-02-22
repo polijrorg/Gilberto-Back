@@ -12,9 +12,9 @@ managerRoutes.post('/create', managerController.create);
 
 managerRoutes.delete('/delete/:id', managerController.delete);
 
-managerRoutes.get('/getAll/:id', managerController.getAllManagerByCompany);
+managerRoutes.get('/getAll/:companyId', managerController.getAllManagerByCompany);
 
-managerRoutes.get('/getAll/:id', managerController.getAllManagerByDirector);
+managerRoutes.get('/getAll/:directorId', managerController.getAllManagerByDirector);
 
 managerRoutes.patch('/update/:id', managerController.update);
 

@@ -40,7 +40,7 @@ export default class SupervisorRepository implements ISupervisorRepository {
     return supervisor;
   }
 
-  public async getAllSupervidorFromACompany(companyId: string): Promise<Supervisor[] | null> {
+  public async getAllSupervisorFromACompany(companyId: string): Promise<Supervisor[] | null> {
     const supervisor = await this.ormRepository.findMany({
       where: { companyId },
       orderBy: {
@@ -51,7 +51,7 @@ export default class SupervisorRepository implements ISupervisorRepository {
     return supervisor;
   }
 
-  public async getAllSupervidorFromAManager(managerId: string): Promise<Supervisor[] | null> {
+  public async getAllSupervisorFromAManager(managerId: string): Promise<Supervisor[] | null> {
     const supervisor = await this.ormRepository.findMany({
       where: { managerId },
       orderBy: {
@@ -60,6 +60,22 @@ export default class SupervisorRepository implements ISupervisorRepository {
     });
 
     return supervisor;
+  }
+
+  public async getAllSupervisorFromADirector(directorId: string): Promise<Supervisor[] | null> {
+    const managers = await prisma.manager.findMany({
+      where: { directorId },
+      include: {
+        supervisor: true,
+      },
+    });
+
+    const allSupervisors: Supervisor[] = managers.reduce<Supervisor[]>(
+      (acc, manager) => acc.concat(manager.supervisor),
+      [],
+    );
+
+    return allSupervisors.length > 0 ? allSupervisors : null;
   }
 
   public async update(id: string, data: IUpdateSupervisorDTO): Promise<Supervisor> {
