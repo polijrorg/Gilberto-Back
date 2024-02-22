@@ -7,6 +7,7 @@ import UpdateSupervisorService from '@modules/supervisor/services/UpdateSupervis
 import AuthenticateSupervisorService from '@modules/supervisor/services/AuthenticateSupervisorService';
 import GetAllSupervisorFromAManagerService from '@modules/supervisor/services/GetAllSupervisorFromAManagerService';
 import GetAllSupervisorFromACompanyService from '@modules/supervisor/services/GetAllSupervisorFromACompanyService';
+import GetAllSupervisorFromADirectorService from '@modules/supervisor/services/GetAllSupervisorFromADirectorService';
 
 export default class SupervisorController {
   public async login(req: Request, res: Response): Promise<Response> {
@@ -62,6 +63,16 @@ export default class SupervisorController {
     const getSupervisor = container.resolve(GetAllSupervisorFromAManagerService);
 
     const supervisor = await getSupervisor.execute(managerId);
+
+    return res.status(200).json(supervisor);
+  }
+
+  public async getAllSupervisorFromADirector(req: Request, res: Response): Promise<Response> {
+    const { directorId } = req.params;
+
+    const getSupervisor = container.resolve(GetAllSupervisorFromADirectorService);
+
+    const supervisor = await getSupervisor.execute(directorId);
 
     return res.status(200).json(supervisor);
   }

@@ -6,6 +6,8 @@ import DeleteSellerService from '@modules/seller/services/DeleteSellerService';
 import GetAllSellerFromASupervisorService from '@modules/seller/services/GetAllSellerFromASupervisorService';
 import GetAllSellerFromACompanyService from '@modules/seller/services/GetAllSellerFromACompanyService';
 import UpdateSellerService from '@modules/seller/services/UpdateSellerService';
+import GetAllSellerFromAManagerService from '@modules/seller/services/GetAllSellerFromAManagerService';
+import GetAllSellerFromADirectorService from '@modules/seller/services/GetAllSellerFromADirector';
 
 export default class SellerController {
   public async create(req: Request, res: Response): Promise<Response> {
@@ -38,6 +40,26 @@ export default class SellerController {
     const getAllSeller = container.resolve(GetAllSellerFromASupervisorService);
 
     const seller = await getAllSeller.execute(supervisorId);
+
+    return res.status(200).json(seller);
+  }
+
+  public async getAllFromAManager(req: Request, res: Response): Promise<Response> {
+    const { managerId } = req.params;
+
+    const getAllSeller = container.resolve(GetAllSellerFromAManagerService);
+
+    const seller = await getAllSeller.execute(managerId);
+
+    return res.status(200).json(seller);
+  }
+
+  public async getAllFromADirector(req: Request, res: Response): Promise<Response> {
+    const { directorId } = req.params;
+
+    const getAllSeller = container.resolve(GetAllSellerFromADirectorService);
+
+    const seller = await getAllSeller.execute(directorId);
 
     return res.status(200).json(seller);
   }

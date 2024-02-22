@@ -12,7 +12,7 @@ directorRoutes.post('/create', directorController.create);
 
 directorRoutes.delete('/delete/:id', directorController.delete);
 
-directorRoutes.get('/getAll/:id', directorController.getAllDirectorByCompany);
+directorRoutes.get('/getAll/:companyId', directorController.getAllDirectorByCompany);
 
 directorRoutes.patch('/update/:id', directorController.update);
 

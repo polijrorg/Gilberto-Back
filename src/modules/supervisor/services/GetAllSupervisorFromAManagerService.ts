@@ -21,7 +21,7 @@ export default class GetAllSupervisorFromAManagerService {
 
     if (!managerExists) throw new AppError('A manager with this Id does not exist');
 
-    const supervisor = await this.supervisorRepository.getAllSupervidorFromAManager(managerId);
+    const supervisor = await this.supervisorRepository.getAllSupervisorFromAManager(managerId);
 
     return supervisor;
   }

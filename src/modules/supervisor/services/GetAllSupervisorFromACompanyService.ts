@@ -21,7 +21,7 @@ export default class GetAllSupervisorFromCompanyService {
 
     if (!companyExists) throw new AppError('A company with this Id does not exist');
 
-    const supervisor = await this.supervisorRepository.getAllSupervidorFromACompany(companyId);
+    const supervisor = await this.supervisorRepository.getAllSupervisorFromACompany(companyId);
 
     return supervisor;
   }
