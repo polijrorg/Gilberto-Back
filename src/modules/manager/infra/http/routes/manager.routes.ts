@@ -14,6 +14,8 @@ managerRoutes.delete('/delete/:id', managerController.delete);
 
 managerRoutes.get('/getAll/:id', managerController.getAllManagerByCompany);
 
+managerRoutes.get('/getAll/:id', managerController.getAllManagerByDirector);
+
 managerRoutes.patch('/update/:id', managerController.update);
 
 export default managerRoutes;

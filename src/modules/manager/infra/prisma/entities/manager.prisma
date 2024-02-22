@@ -5,8 +5,10 @@ model Manager {
   email       String
   password    String
   job         String     @default("Gerente")
-  company     Company    @relation(fields: [companyId], references: [id])
+  company     Company    @relation(fields: [companyId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   companyId   String
+  director    Director?  @relation(fields: [directorId], references: [id])
+  directorId  String?
   supervisor  Supervisor[]
   created_at  DateTime   @default(now())
 }
@@ -20,4 +22,9 @@ model Supervisor {
   id          String     @id @default(uuid())
   manager     Manager    @relation(fields: [managerId], references: [id])
   managerId   String
+}
+
+model Director {
+  id          String     @id @default(uuid())
+  manager     Manager[]
 }

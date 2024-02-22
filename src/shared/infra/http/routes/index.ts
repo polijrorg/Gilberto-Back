@@ -7,6 +7,7 @@ import managerRoutes from '@modules/manager/infra/http/routes/manager.routes';
 import moduleRoutes from '@modules/module/infra/http/routes/module.routes';
 import moduleGradesRoutes from '@modules/module/infra/http/routes/moduleGrades.routes';
 import moduleCompanyRoutes from '@modules/company/infra/http/routes/moduleCompany.routes';
+import directorRoutes from '@modules/director/infra/http/routes/director.routes';
 
 const routes = Router();
 
@@ -22,6 +23,9 @@ routes.use('/moduleCompany', moduleCompanyRoutes);
 
 // Manager
 routes.use('/manager', managerRoutes);
+
+// Director
+routes.use('/director', directorRoutes);
 
 // Module and ModuleGrades
 routes.use('/module', moduleRoutes);

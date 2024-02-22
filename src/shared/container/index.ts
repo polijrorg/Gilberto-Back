@@ -17,6 +17,8 @@ import IModuleGradesRepository from '@modules/module/repositories/IModuleGradesR
 import ModuleGradesRepository from '@modules/module/infra/prisma/repositories/ModuleGradesRepository';
 import IModuleCompanyRepository from '@modules/company/repositories/IModuleCompanyRepository';
 import ModuleCompanyRepository from '@modules/company/infra/prisma/repositories/ModuleCompanyRepository';
+import IDirectorRepository from '@modules/director/repositories/IDirectorRepository';
+import DirectorRepository from '@modules/director/infra/prisma/repositories/DirectorRepository';
 
 container.registerSingleton<ISupervisorRepository>('SupervisorRepository', SupervisorRepository);
 container.registerSingleton<ISellerRepository>('SellerRepository', SellerRepository);
@@ -25,3 +27,4 @@ container.registerSingleton<IManagerRepository>('ManagerRepository', ManagerRepo
 container.registerSingleton<IModuleRepository>('ModuleRepository', ModuleRepository);
 container.registerSingleton<IModuleGradesRepository>('ModuleGradesRepository', ModuleGradesRepository);
 container.registerSingleton<IModuleCompanyRepository>('ModuleCompanyRepository', ModuleCompanyRepository);
+container.registerSingleton<IDirectorRepository>('DirectorRepository', DirectorRepository);

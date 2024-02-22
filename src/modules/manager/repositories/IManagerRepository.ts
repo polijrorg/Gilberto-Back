@@ -9,6 +9,7 @@ interface IManagerRepository {
   create(data: ICreateManagerDTO): Promise<Manager>;
   delete(id: string): Promise<Manager>;
   getAllManagerByCompany(companyId: string): Promise<Manager[] | null>;
+  getAllManagerByDirector(directorId: string): Promise<Manager[] | null>;
   update(id: string, data: IUpdateManagerDTO): Promise<Manager>;
 }
 

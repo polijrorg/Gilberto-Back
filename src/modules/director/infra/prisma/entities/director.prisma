@@ -1,0 +1,23 @@
+model Director {
+  id          String     @id @default(uuid())
+  image       String
+  name        String
+  email       String
+  password    String
+  job         String     @default("Diretor")
+  manager     Manager[]
+  company     Company    @relation(fields: [companyId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  companyId   String
+  created_at  DateTime   @default(now())
+}
+
+model Manager {
+  id          String     @id @default(uuid())
+  director    Director?   @relation(fields: [directorId], references: [id])
+  directorId  String?
+}
+
+model Company {
+  id          String     @id @default(uuid())
+  director    Director[]
+}

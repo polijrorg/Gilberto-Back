@@ -42,6 +42,12 @@ export default class ManagerRepository implements IManagerRepository {
     return seller;
   }
 
+  public async getAllManagerByDirector(directorId: string): Promise<Manager[] | null> {
+    const seller = await this.ormRepository.findMany({ where: { directorId }, orderBy: { name: 'asc' } });
+
+    return seller;
+  }
+
   public async update(id: string, data: IUpdateManagerDTO): Promise<Manager> {
     const seller = await this.ormRepository.update({ where: { id }, data });
 

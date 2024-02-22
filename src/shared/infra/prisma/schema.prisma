@@ -12,9 +12,11 @@ model Company {
   id         String          @id @default(uuid())
   seller     Seller[]
   manager    Manager[]
+  director   Director[]
   modules    ModuleCompany[]
   image      String
   name       String
+  stage      String
   supervisor Supervisor[]
   created_at DateTime        @default(now())
 }
@@ -28,7 +30,7 @@ model Seller {
   name         String
   email        String         @unique
   job          String         @default("Vendedor")
-  company      Company        @relation(fields: [companyId], references: [id])
+  company      Company        @relation(fields: [companyId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   companyId    String
   moduleGrades ModuleGrades[]
   created_at   DateTime       @default(now())
@@ -45,7 +47,7 @@ model Supervisor {
   manager    Manager? @relation(fields: [managerId], references: [id])
   managerId  String?
   created_at DateTime @default(now())
-  company    Company  @relation(fields: [companyId], references: [id])
+  company    Company  @relation(fields: [companyId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   companyId  String
 }
 
@@ -57,9 +59,24 @@ model Manager {
   email      String
   password   String
   job        String       @default("Gerente")
-  company    Company      @relation(fields: [companyId], references: [id])
+  company    Company      @relation(fields: [companyId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   companyId  String
+  director   Director?    @relation(fields: [directorId], references: [id])
+  directorId String?
   created_at DateTime     @default(now())
+}
+
+model Director {
+  id         String    @id @default(uuid())
+  manager    Manager[]
+  image      String
+  name       String
+  email      String
+  password   String
+  job        String    @default("Diretor")
+  company    Company   @relation(fields: [companyId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  companyId  String
+  created_at DateTime  @default(now())
 }
 
 model ModuleCompany {

@@ -5,11 +5,7 @@ import { Company } from '@prisma/client';
 import AppError from '@shared/errors/AppError';
 
 import ICompanyRepository from '../repositories/ICompanyRepository';
-
-interface IRequest {
-  image: string
-  name: string;
-}
+import ICreateCompanyDTO from '../dtos/ICreateCompanyDTO';
 
 @injectable()
 export default class CreateCompanyService {
@@ -18,17 +14,12 @@ export default class CreateCompanyService {
     private companyRepository: ICompanyRepository,
   ) { }
 
-  public async execute({
-    image, name,
-  }: IRequest): Promise<Company> {
-    const nameAlreadyExists = await this.companyRepository.findByName(name);
+  public async execute(data: ICreateCompanyDTO): Promise<Company> {
+    const nameAlreadyExists = await this.companyRepository.findByName(data.name);
 
     if (nameAlreadyExists) throw new AppError('A company with this name already exists');
 
-    const seller = await this.companyRepository.create({
-      image,
-      name,
-    });
+    const seller = await this.companyRepository.create(data);
 
     return seller;
   }
