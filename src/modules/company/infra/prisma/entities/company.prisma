@@ -2,6 +2,8 @@ model Company {
   id          String     @id @default(uuid())
   image       String
   name        String
+  stage       String     @default("Estágio inicial")
+  director    Director[]
   manager     Manager[]
   supervisor  Supervisor[]
   seller      Seller[]
@@ -11,19 +13,25 @@ model Company {
 
 model Seller {
   id          String     @id @default(uuid())
-  company     Company    @relation(fields: [companyId], references: [id])
+  company     Company    @relation(fields: [companyId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   companyId   String
 }
 
 model Supervisor {
   id          String     @id @default(uuid())
-  company     Company    @relation(fields: [companyId], references: [id])
+  company     Company    @relation(fields: [companyId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   companyId   String
 }
 
 model Manager {
   id          String     @id @default(uuid())
-  company     Company    @relation(fields: [companyId], references: [id])
+  company     Company    @relation(fields: [companyId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  companyId   String
+}
+
+model Director {
+  id          String     @id @default(uuid())
+  company     Company    @relation(fields: [companyId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   companyId   String
 }
 

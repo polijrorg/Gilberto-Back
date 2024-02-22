@@ -1,10 +1,9 @@
-interface ICreateManagerDTO {
+interface ICreateDirectorDTO {
   image: string
   name: string;
   email: string;
   password: string;
   companyId: string;
-  directorId?: string;
 }
 
-export default ICreateManagerDTO;
+export default ICreateDirectorDTO;

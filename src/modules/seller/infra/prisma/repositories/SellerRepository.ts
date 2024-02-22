@@ -1,5 +1,5 @@
 import prisma from '@shared/infra/prisma/client';
-import { Prisma, Seller } from '@prisma/client';
+import { Prisma, Seller, Supervisor } from '@prisma/client';
 
 import ISellerRepository from '@modules/seller/repositories/ISellerRepository';
 import ICreateSellerDTO from '@modules/seller/dtos/ICreateSellerDTO';
@@ -40,6 +40,19 @@ export default class SellerRepository implements ISellerRepository {
     const seller = await this.ormRepository.findMany({ where: { supervisorId }, orderBy: { name: 'asc' } });
 
     return seller;
+  }
+
+  public async getAllSellerFromAManager(managerId: string): Promise<Seller[] | null> {
+    const supervisors = await prisma.supervisor.findMany({
+      where: { managerId },
+      include: {
+        seller: true,
+      },
+    });
+
+    const sellers = supervisors.flatMap(supervisor => supervisor.sellers);
+
+    return sellers.length > 0 ? sellers : null;
   }
 
   public async getAllSellerFromACompany(companyId: string): Promise<Seller[] | null> {

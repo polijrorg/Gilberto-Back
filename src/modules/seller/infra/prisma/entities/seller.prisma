@@ -6,7 +6,7 @@ model Seller {
   job          String     @default("Vendedor")
   supervisor   Supervisor @relation(fields: [supervisorId], references: [id])
   supervisorId String
-  company      Company    @relation(fields: [companyId], references: [id])
+  company      Company    @relation(fields: [companyId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   companyId    String
   moduleGrades ModuleGrades[]
   visit        Visit[]

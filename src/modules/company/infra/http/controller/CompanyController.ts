@@ -9,13 +9,13 @@ import UpdateCompanyService from '@modules/company/services/UpdateCompanyService
 export default class CompanyController {
   public async create(req: Request, res: Response): Promise<Response> {
     const {
-      image, name,
+      image, name, stage,
     } = req.body;
 
     const createCompany = container.resolve(CreateCompanyService);
 
     const company = await createCompany.execute({
-      image, name,
+      image, name, stage,
     });
 
     return res.status(201).json(company);
@@ -41,10 +41,10 @@ export default class CompanyController {
 
   public async update(req: Request, res: Response): Promise<Response> {
     const { id } = req.params;
-    const { name, image } = req.body;
+    const { name, image, stage } = req.body;
     const updateCompany = container.resolve(UpdateCompanyService);
 
-    const company = await updateCompany.execute(id, { name, image });
+    const company = await updateCompany.execute(id, { name, image, stage });
 
     return res.status(200).json(company);
   }

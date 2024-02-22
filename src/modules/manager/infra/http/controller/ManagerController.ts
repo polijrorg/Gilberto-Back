@@ -6,6 +6,7 @@ import DeleteManagerService from '@modules/manager/services/DeleteManagerService
 import GetAllManagerByCompanyService from '@modules/manager/services/GetAllManagerByCompanyService';
 import UpdateManagerService from '@modules/manager/services/UpdateManagerService';
 import AuthenticateManagerService from '@modules/manager/services/AuthenticateManagerService';
+import GetAllManagerByDirectorService from '@modules/manager/services/GetAllManagerByDirectorService';
 
 export default class ManagerController {
   public async login(req: Request, res: Response): Promise<Response> {
@@ -23,13 +24,13 @@ export default class ManagerController {
 
   public async create(req: Request, res: Response): Promise<Response> {
     const {
-      image, name, email, password, companyId,
+      image, name, email, password, companyId, directorId,
     } = req.body;
 
     const createManager = container.resolve(CreateManagerService);
 
     const manager = await createManager.execute({
-      image, name, email, password, companyId,
+      image, name, email, password, companyId, directorId,
     });
 
     return res.status(201).json(manager);
@@ -51,6 +52,16 @@ export default class ManagerController {
     const getAllManagerByCompany = container.resolve(GetAllManagerByCompanyService);
 
     const company = await getAllManagerByCompany.execute({ companyId });
+
+    return res.status(200).json(company);
+  }
+
+  public async getAllManagerByDirector(req: Request, res: Response): Promise<Response> {
+    const { directorId } = req.params;
+
+    const getAllManagerByDirector = container.resolve(GetAllManagerByDirectorService);
+
+    const company = await getAllManagerByDirector.execute(directorId);
 
     return res.status(200).json(company);
   }
