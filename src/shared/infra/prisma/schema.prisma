@@ -16,7 +16,7 @@ model Company {
   modules    ModuleCompany[]
   image      String
   name       String
-  stage      String
+  stage      String          @default("Estágio inicial")
   supervisor Supervisor[]
   created_at DateTime        @default(now())
 }
@@ -109,10 +109,31 @@ model ModuleGrades {
 }
 
 model Visit {
-  id           String   @id @default(uuid())
+  id           String       @id @default(uuid())
   storeVisited String
   dateVisited  DateTime
-  seller       Seller   @relation(fields: [sellerId], references: [id])
+  seller       Seller       @relation(fields: [sellerId], references: [id])
   sellerId     String
-  created_at   DateTime @default(now())
+  categories   Categories[]
+  created_at   DateTime     @default(now())
+}
+
+model Categories {
+  id        String      @id @default(uuid())
+  visit     Visit       @relation(fields: [visitId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  visitId   String
+  questions Questions[]
+  name      String
+  number    Int
+  comments  String
+  grade     Float
+}
+
+model Questions {
+  id           String     @id @default(uuid())
+  question     String
+  number       Int
+  grade        Float
+  categories   Categories @relation(fields: [categoriesId], references: [id])
+  categoriesId String
 }

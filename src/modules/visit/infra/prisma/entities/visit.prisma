@@ -4,10 +4,17 @@ model Visit {
   dateVisited  DateTime
   seller       Seller    @relation(fields: [sellerId], references: [id])
   sellerId     String
+  categories   Categories[]
   created_at   DateTime  @default(now())
 }
 
 model Seller {
   id           String    @id @default(uuid())
   visit        Visit[]
+}
+
+model Categories {
+  id           String    @id @default(uuid())
+  visit        Visit     @relation(fields: [visitId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  visitId      String
 }
