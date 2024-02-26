@@ -1,0 +1,13 @@
+model Questions {
+  id           String    @id @default(uuid())
+  question     String
+  number       Int
+  grade        Float
+  categories   Categories @relation(fields: [categoriesId], references: [id])
+  categoriesId String
+}
+
+model Categories {
+  id           String    @id @default(uuid())
+  questions    Questions[]
+}
