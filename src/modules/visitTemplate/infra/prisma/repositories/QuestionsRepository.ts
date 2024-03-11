@@ -1,8 +1,8 @@
 import prisma from '@shared/infra/prisma/client';
 import { Prisma, Questions } from '@prisma/client';
 
-import IQuestionsRepository from '@modules/visit/repositories/IQuestionsRepository';
-import ICreateQuestionsDTO from '@modules/visit/dtos/ICreateQuestionsDTO';
+import IQuestionsRepository from '@modules/visitTemplate/repositories/IQuestionsRepository';
+import ICreateQuestionsDTO from '@modules/visitTemplate/dtos/ICreateQuestionsDTO';
 
 export default class QuestionsRepository implements IQuestionsRepository {
   private ormRepository: Prisma.QuestionsDelegate<Prisma.RejectOnNotFound | Prisma.RejectPerOperation | undefined>

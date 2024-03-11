@@ -10,6 +10,6 @@ categoriesRoutes.post('/create', categoriesController.create);
 
 categoriesRoutes.delete('/delete/:id', categoriesController.delete);
 
-categoriesRoutes.get('/getAll/:visitId', categoriesController.getAllCategoriesByVisit);
+categoriesRoutes.get('/getAll/:visitTemplateId', categoriesController.getAllCategoriesByVisit);
 
 export default categoriesRoutes;

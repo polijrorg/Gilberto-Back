@@ -1,27 +1,27 @@
 import { inject, injectable } from 'tsyringe';
 
-import { Visit } from '@prisma/client';
+import { VisitGrades } from '@prisma/client';
 
 import AppError from '@shared/errors/AppError';
 
 import ISellerRepository from '@modules/seller/repositories/ISellerRepository';
-import IVisitRepository from '../repositories/IVisitRepository';
+import IVisitGradesRepository from '../repositories/IVisitGradesRepository';
 
 @injectable()
-export default class GetAllVisitBySellerService {
+export default class GetAllVisitGradesService {
   constructor(
-    @inject('VisitRepository')
-    private visitRepository: IVisitRepository,
+    @inject('VisitGradesRepository')
+    private visitGradesRepository: IVisitGradesRepository,
     @inject('SellerRepository')
     private sellerRepository: ISellerRepository,
   ) { }
 
-  public async execute(sellerId: string): Promise<Visit[] | null> {
+  public async execute(sellerId: string): Promise<VisitGrades[] | null> {
     const sellerExists = await this.sellerRepository.findById(sellerId);
 
     if (!sellerExists) throw new AppError('A seller with this Id does not exist');
 
-    const seller = await this.visitRepository.getAllBySeller(sellerId);
+    const seller = await this.visitGradesRepository.getAllBySeller(sellerId);
 
     return seller;
   }

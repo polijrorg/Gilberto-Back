@@ -4,24 +4,24 @@ import { Categories } from '@prisma/client';
 
 import AppError from '@shared/errors/AppError';
 
-import IVisitRepository from '../repositories/IVisitRepository';
+import IVisitTemplateRepository from '../repositories/IVisitTemplateRepository';
 import ICategoriesRepository from '../repositories/ICategoriesRepository';
 
 @injectable()
 export default class GetAllCategoriesByVisitService {
   constructor(
-    @inject('VisitRepository')
-    private visitRepository: IVisitRepository,
+    @inject('VisitTemplateRepository')
+    private visitTemplateRepository: IVisitTemplateRepository,
     @inject('CategoriesRepository')
     private categoriesRepository: ICategoriesRepository,
   ) { }
 
-  public async execute(visitId: string): Promise<Categories[] | null> {
-    const sellerExists = await this.visitRepository.findById(visitId);
+  public async execute(visitTemplateId: string): Promise<Categories[] | null> {
+    const sellerExists = await this.visitTemplateRepository.findById(visitTemplateId);
 
-    if (!sellerExists) throw new AppError('A visit with this Id does not exist');
+    if (!sellerExists) throw new AppError('A visit template with this Id does not exist');
 
-    const seller = await this.categoriesRepository.getAllByVisit(visitId);
+    const seller = await this.categoriesRepository.getAllByVisit(visitTemplateId);
 
     return seller;
   }

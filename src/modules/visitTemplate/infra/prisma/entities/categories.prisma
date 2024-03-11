@@ -1,21 +1,20 @@
 model Categories {
-  id           String    @id @default(uuid())
-  name         String
-  number       Int
-  comments     String
-  grade        Float
-  visit        Visit     @relation(fields: [visitId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  visitId      String
-  questions    Questions[]
+  id              String    @id @default(uuid())
+  name            String
+  number          Int
+  comments        String
+  visitTemplate   VisitTemplate @relation(fields: [visitTemplateId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  visitTemplateId String
+  questions       Questions[]
 }
 
 model Questions {
-  id           String    @id @default(uuid())
-  categories   Categories @relation(fields: [categoriesId], references: [id])
-  categoriesId String
+  id              String    @id @default(uuid())
+  categories      Categories @relation(fields: [categoriesId], references: [id])
+  categoriesId    String
 }
 
-model Visit {
-  id           String    @id @default(uuid())
-  categories   Categories[]
+model VisitTemplate {
+  id              String    @id @default(uuid())
+  categories      Categories[]
 }
