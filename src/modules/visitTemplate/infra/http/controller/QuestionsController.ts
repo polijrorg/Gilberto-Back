@@ -1,20 +1,20 @@
 import { Request, Response } from 'express';
 import { container } from 'tsyringe';
 
-import CreateQuestionsService from '@modules/visit/services/CreateQuestionsService';
-import DeleteQuestionsService from '@modules/visit/services/DeleteQuestionsService';
-import GetAllQuestionsByCategoryService from '@modules/visit/services/GetAllQuestionsByCategoryService';
+import CreateQuestionsService from '@modules/visitTemplate/services/CreateQuestionsService';
+import DeleteQuestionsService from '@modules/visitTemplate/services/DeleteQuestionsService';
+import GetAllQuestionsByCategoryService from '@modules/visitTemplate/services/GetAllQuestionsByCategoryService';
 
 export default class QuestionsController {
   public async create(req: Request, res: Response): Promise<Response> {
     const {
-      question, grade, number, categoriesId,
+      question, number, categoriesId,
     } = req.body;
 
     const createManager = container.resolve(CreateQuestionsService);
 
     const manager = await createManager.execute({
-      question, grade, number, categoriesId,
+      question, number, categoriesId,
     });
 
     return res.status(201).json(manager);

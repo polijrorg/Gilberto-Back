@@ -1,8 +1,8 @@
 import prisma from '@shared/infra/prisma/client';
 import { Prisma, Categories } from '@prisma/client';
 
-import ICategoriesRepository from '@modules/visit/repositories/ICategoriesRepository';
-import ICreateCategoriesDTO from '@modules/visit/dtos/ICreateCategoriesDTO';
+import ICategoriesRepository from '@modules/visitTemplate/repositories/ICategoriesRepository';
+import ICreateCategoriesDTO from '@modules/visitTemplate/dtos/ICreateCategoriesDTO';
 
 export default class CategoriesRepository implements ICategoriesRepository {
   private ormRepository: Prisma.CategoriesDelegate<Prisma.RejectOnNotFound | Prisma.RejectPerOperation | undefined>
@@ -29,8 +29,8 @@ export default class CategoriesRepository implements ICategoriesRepository {
     return seller;
   }
 
-  public async getAllByVisit(visitId: string): Promise<Categories[] | null> {
-    const seller = await this.ormRepository.findMany({ where: { visitId }, orderBy: { number: 'asc' } });
+  public async getAllByVisit(visitTemplateId: string): Promise<Categories[] | null> {
+    const seller = await this.ormRepository.findMany({ where: { visitTemplateId }, orderBy: { number: 'asc' } });
 
     return seller;
   }

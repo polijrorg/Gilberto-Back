@@ -2,8 +2,7 @@ interface ICreateCategoriesDTO {
   name: string;
   number: number;
   comments: string;
-  grade: number;
-  visitId: string;
+  visitTemplateId: string;
 }
 
 export default ICreateCategoriesDTO;

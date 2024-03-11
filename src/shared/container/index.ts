@@ -26,14 +26,20 @@ import ModuleCompanyRepository from '@modules/company/infra/prisma/repositories/
 import IDirectorRepository from '@modules/director/repositories/IDirectorRepository';
 import DirectorRepository from '@modules/director/infra/prisma/repositories/DirectorRepository';
 
+import IVisitTemplateRepository from '@modules/visitTemplate/repositories/IVisitTemplateRepository';
+import VisitTemplateRepository from '@modules/visitTemplate/infra/prisma/repositories/VisitTemplateRepository';
+
+import ICategoriesRepository from '@modules/visitTemplate/repositories/ICategoriesRepository';
+import CategoriesRepository from '@modules/visitTemplate/infra/prisma/repositories/CategoriesRepository';
+
+import IQuestionsRepository from '@modules/visitTemplate/repositories/IQuestionsRepository';
+import QuestionsRepository from '@modules/visitTemplate/infra/prisma/repositories/QuestionsRepository';
+
 import IVisitRepository from '@modules/visit/repositories/IVisitRepository';
 import VisitRepository from '@modules/visit/infra/prisma/repositories/VisitRepository';
 
-import ICategoriesRepository from '@modules/visit/repositories/ICategoriesRepository';
-import CategoriesRepository from '@modules/visit/infra/prisma/repositories/CategoriesRepository';
-
-import IQuestionsRepository from '@modules/visit/repositories/IQuestionsRepository';
-import QuestionsRepository from '@modules/visit/infra/prisma/repositories/QuestionsRepository';
+import IVisitGradesRepository from '@modules/visit/repositories/IVisitGradesRepository';
+import VisitGradesRepository from '@modules/visit/infra/prisma/repositories/VisitGradesRepository';
 
 container.registerSingleton<ISupervisorRepository>('SupervisorRepository', SupervisorRepository);
 
@@ -49,6 +55,9 @@ container.registerSingleton<IModuleCompanyRepository>('ModuleCompanyRepository',
 
 container.registerSingleton<IDirectorRepository>('DirectorRepository', DirectorRepository);
 
-container.registerSingleton<IVisitRepository>('VisitRepository', VisitRepository);
+container.registerSingleton<IVisitTemplateRepository>('VisitTemplateRepository', VisitTemplateRepository);
 container.registerSingleton<ICategoriesRepository>('CategoriesRepository', CategoriesRepository);
 container.registerSingleton<IQuestionsRepository>('QuestionsRepository', QuestionsRepository);
+
+container.registerSingleton<IVisitRepository>('VisitRepository', VisitRepository);
+container.registerSingleton<IVisitGradesRepository>('VisitGradesRepository', VisitGradesRepository);

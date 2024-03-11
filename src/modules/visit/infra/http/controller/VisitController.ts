@@ -8,13 +8,13 @@ import getAllVisitBySellerService from '@modules/visit/services/GetAllVisitBySel
 export default class VisitController {
   public async create(req: Request, res: Response): Promise<Response> {
     const {
-      storeVisited, dateVisited, sellerId,
+      storeVisited, dateVisited, sellerId, visitTemplateId,
     } = req.body;
 
     const createManager = container.resolve(CreateVisitService);
 
     const manager = await createManager.execute({
-      storeVisited, dateVisited, sellerId,
+      storeVisited, dateVisited, sellerId, visitTemplateId,
     });
 
     return res.status(201).json(manager);
