@@ -6,7 +6,7 @@ model ModuleGrades {
   supervisorComment   String
   module              Module     @relation(fields: [moduleId], references: [id])
   moduleId            String
-  seller              Seller     @relation(fields: [sellerId], references: [id])
+  seller              Seller     @relation(fields: [sellerId], references: [id], onDelete: Cascade)
   sellerId            String
   created_at          DateTime   @default(now())
 }

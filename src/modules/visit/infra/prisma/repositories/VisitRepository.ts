@@ -3,6 +3,7 @@ import { Prisma, Visit } from '@prisma/client';
 
 import IVisitRepository from '@modules/visit/repositories/IVisitRepository';
 import ICreateVisitDTO from '@modules/visit/dtos/ICreateVisitDTO';
+import IUpdateVisitDTO from '@modules/visit/dtos/IUpdateVisitDTO';
 
 export default class VisitRepository implements IVisitRepository {
   private ormRepository: Prisma.VisitDelegate<Prisma.RejectOnNotFound | Prisma.RejectPerOperation | undefined>
@@ -31,6 +32,12 @@ export default class VisitRepository implements IVisitRepository {
 
   public async getAllBySeller(sellerId: string): Promise<Visit[] | null> {
     const seller = await this.ormRepository.findMany({ where: { sellerId }, orderBy: { dateVisited: 'asc' } });
+
+    return seller;
+  }
+
+  public async update(id: string, data: IUpdateVisitDTO): Promise<Visit> {
+    const seller = await this.ormRepository.update({ where: { id }, data });
 
     return seller;
   }

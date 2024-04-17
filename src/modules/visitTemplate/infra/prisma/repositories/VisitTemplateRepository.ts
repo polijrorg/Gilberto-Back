@@ -48,6 +48,78 @@ export default class VisitTemplateRepository implements IVisitTemplateRepository
     return seller;
   }
 
+  public async getManagerIdBySeller(sellerId: string): Promise<string | null> {
+    const seller = await prisma.seller.findFirst({
+      where: { id: sellerId },
+      select: { supervisorId: true },
+    });
+
+    let supervisor;
+
+    if (seller && seller.supervisorId) {
+      supervisor = await prisma.supervisor.findFirst({
+        where: { id: seller.supervisorId },
+        select: { managerId: true },
+      });
+    }
+
+    if (supervisor) {
+      return supervisor.managerId;
+    }
+
+    return null;
+  }
+
+  public async getDirectorIdBySeller(sellerId: string): Promise<string | null> {
+    const managerId = await this.getManagerIdBySeller(sellerId);
+
+    if (managerId) {
+      const manager = await prisma.manager.findFirst({
+        where: { id: managerId },
+        select: { directorId: true },
+      });
+
+      if (manager) {
+        return manager.directorId;
+      }
+    }
+
+    return null; // Se o gerente não for encontrado ou não estiver vinculado a um diretor
+  }
+
+  public async getCompanyIdBySeller(sellerId: string): Promise<string | null> {
+    const company = await prisma.seller.findFirst({
+      where: { id: sellerId },
+      select: { companyId: true },
+    });
+
+    if (company) {
+      return company.companyId;
+    }
+
+    return null;
+  }
+
+  public async getVisitTemplateForSeller(sellerId: string): Promise<VisitTemplate | null> {
+    const managerId = await this.getManagerIdBySeller(sellerId);
+
+    let visitTemplate = await this.ormRepository.findFirst({ where: { managerId } });
+
+    if (visitTemplate) return visitTemplate;
+
+    const directorId = await this.getDirectorIdBySeller(sellerId);
+
+    visitTemplate = await this.ormRepository.findFirst({ where: { directorId } });
+
+    if (visitTemplate) return visitTemplate;
+
+    const companyId = await this.getCompanyIdBySeller(sellerId);
+
+    visitTemplate = await this.ormRepository.findFirst({ where: { companyId } });
+
+    return visitTemplate;
+  }
+
   public async update(id: string, data: IUpdateVisitTemplateDTO): Promise<VisitTemplate> {
     const seller = await this.ormRepository.update({ where: { id }, data });
 

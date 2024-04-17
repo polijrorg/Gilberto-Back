@@ -4,6 +4,7 @@ import { container } from 'tsyringe';
 import CreateVisitService from '@modules/visit/services/CreateVisitService';
 import DeleteVisitService from '@modules/visit/services/DeleteVisitService';
 import getAllVisitBySellerService from '@modules/visit/services/GetAllVisitBySellerService';
+import UpdateVisitService from '@modules/visit/services/UpdateVisitService';
 
 export default class VisitController {
   public async create(req: Request, res: Response): Promise<Response> {
@@ -36,6 +37,17 @@ export default class VisitController {
     const getAllManagerByCompany = container.resolve(getAllVisitBySellerService);
 
     const company = await getAllManagerByCompany.execute(sellerId);
+
+    return res.status(200).json(company);
+  }
+
+  public async update(req: Request, res: Response): Promise<Response> {
+    const { id } = req.params;
+    const { grade, comments } = req.body;
+
+    const getAllManagerByCompany = container.resolve(UpdateVisitService);
+
+    const company = await getAllManagerByCompany.execute(id, { grade, comments });
 
     return res.status(200).json(company);
   }
