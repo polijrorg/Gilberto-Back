@@ -25,12 +25,12 @@ model Company {
 
 model ModuleGrades {
   id          String     @id @default(uuid())
-  seller      Seller     @relation(fields: [sellerId], references: [id])
+  seller      Seller     @relation(fields: [sellerId], references: [id], onDelete: Cascade)
   sellerId    String
 }
 
 model Visit {
   id          String     @id @default(uuid())
-  seller      Seller     @relation(fields: [sellerId], references: [id])
+  seller      Seller     @relation(fields: [sellerId], references: [id], onDelete: Cascade)
   sellerId    String
 }

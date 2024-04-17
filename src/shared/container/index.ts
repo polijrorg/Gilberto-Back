@@ -35,11 +35,14 @@ import CategoriesRepository from '@modules/visitTemplate/infra/prisma/repositori
 import IQuestionsRepository from '@modules/visitTemplate/repositories/IQuestionsRepository';
 import QuestionsRepository from '@modules/visitTemplate/infra/prisma/repositories/QuestionsRepository';
 
+import IQuestionsGradesRepository from '@modules/visitTemplate/repositories/IQuestionsGradesRepository';
+import QuestionsGradesRepository from '@modules/visitTemplate/infra/prisma/repositories/QuestionsGradesRepository';
+
 import IVisitRepository from '@modules/visit/repositories/IVisitRepository';
 import VisitRepository from '@modules/visit/infra/prisma/repositories/VisitRepository';
 
-import IVisitGradesRepository from '@modules/visit/repositories/IVisitGradesRepository';
-import VisitGradesRepository from '@modules/visit/infra/prisma/repositories/VisitGradesRepository';
+import IActionPlansRepository from '@modules/actionPlans/repositories/IActionPlansRepository';
+import ActionPlansRepository from '@modules/actionPlans/infra/prisma/repositories/ActionPlansRepository';
 
 container.registerSingleton<ISupervisorRepository>('SupervisorRepository', SupervisorRepository);
 
@@ -58,6 +61,8 @@ container.registerSingleton<IDirectorRepository>('DirectorRepository', DirectorR
 container.registerSingleton<IVisitTemplateRepository>('VisitTemplateRepository', VisitTemplateRepository);
 container.registerSingleton<ICategoriesRepository>('CategoriesRepository', CategoriesRepository);
 container.registerSingleton<IQuestionsRepository>('QuestionsRepository', QuestionsRepository);
+container.registerSingleton<IQuestionsGradesRepository>('QuestionsGradesRepository', QuestionsGradesRepository);
 
 container.registerSingleton<IVisitRepository>('VisitRepository', VisitRepository);
-container.registerSingleton<IVisitGradesRepository>('VisitGradesRepository', VisitGradesRepository);
+
+container.registerSingleton<IActionPlansRepository>('ActionPlansRepository', ActionPlansRepository);

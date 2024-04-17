@@ -12,7 +12,8 @@ import visitTemplateRoutes from '@modules/visitTemplate/infra/http/routes/visitT
 import categoriesRoutes from '@modules/visitTemplate/infra/http/routes/categories.routes';
 import questionsRoutes from '@modules/visitTemplate/infra/http/routes/questions.routes';
 import visitRoutes from '@modules/visit/infra/http/routes/visit.routes';
-import visitGradesRoutes from '@modules/visit/infra/http/routes/visitGrades.routes';
+import actionPlansRoutes from '@modules/actionPlans/infra/http/routes/actionPlans.routes';
+import questionsGradesRoutes from '@modules/visitTemplate/infra/http/routes/questionsGrades.routes';
 
 const routes = Router();
 
@@ -40,9 +41,12 @@ routes.use('/moduleGrades', moduleGradesRoutes);
 routes.use('/visitTemplate', visitTemplateRoutes);
 routes.use('/categories', categoriesRoutes);
 routes.use('/questions', questionsRoutes);
+routes.use('/questionsGrades', questionsGradesRoutes);
 
-// Visit and VisitGrades
+// Visit
 routes.use('/visit', visitRoutes);
-routes.use('/visitGrades', visitGradesRoutes);
+
+// ActionPlans
+routes.use('/actionPlans', actionPlansRoutes);
 
 export default routes;

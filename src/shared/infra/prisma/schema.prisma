@@ -8,6 +8,79 @@ generator client {
   provider = "prisma-client-js"
 }
 
+model ActionPlans {
+  id           String     @id @default(uuid())
+  prize        String
+  comments     String
+  title        String
+  sellerId     String
+  done         Boolean    @default(false)
+  seller       Seller     @relation(fields: [sellerId], references: [id])
+  supervisorId String
+  supervisor   Supervisor @relation(fields: [supervisorId], references: [id])
+  visitId      String?    @unique
+  visit        Visit?     @relation(fields: [visitId], references: [id])
+  moduleId     String?    @unique
+  module       Module?    @relation(fields: [moduleId], references: [id])
+  created_at   DateTime   @default(now())
+}
+
+model Supervisor {
+  id         String        @id @default(uuid())
+  image      String
+  name       String
+  email      String
+  password   String
+  job        String        @default("Supervisor")
+  seller     Seller[]
+  manager    Manager?      @relation(fields: [managerId], references: [id])
+  managerId  String?
+  created_at DateTime      @default(now())
+  company    Company       @relation(fields: [companyId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  companyId  String
+  actionPlan ActionPlans[]
+}
+
+model Seller {
+  id              String            @id @default(uuid())
+  questionsGrades QuestionsGrades[]
+  visit           Visit[]
+  supervisor      Supervisor        @relation(fields: [supervisorId], references: [id])
+  supervisorId    String
+  image           String
+  name            String
+  email           String            @unique
+  job             String            @default("Vendedor")
+  company         Company           @relation(fields: [companyId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  companyId       String
+  moduleGrades    ModuleGrades[]
+  created_at      DateTime          @default(now())
+  actionPlan      ActionPlans[]
+}
+
+model Visit {
+  id              String        @id @default(uuid())
+  storeVisited    String
+  dateVisited     String
+  grade           Float         @default(0)
+  comments        String        @default("")
+  seller          Seller        @relation(fields: [sellerId], references: [id], onDelete: Cascade)
+  sellerId        String
+  visitTemplate   VisitTemplate @relation(fields: [visitTemplateId], references: [id])
+  visitTemplateId String
+  created_at      DateTime      @default(now())
+  actionPlan      ActionPlans?
+}
+
+model Module {
+  id           String          @id @default(uuid())
+  sellerGrades ModuleGrades[]
+  name         String
+  companies    ModuleCompany[]
+  created_at   DateTime        @default(now())
+  actionPlan   ActionPlans?
+}
+
 model Company {
   id            String          @id @default(uuid())
   visitTemplate VisitTemplate?
@@ -20,38 +93,6 @@ model Company {
   stage         String          @default("Estágio inicial")
   supervisor    Supervisor[]
   created_at    DateTime        @default(now())
-}
-
-model Seller {
-  id           String         @id @default(uuid())
-  visitGrades  VisitGrades[]
-  visit        Visit[]
-  supervisor   Supervisor     @relation(fields: [supervisorId], references: [id])
-  supervisorId String
-  image        String
-  name         String
-  email        String         @unique
-  job          String         @default("Vendedor")
-  company      Company        @relation(fields: [companyId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  companyId    String
-  moduleGrades ModuleGrades[]
-  created_at   DateTime       @default(now())
-  VisitGrade   VisitGrade[]
-}
-
-model Supervisor {
-  id         String   @id @default(uuid())
-  image      String
-  name       String
-  email      String
-  password   String
-  job        String   @default("Supervisor")
-  seller     Seller[]
-  manager    Manager? @relation(fields: [managerId], references: [id])
-  managerId  String?
-  created_at DateTime @default(now())
-  company    Company  @relation(fields: [companyId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  companyId  String
 }
 
 model Manager {
@@ -92,17 +133,9 @@ model ModuleCompany {
   company   Company @relation(fields: [companyId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 }
 
-model Module {
-  id           String          @id @default(uuid())
-  sellerGrades ModuleGrades[]
-  name         String
-  companies    ModuleCompany[]
-  created_at   DateTime        @default(now())
-}
-
 model ModuleGrades {
   id                  String   @id @default(uuid())
-  seller              Seller   @relation(fields: [sellerId], references: [id])
+  seller              Seller   @relation(fields: [sellerId], references: [id], onDelete: Cascade)
   sellerId            String
   implementationScore Float
   knowledgeScore      Float
@@ -113,31 +146,10 @@ model ModuleGrades {
   created_at          DateTime @default(now())
 }
 
-model Visit {
-  id              String        @id @default(uuid())
-  visitGrade      VisitGrades?
-  storeVisited    String
-  dateVisited     String
-  seller          Seller        @relation(fields: [sellerId], references: [id])
-  sellerId        String
-  visitTemplate   VisitTemplate @relation(fields: [visitTemplateId], references: [id])
-  visitTemplateId String
-  created_at      DateTime      @default(now())
-  VisitGrade      VisitGrade[]
-}
-
-model VisitGrade {
-  id       String @id @default(uuid())
-  visit    Visit  @relation(fields: [visitId], references: [id])
-  visitId  String @unique
-  seller   Seller @relation(fields: [sellerId], references: [id])
-  sellerId String
-}
-
 model VisitTemplate {
   id         String       @id @default(uuid())
-  company    Company      @relation(fields: [companyId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  companyId  String       @unique
+  company    Company?     @relation(fields: [companyId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  companyId  String?      @unique
   manager    Manager?     @relation(fields: [managerId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   managerId  String?      @unique
   director   Director?    @relation(fields: [directorId], references: [id], onDelete: Cascade, onUpdate: Cascade)
@@ -146,16 +158,6 @@ model VisitTemplate {
   created_at DateTime     @default(now())
   updated_at DateTime     @updatedAt
   visit      Visit[]
-}
-
-model VisitGrades {
-  id       String @id @default(uuid())
-  grade    Int    @default(0)
-  comments String
-  visit    Visit  @relation(fields: [visitId], references: [id])
-  visitId  String @unique
-  seller   Seller @relation(fields: [sellerId], references: [id])
-  sellerId String
 }
 
 model Categories {
@@ -169,9 +171,20 @@ model Categories {
 }
 
 model Questions {
-  id           String     @id @default(uuid())
+  id           String            @id @default(uuid())
+  grade        QuestionsGrades[]
   question     String
   number       Int
-  categories   Categories @relation(fields: [categoriesId], references: [id])
+  categories   Categories        @relation(fields: [categoriesId], references: [id])
   categoriesId String
+}
+
+model QuestionsGrades {
+  id          String    @id @default(uuid())
+  grade       Float
+  question    Questions @relation(fields: [questionsId], references: [id])
+  questionsId String
+  seller      Seller    @relation(fields: [sellerId], references: [id])
+  sellerId    String
+  created_at  DateTime  @default(now())
 }

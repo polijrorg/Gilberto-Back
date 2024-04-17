@@ -1,7 +1,7 @@
 model VisitTemplate {
   id            String    @id @default(uuid())
-  company       Company   @relation(fields: [companyId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  companyId     String    @unique
+  company       Company?  @relation(fields: [companyId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  companyId     String?   @unique
   manager       Manager?  @relation(fields: [managerId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   managerId     String?   @unique
   director      Director? @relation(fields: [directorId], references: [id], onDelete: Cascade, onUpdate: Cascade)

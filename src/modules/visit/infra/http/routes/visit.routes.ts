@@ -12,4 +12,6 @@ visitRoutes.delete('/delete/:id', visitController.delete);
 
 visitRoutes.get('/getAll/:sellerId', visitController.getAllVisitBySeller);
 
+visitRoutes.get('/update/:id', visitController.update);
+
 export default visitRoutes;
