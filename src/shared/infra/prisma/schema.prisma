@@ -51,6 +51,7 @@ model Seller {
   name            String
   email           String            @unique
   job             String            @default("Vendedor")
+  stage           Stage             @default(Pendente)
   company         Company           @relation(fields: [companyId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   companyId       String
   moduleGrades    ModuleGrades[]
@@ -187,4 +188,10 @@ model QuestionsGrades {
   seller      Seller    @relation(fields: [sellerId], references: [id])
   sellerId    String
   created_at  DateTime  @default(now())
+}
+
+enum Stage {
+  Pendente
+  Mentoria
+  Visita
 }

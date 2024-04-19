@@ -3,6 +3,7 @@ interface IUpdateSellerDTO {
   name?: string;
   email?: string;
   supervisorId?: string;
+  stage?: string;
 }
 
 export default IUpdateSellerDTO;

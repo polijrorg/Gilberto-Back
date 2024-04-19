@@ -42,6 +42,24 @@ export default class SellerRepository implements ISellerRepository {
     return seller;
   }
 
+  public async getAllSellerPendenteFromASupervisor(supervisorId: string): Promise<Seller[] | null> {
+    const seller = await this.ormRepository.findMany({ where: { supervisorId, stage: 'Pendente' }, orderBy: { name: 'asc' } });
+
+    return seller;
+  }
+
+  public async getAllSellerMentoriaFromASupervisor(supervisorId: string): Promise<Seller[] | null> {
+    const seller = await this.ormRepository.findMany({ where: { supervisorId, stage: 'Mentoria' }, orderBy: { name: 'asc' } });
+
+    return seller;
+  }
+
+  public async getAllSellerVisitaFromASupervisor(supervisorId: string): Promise<Seller[] | null> {
+    const seller = await this.ormRepository.findMany({ where: { supervisorId, stage: 'Visita' }, orderBy: { name: 'asc' } });
+
+    return seller;
+  }
+
   public async getAllSellerFromAManager(managerId: string): Promise<Seller[] | null> {
     const supervisors = await prisma.supervisor.findMany({
       where: { managerId },
