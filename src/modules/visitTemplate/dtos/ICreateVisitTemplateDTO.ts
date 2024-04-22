@@ -1,5 +1,5 @@
 interface ICreateVisitTemplateDTO {
-  companyId: string;
+  companyId?: string;
   directorId?: string;
   managerId?: string;
 }
