@@ -4,6 +4,7 @@ model Seller {
   name         String
   email        String     @unique
   job          String     @default("Vendedor")
+  stage        Stage      @default(Pendente)
   supervisor   Supervisor @relation(fields: [supervisorId], references: [id])
   supervisorId String
   company      Company    @relation(fields: [companyId], references: [id], onDelete: Cascade, onUpdate: Cascade)
@@ -11,6 +12,12 @@ model Seller {
   moduleGrades ModuleGrades[]
   visit        Visit[]
   created_at   DateTime   @default(now())
+}
+
+enum Stage {
+  Pendente
+  Mentoria
+  Visita
 }
 
 model Supervisor {

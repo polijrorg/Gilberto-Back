@@ -4,6 +4,9 @@ import { container } from 'tsyringe';
 import CreateSellerService from '@modules/seller/services/CreateSellerService';
 import DeleteSellerService from '@modules/seller/services/DeleteSellerService';
 import GetAllSellerFromASupervisorService from '@modules/seller/services/GetAllSellerFromASupervisorService';
+import GetAllSellerPendenteFromASupervisorService from '@modules/seller/services/GetAllSellerPendenteFromASupervisorService';
+import GetAllSellerVisitaFromASupervisorService from '@modules/seller/services/GetAllSellerVisitaFromASupervisorService';
+import GetAllSellerMentoriaFromASupervisorService from '@modules/seller/services/GetAllSellerMentoriaFromASupervisorService';
 import GetAllSellerFromACompanyService from '@modules/seller/services/GetAllSellerFromACompanyService';
 import UpdateSellerService from '@modules/seller/services/UpdateSellerService';
 import GetAllSellerFromAManagerService from '@modules/seller/services/GetAllSellerFromAManagerService';
@@ -12,13 +15,13 @@ import GetAllSellerFromADirectorService from '@modules/seller/services/GetAllSel
 export default class SellerController {
   public async create(req: Request, res: Response): Promise<Response> {
     const {
-      image, name, email, supervisorId, companyId,
+      image, name, email, supervisorId, companyId, stage,
     } = req.body;
 
     const createSeller = container.resolve(CreateSellerService);
 
     const seller = await createSeller.execute({
-      image, name, email, supervisorId, companyId,
+      image, name, email, supervisorId, companyId, stage,
     });
 
     return res.status(201).json(seller);
@@ -38,6 +41,36 @@ export default class SellerController {
     const { supervisorId } = req.params;
 
     const getAllSeller = container.resolve(GetAllSellerFromASupervisorService);
+
+    const seller = await getAllSeller.execute(supervisorId);
+
+    return res.status(200).json(seller);
+  }
+
+  public async getAllPendenteFromASupervisor(req: Request, res: Response): Promise<Response> {
+    const { supervisorId } = req.params;
+
+    const getAllSeller = container.resolve(GetAllSellerPendenteFromASupervisorService);
+
+    const seller = await getAllSeller.execute(supervisorId);
+
+    return res.status(200).json(seller);
+  }
+
+  public async getAllVisitaFromASupervisor(req: Request, res: Response): Promise<Response> {
+    const { supervisorId } = req.params;
+
+    const getAllSeller = container.resolve(GetAllSellerVisitaFromASupervisorService);
+
+    const seller = await getAllSeller.execute(supervisorId);
+
+    return res.status(200).json(seller);
+  }
+
+  public async getAllMentoriaFromASupervisor(req: Request, res: Response): Promise<Response> {
+    const { supervisorId } = req.params;
+
+    const getAllSeller = container.resolve(GetAllSellerMentoriaFromASupervisorService);
 
     const seller = await getAllSeller.execute(supervisorId);
 
@@ -76,11 +109,15 @@ export default class SellerController {
 
   public async update(req: Request, res: Response): Promise<Response> {
     const { id } = req.params;
-    const { image, name, supervisorId } = req.body;
+    const {
+      image, name, supervisorId, stage,
+    } = req.body;
 
     const updateSeller = container.resolve(UpdateSellerService);
 
-    const seller = await updateSeller.execute(id, { image, name, supervisorId });
+    const seller = await updateSeller.execute(id, {
+      image, name, supervisorId, stage,
+    });
 
     return res.status(200).json(seller);
   }
