@@ -4,8 +4,12 @@ import { container } from 'tsyringe';
 import CreateActionPlansService from '@modules/actionPlans/services/CreateActionPlansService';
 import DeleteActionPlansService from '@modules/actionPlans/services/DeleteActionPlansService';
 import GetAllActionPlansService from '@modules/actionPlans/services/GetAllActionPlansService';
+import GetByIdAllActionByIdSeller from '@modules/actionPlans/services/GetByIdAllActionByIdSeller';
 import UpdateActionPlansService from '@modules/actionPlans/services/UpdateActionPlansService';
 import MarkActionPlanAsDoneService from '@modules/actionPlans/services/MarkActionPlanAsDoneService';
+
+//Component Error do Template
+import AppError from '@shared/errors/AppError';
 
 export default class ActionPlansController {
   public async create(req: Request, res: Response): Promise<Response> {
@@ -38,6 +42,17 @@ export default class ActionPlansController {
     const module = await getAllModule.execute();
 
     return res.status(200).json(module);
+  }
+
+  public async getActionPlansByIdSeller(req: Request, res:Response): Promise<Response>{
+    try {
+      const { idSeller } = req.params;
+      const getActionPlans = container.resolve(GetByIdAllActionByIdSeller);
+      const plans = await getActionPlans.execute({ idSeller});
+      return res.status(200).json(plans)
+    } catch (error) {
+      return res.status(error.statusCode || 500).json(error.message);
+    }
   }
 
   public async update(req: Request, res: Response): Promise<Response> {

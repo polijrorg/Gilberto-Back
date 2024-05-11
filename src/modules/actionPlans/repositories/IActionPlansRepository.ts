@@ -7,6 +7,7 @@ interface IActionPlansRepository {
   create(data: ICreateActionPlansDTO): Promise<ActionPlans>;
   delete(id: string): Promise<ActionPlans>;
   getAll(): Promise<ActionPlans[] | null>;
+  getByIdSeller(idSeller: string): Promise<ActionPlans[] | null>;
   update(id: string, data: IUpdateActionPlansDTO): Promise<ActionPlans>;
   findById(id: string): Promise<ActionPlans | null>;
   markAsDone(id: string): Promise<ActionPlans>;

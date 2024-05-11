@@ -16,4 +16,7 @@ actionPlansRoutes.patch('/update/:id', actionPlansController.update);
 
 actionPlansRoutes.patch('/markAsDone/:id', actionPlansController.markAsDone);
 
+actionPlansRoutes.get('/getAll/:idSeller', actionPlansController.getActionPlansByIdSeller);
+
+
 export default actionPlansRoutes;

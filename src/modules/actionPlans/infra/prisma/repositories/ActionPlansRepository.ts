@@ -11,6 +11,13 @@ export default class ActionPlansRepository implements IActionPlansRepository {
   constructor() {
     this.ormRepository = prisma.actionPlans;
   }
+  public async getByIdSeller(idSeller: string): Promise<ActionPlans[] | null> {
+    const actionPlans = await this.ormRepository.findMany({
+      where: { sellerId: idSeller },
+    });
+
+    return actionPlans;
+  }
 
   public async findById(id: string): Promise<ActionPlans | null> {
     const seller = await this.ormRepository.findFirst({ where: { id } });
