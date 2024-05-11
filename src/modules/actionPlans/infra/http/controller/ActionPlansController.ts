@@ -13,17 +13,22 @@ import AppError from '@shared/errors/AppError';
 
 export default class ActionPlansController {
   public async create(req: Request, res: Response): Promise<Response> {
-    const {
-      sellerId, supervisorId, prize, comments, title, visitId, moduleId,
-    } = req.body;
+    try {
+      const {
+        sellerId, supervisorId, prize, comments, title, visitId, moduleId,
+      } = req.body;
 
-    const createModule = container.resolve(CreateActionPlansService);
+      const createModule = container.resolve(CreateActionPlansService);
 
-    const module = await createModule.execute({
-      sellerId, supervisorId, prize, comments, title, visitId, moduleId,
-    });
+      const module = await createModule.execute({
+        sellerId, supervisorId, prize, comments, title, visitId, moduleId,
+      });
 
-    return res.status(201).json(module);
+      return res.status(201).json(module);
+    } catch (error) {
+      throw new AppError(error.message, error. status)
+    }
+
   }
 
   public async delete(req: Request, res: Response): Promise<Response> {
