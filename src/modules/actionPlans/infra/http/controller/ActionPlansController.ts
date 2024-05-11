@@ -8,9 +8,6 @@ import GetByIdAllActionByIdSeller from '@modules/actionPlans/services/GetByIdAll
 import UpdateActionPlansService from '@modules/actionPlans/services/UpdateActionPlansService';
 import MarkActionPlanAsDoneService from '@modules/actionPlans/services/MarkActionPlanAsDoneService';
 
-//Component Error do Template
-import AppError from '@shared/errors/AppError';
-
 export default class ActionPlansController {
   public async create(req: Request, res: Response): Promise<Response> {
     try {
@@ -26,7 +23,7 @@ export default class ActionPlansController {
 
       return res.status(201).json(module);
     } catch (error) {
-      throw new AppError(error.message, error. status)
+      return res.status(error.statusCode || 500).json(error.message);
     }
 
   }
