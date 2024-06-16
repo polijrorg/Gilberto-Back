@@ -1,9 +1,9 @@
-import prisma from "@shared/infra/prisma/client";
-import { Prisma, Visit } from "@prisma/client";
+import prisma from '@shared/infra/prisma/client';
+import { Prisma, Visit } from '@prisma/client';
 
-import IVisitRepository from "@modules/visit/repositories/IVisitRepository";
-import ICreateVisitDTO from "@modules/visit/dtos/ICreateVisitDTO";
-import IUpdateVisitDTO from "@modules/visit/dtos/IUpdateVisitDTO";
+import IVisitRepository from '@modules/visit/repositories/IVisitRepository';
+import ICreateVisitDTO from '@modules/visit/dtos/ICreateVisitDTO';
+import IUpdateVisitDTO from '@modules/visit/dtos/IUpdateVisitDTO';
 
 export default class VisitRepository implements IVisitRepository {
   private ormRepository: Prisma.VisitDelegate<
@@ -13,6 +13,7 @@ export default class VisitRepository implements IVisitRepository {
   constructor() {
     this.ormRepository = prisma.visit;
   }
+
   public async getAll(): Promise<Visit[] | null> {
     const visits = await this.ormRepository.findMany();
     return visits;
@@ -39,7 +40,7 @@ export default class VisitRepository implements IVisitRepository {
   public async getAllBySeller(sellerId: string): Promise<Visit[] | null> {
     const seller = await this.ormRepository.findMany({
       where: { sellerId },
-      orderBy: { dateVisited: "asc" },
+      orderBy: { dateVisited: 'asc' },
     });
 
     return seller;

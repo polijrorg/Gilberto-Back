@@ -1,7 +1,10 @@
-import { Seller } from '@prisma/client';
+import {
+  Seller,
+} from '@prisma/client';
 
 import ICreateSellerDTO from '../dtos/ICreateSellerDTO';
 import IUpdateSellerDTO from '../dtos/IUpdateSellerDTO';
+import ReceiveSellerInfosDTO from '../dtos/IReceiveSellerInfosDTO';
 
 interface ISellerRepository {
   create(data: ICreateSellerDTO): Promise<Seller>;
@@ -16,6 +19,7 @@ interface ISellerRepository {
   updateSeller(id: string, data: IUpdateSellerDTO): Promise<Seller>;
   findByEmail(email: string): Promise<Seller | null>;
   findById(id: string): Promise<Seller | null>;
+  findByIdAndData(id: string, day: string): Promise<ReceiveSellerInfosDTO | null>;
 }
 
 export default ISellerRepository;
