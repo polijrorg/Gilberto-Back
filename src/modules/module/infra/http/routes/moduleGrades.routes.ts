@@ -14,4 +14,6 @@ moduleGradesRoutes.get('/getAll/:sellerId', moduleGradesController.getAllModuleG
 
 moduleGradesRoutes.patch('/update/:id', moduleGradesController.update);
 
+moduleGradesRoutes.get('/getModuleAverages', moduleGradesController.calculateModuleAverages);
+
 export default moduleGradesRoutes;
