@@ -36,6 +36,11 @@ export default class ModuleGradesRepository implements IModuleGradesRepository {
     return seller;
   }
 
+  public async getAllModuleGradesAll(): Promise<ModuleGrades[] | null> {
+    const grades = await this.ormRepository.findMany();
+    return grades;
+  }
+
   public async update(id: string, data: IUpdateModuleGradesDTO): Promise<ModuleGrades> {
     const seller = await this.ormRepository.update({ where: { id }, data });
 

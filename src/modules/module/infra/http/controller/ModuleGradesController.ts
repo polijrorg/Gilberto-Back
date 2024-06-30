@@ -3,6 +3,7 @@ import { container } from 'tsyringe';
 
 import CreateModuleGradesService from '@modules/module/services/CreateModuleGradesService';
 import DeleteModuleGradesService from '@modules/module/services/DeleteModuleGradesService';
+import CalculateModuleAveragesService from '@modules/module/services/CalculateModuleAveragesService';
 import GetAllModuleGradesFromASellerService from '@modules/module/services/GetAllModuleGradesFromASellerService';
 import UpdateModuleGradesService from '@modules/module/services/UpdateModuleGradesService';
 
@@ -21,6 +22,23 @@ export default class ModuleController {
     });
 
     return res.status(201).json(module);
+  }
+
+  public async calculateModuleAverages(req: Request, res: Response): Promise<Response> {
+    const calculateAverages = container.resolve(CalculateModuleAveragesService);
+
+    const moduleAverages = await calculateAverages.execute();
+
+    const modulesWithAverages = moduleAverages?.map((module) => {
+      const average = moduleAverages.find((avg) => avg.moduleId === module.moduleId)?.average || 0;
+      return {
+        ...module,
+        average,
+      };
+    });
+
+    return res.status(200).json(modulesWithAverages);
+    // eslint-disable-next-line no-empty
   }
 
   public async delete(req: Request, res: Response): Promise<Response> {

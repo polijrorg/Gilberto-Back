@@ -8,6 +8,7 @@ interface IModuleGradesRepository {
   create(data: ICreateModuleGradesDTO): Promise<ModuleGrades>;
   delete(id: string): Promise<ModuleGrades>;
   getAllModuleGradesFromASeller(sellerId: string): Promise<ModuleGrades[] | null>;
+  getAllModuleGradesAll(): Promise<ModuleGrades[] | null>;
   update(id:string, data: IUpdateModuleGradesDTO): Promise<ModuleGrades>;
 }
 
