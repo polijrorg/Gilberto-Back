@@ -29,16 +29,13 @@ export default class ModuleController {
 
     const moduleAverages = await calculateAverages.execute();
 
-    const modulesWithAverages = moduleAverages?.map((module) => {
-      const average = moduleAverages.find((avg) => avg.moduleId === module.moduleId)?.average || 0;
-      return {
-        ...module,
-        average,
-      };
-    });
+    // Mapeia os módulos com as médias corretas
+    const modulesWithAverages = moduleAverages.map((module) => ({
+      moduleId: module.moduleId,
+      average: module.average,
+    }));
 
     return res.status(200).json(modulesWithAverages);
-    // eslint-disable-next-line no-empty
   }
 
   public async delete(req: Request, res: Response): Promise<Response> {
