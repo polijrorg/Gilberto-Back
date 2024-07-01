@@ -1,9 +1,12 @@
 import prisma from '@shared/infra/prisma/client';
-import { Prisma, Seller } from '@prisma/client';
+import {
+  Prisma, Seller,
+} from '@prisma/client';
 
 import ISellerRepository from '@modules/seller/repositories/ISellerRepository';
 import ICreateSellerDTO from '@modules/seller/dtos/ICreateSellerDTO';
 import IUpdateSellerDTO from '@modules/seller/dtos/IUpdateSellerDTO';
+import ReceiveSellerInfosDTO from '@modules/seller/dtos/IReceiveSellerInfosDTO';
 
 export default class SellerRepository implements ISellerRepository {
   private ormRepository: Prisma.SellerDelegate<Prisma.RejectOnNotFound | Prisma.RejectPerOperation | undefined>
@@ -21,6 +24,51 @@ export default class SellerRepository implements ISellerRepository {
   public async findById(id: string): Promise<Seller | null> {
     const seller = await this.ormRepository.findFirst({ where: { id } });
 
+    return seller;
+  }
+
+  public async findByIdAndData(id: string, day: string): Promise<ReceiveSellerInfosDTO | null> {
+    const seller = await this.ormRepository.findFirst({
+      where: {
+        id,
+        visit: {
+          some: {
+            dateVisited: day,
+          },
+        },
+      },
+      select: {
+        name: true,
+        email: true,
+        visit: {
+          select: {
+            created_at: true,
+            storeVisited: true,
+            grade: true,
+            visitTemplateId: true,
+            visitTemplate: {
+              select: {
+                categories: {
+                  select: {
+                    name: true,
+                    questions: {
+                      select: {
+                        question: true,
+                        grade: {
+                          select: {
+                            grade: true,
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    });
     return seller;
   }
 

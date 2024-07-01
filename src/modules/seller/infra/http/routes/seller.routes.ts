@@ -19,6 +19,7 @@ sellerRoutes.get('/getMentoriaFromASupervisor/:supervisorId', sellerController.g
 sellerRoutes.get('/getAllFromAManager/:managerId', sellerController.getAllFromAManager);
 
 sellerRoutes.get('/getAllFromADirector/:directorId', sellerController.getAllFromADirector);
+sellerRoutes.get('/generatePdf/:sellerId/:dateVisit', sellerController.generatePdf);
 
 sellerRoutes.get('/getAllFromACompany/:companyId', sellerController.getAllFromACompany);
 

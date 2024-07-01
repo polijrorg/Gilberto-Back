@@ -11,6 +11,7 @@ import GetAllSellerFromACompanyService from '@modules/seller/services/GetAllSell
 import UpdateSellerService from '@modules/seller/services/UpdateSellerService';
 import GetAllSellerFromAManagerService from '@modules/seller/services/GetAllSellerFromAManagerService';
 import GetAllSellerFromADirectorService from '@modules/seller/services/GetAllSellerFromADirector';
+import GeneratePdfService from '@modules/seller/services/GeneratePdfSellerVisit';
 
 export default class SellerController {
   public async create(req: Request, res: Response): Promise<Response> {
@@ -93,6 +94,18 @@ export default class SellerController {
     const getAllSeller = container.resolve(GetAllSellerFromADirectorService);
 
     const seller = await getAllSeller.execute(directorId);
+
+    return res.status(200).json(seller);
+  }
+
+  public async generatePdf(req: Request, res: Response): Promise<Response> {
+    const { sellerId } = req.params;
+
+    const dateVisit = decodeURIComponent(req.params.dateVisit);
+
+    const getAllSeller = container.resolve(GeneratePdfService);
+
+    const seller = await getAllSeller.execute(sellerId, dateVisit);
 
     return res.status(200).json(seller);
   }
