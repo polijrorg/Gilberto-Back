@@ -11,45 +11,24 @@ interface IDocumentTemplate {
 export default (data: IDocumentTemplate): TDocumentDefinitions => ({
   content: [
     { text: `Relatório de Visita - ${data.sellerVisits.name} - Dia ${data.day}`, style: 'header' },
-    data.sellerVisits.visit.forEach((sellerVisit, index) => ([
+    ...(data.sellerVisits.visit?.map((sellerVisit, index) => ([
       { text: `Visita ${index + 1}: Loja ${sellerVisit.storeVisited} - Horário: ${sellerVisit.created_at.getHours()}:${sellerVisit.created_at.getMinutes()} - Nota Geral: ${sellerVisit.grade}/5`, style: 'subheader' },
-
-      { text: `\tCategoria 1`, style: 'category', marginLeft: 20 },
-      {
-        ul: [
-          `Pergunta 1: Nota`,
-        ],
-        marginLeft: 20,
-      },
-
-    ])),
-    // { text: 'Relatório de Visita - Bruno - Dia 11/06/2024', style: 'header' },
-
-    // { text: 'Visita 1: Loja 16 - Horário: 12:50 - Nota Geral: 5/5', style: 'subheader' },
-
-    // { text: '\tCategoria 1', style: 'category', marginLeft: 20 },
-    // {
-    //   ul: [
-    //     'Pergunta 1: Nota',
-    //     'Pergunta 2: Nota',
-    //     'Pergunta 3: Nota',
-    //   ],
-    //   marginLeft: 20,
-    // },
-
-    // data.visitas.forEach((visita, index) => {
-    //     content.push({
-    //         text: `Visita ${index + 1}: Loja ${visita.loja} - Horário: ${visita.horario} - Nota Geral: ${visita.notaGeral}/5`,
-    //         style: 'subheader'
-    //     });
-
-    //     visita.categorias.forEach(categoria => {
-    //         content.push({ text: categoria.nome, style: 'category' });
-
-  //         categoria.perguntas.forEach(pergunta => {
-  //             content.push(`Pergunta ${pergunta.pergunta}: Nota ${pergunta.nota}`);
-  //         });
-  //     });
-  // });
+      ...(sellerVisit.visitTemplate.categories?.map((categoria, catIndex) => ([
+        {
+          text: `${catIndex + 1} - ${categoria.name}`,
+          style: 'category',
+          marginLeft: 20,
+        },
+        {
+          ul: [
+            ...(categoria.questions?.map((question, quesIndex) => ([
+              `${quesIndex + 1} - ${question.question} : ${question.grade.filter((grade) => grade.questionsId === question.id).map((grade) => grade.grade)}/5`,
+            ])) ?? []),
+          ],
+          marginLeft: 20,
+        },
+        { text: `Comentários: ${categoria.comments}` },
+      ])) ?? []),
+    ])) ?? []),
   ],
 });

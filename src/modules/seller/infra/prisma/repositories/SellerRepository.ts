@@ -28,8 +28,6 @@ export default class SellerRepository implements ISellerRepository {
   }
 
   public async findByIdAndData(id: string, day: string): Promise<ReceiveSellerInfosDTO | null> {
-    console.log(`seller: ${id}`);
-    console.log(`day: ${day}`);
     const seller = await this.ormRepository.findFirst({
       where: {
         id,
@@ -40,11 +38,14 @@ export default class SellerRepository implements ISellerRepository {
         },
       },
       select: {
+        name: true,
+        email: true,
         visit: {
           select: {
             created_at: true,
             storeVisited: true,
             grade: true,
+            visitTemplateId: true,
             visitTemplate: {
               select: {
                 categories: {
@@ -53,6 +54,11 @@ export default class SellerRepository implements ISellerRepository {
                     questions: {
                       select: {
                         question: true,
+                        grade: {
+                          select: {
+                            grade: true,
+                          },
+                        },
                       },
                     },
                   },
@@ -63,9 +69,6 @@ export default class SellerRepository implements ISellerRepository {
         },
       },
     });
-
-    console.log(seller);
-
     return seller;
   }
 

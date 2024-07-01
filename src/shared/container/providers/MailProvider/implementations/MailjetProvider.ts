@@ -28,6 +28,7 @@ export default class MailjetMailProvider implements IMailProvider {
     to,
     subject,
     templateData,
+    base64PDF,
   }: ISendMailDTO): Promise<void> {
     const { email, name } = mailConfig.defaults.from;
     const html = await this.mailTemplateProvider.parse(templateData);
@@ -52,6 +53,11 @@ export default class MailjetMailProvider implements IMailProvider {
             name: templateData.variables.name,
             token: templateData.variables.token,
           },
+          Attachments: [{
+            ContentType: 'application/pdf',
+            Filename: 'relatorio_de_visita.pdf',
+            Base64Content: base64PDF,
+          }],
         },
       ],
     });

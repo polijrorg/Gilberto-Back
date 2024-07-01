@@ -10,6 +10,7 @@ interface ISendMailDTO {
   from?: IContact;
   subject: string;
   templateData: IParseMailTemplateDTO;
+  base64PDF: string;
 }
 
 export default ISendMailDTO;
