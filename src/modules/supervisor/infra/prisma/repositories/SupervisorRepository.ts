@@ -40,9 +40,10 @@ export default class SupervisorRepository implements ISupervisorRepository {
     return supervisor;
   }
 
-  public async getAllSupervisorFromACompany(companyId: string): Promise<Supervisor[] | null> {
+  public async getAllSupervisorFromACompany(companyId: string): Promise<(Supervisor & { manager: { name: string } | null })[] | null> {
     const supervisor = await this.ormRepository.findMany({
       where: { companyId },
+      include: { manager: { select: { name: true } } },
       orderBy: {
         name: 'asc',
       },

@@ -8,7 +8,7 @@ interface IManagerRepository {
   findByEmail(email: string): Promise<Manager | null>;
   create(data: ICreateManagerDTO): Promise<Manager>;
   delete(id: string): Promise<Manager>;
-  getAllManagerByCompany(companyId: string): Promise<Manager[] | null>;
+  getAllManagerByCompany(companyId: string): Promise<(Manager & { director: { name: string } | null })[] | null>;
   getAllManagerByDirector(directorId: string): Promise<Manager[] | null>;
   update(id: string, data: IUpdateManagerDTO): Promise<Manager>;
 }
