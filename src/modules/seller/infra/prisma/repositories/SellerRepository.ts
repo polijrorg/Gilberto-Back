@@ -150,8 +150,12 @@ export default class SellerRepository implements ISellerRepository {
     return sortedSellers.length > 0 ? sortedSellers : null;
   }
 
-  public async getAllSellerFromACompany(companyId: string): Promise<Seller[] | null> {
-    const seller = await this.ormRepository.findMany({ where: { companyId }, orderBy: { name: 'asc' } });
+  public async getAllSellerFromACompany(companyId: string): Promise<(Seller & { supervisor: { name: string } })[] | null> {
+    const seller = await this.ormRepository.findMany({
+      where: { companyId },
+      include: { supervisor: { select: { name: true } } },
+      orderBy: { name: 'asc' },
+    });
 
     return seller;
   }
