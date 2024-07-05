@@ -3,6 +3,7 @@ import { container } from 'tsyringe';
 
 import CreateSellerService from '@modules/seller/services/CreateSellerService';
 import DeleteSellerService from '@modules/seller/services/DeleteSellerService';
+import FindSellerById from '@modules/seller/services/FindSellerById';
 import GetAllSellerFromASupervisorService from '@modules/seller/services/GetAllSellerFromASupervisorService';
 import GetAllSellerPendenteFromASupervisorService from '@modules/seller/services/GetAllSellerPendenteFromASupervisorService';
 import GetAllSellerVisitaFromASupervisorService from '@modules/seller/services/GetAllSellerVisitaFromASupervisorService';
@@ -14,6 +15,16 @@ import GetAllSellerFromADirectorService from '@modules/seller/services/GetAllSel
 import GeneratePdfService from '@modules/seller/services/GeneratePdfSellerVisit';
 
 export default class SellerController {
+  public async findById(req: Request, res: Response): Promise<Response> {
+    const { id } = req.params;
+
+    const findSellerById = container.resolve(FindSellerById);
+
+    const seller = await findSellerById.execute({ id });
+
+    return res.status(200).json(seller);
+  }
+
   public async create(req: Request, res: Response): Promise<Response> {
     const {
       image, name, email, supervisorId, companyId, stage,
