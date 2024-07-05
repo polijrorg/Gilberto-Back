@@ -1,36 +1,36 @@
 model ActionPlans {
-  id                  String     @id @default(uuid())
-  prize               String
-  comments            String
-  title               String
-  sellerId            String
-  done                Boolean    @default(false)
-  seller              Seller     @relation(fields: [sellerId], references: [id])
-  supervisorId        String
-  supervisor          Supervisor @relation(fields: [supervisorId], references: [id])
-  visitId             String?    @unique
-  visit               Visit?     @relation(fields: [visitId], references: [id])
-  moduleId            String?    @unique
-  module              Module?    @relation(fields: [moduleId], references: [id])
-  created_at          DateTime   @default(now())
+  id           String     @id @default(uuid())
+  prize        String
+  comments     String
+  title        String
+  sellerId     String
+  done         Boolean    @default(false)
+  seller       Seller     @relation(fields: [sellerId], references: [id], onDelete: Cascade)
+  supervisorId String
+  supervisor   Supervisor @relation(fields: [supervisorId], references: [id], onDelete: Cascade)
+  visitId      String?    @unique
+  visit        Visit?     @relation(fields: [visitId], references: [id], onDelete: Cascade)
+  moduleId     String?    @unique
+  module       Module?    @relation(fields: [moduleId], references: [id])
+  created_at   DateTime   @default(now())
 }
 
 model Supervisor {
-  id                  String     @id @default(uuid())
-  actionPlan          ActionPlans[]
+  id         String        @id @default(uuid())
+  actionPlan ActionPlans[]
 }
 
 model Seller {
-  id                  String     @id @default(uuid())
-  actionPlan          ActionPlans[]
+  id         String        @id @default(uuid())
+  actionPlan ActionPlans[]
 }
 
 model Visit {
-  id                  String     @id @default(uuid())
-  actionPlan          ActionPlans?
+  id         String       @id @default(uuid())
+  actionPlan ActionPlans?
 }
 
 model Module {
-  id                  String     @id @default(uuid())
-  actionPlan          ActionPlans?
+  id         String       @id @default(uuid())
+  actionPlan ActionPlans?
 }
