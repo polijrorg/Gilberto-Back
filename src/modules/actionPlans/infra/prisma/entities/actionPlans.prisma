@@ -11,7 +11,7 @@ model ActionPlans {
   visitId      String?    @unique
   visit        Visit?     @relation(fields: [visitId], references: [id], onDelete: Cascade)
   moduleId     String?    @unique
-  module       Module?    @relation(fields: [moduleId], references: [id])
+  module       Module?    @relation(fields: [moduleId], references: [id], onDelete: Cascade)
   created_at   DateTime   @default(now())
 }
 

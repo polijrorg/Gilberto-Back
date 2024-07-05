@@ -15,13 +15,13 @@ model ActionPlans {
   title        String
   sellerId     String
   done         Boolean    @default(false)
-  seller       Seller     @relation(fields: [sellerId], references: [id])
+  seller       Seller     @relation(fields: [sellerId], references: [id], onDelete: Cascade)
   supervisorId String
-  supervisor   Supervisor @relation(fields: [supervisorId], references: [id])
+  supervisor   Supervisor @relation(fields: [supervisorId], references: [id], onDelete: Cascade)
   visitId      String?    @unique
-  visit        Visit?     @relation(fields: [visitId], references: [id])
+  visit        Visit?     @relation(fields: [visitId], references: [id], onDelete: Cascade)
   moduleId     String?    @unique
-  module       Module?    @relation(fields: [moduleId], references: [id])
+  module       Module?    @relation(fields: [moduleId], references: [id], onDelete: Cascade)
   created_at   DateTime   @default(now())
 }
 
