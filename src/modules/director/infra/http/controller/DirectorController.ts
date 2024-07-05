@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import { container } from 'tsyringe';
 
 import AuthenticateDirectorService from '@modules/director/services/AuthenticateDirectorService';
+import AuthenticateGilbasService from '@modules/director/services/AuthenticateGilbasService';
 import CreateDirectorService from '@modules/director/services/CreateDirectorService';
 import DeleteDirectorService from '@modules/director/services/DeleteDirectorService';
 import GetAllDirectorByCompanyService from '@modules/director/services/GetAllDirectorByCompanyService';
@@ -19,6 +20,19 @@ export default class ManagerController {
     const { user, token } = await authenticateManager.execute({ email, password });
 
     return res.json({ user, token });
+  }
+
+  public async admin(req: Request, res: Response): Promise<Response> {
+    const {
+      email,
+      password,
+    } = req.body;
+
+    const authenticateManager = container.resolve(AuthenticateGilbasService);
+
+    const { token } = await authenticateManager.execute({ email, password });
+
+    return res.json({ token });
   }
 
   public async create(req: Request, res: Response): Promise<Response> {

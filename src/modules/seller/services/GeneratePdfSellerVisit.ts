@@ -40,7 +40,7 @@ export default class GetAllSellerFromACompanyService {
     await this.mailProvider.sendMail({
       to: {
         name: visitExists.name,
-        email: 'brunomarcianosantos@usp.br',
+        email: supervisor.email,
       },
       subject: 'Relatório de Visita',
       templateData: {

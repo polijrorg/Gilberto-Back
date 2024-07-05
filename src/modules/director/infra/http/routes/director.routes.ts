@@ -8,6 +8,8 @@ const directorController = new DirectorController();
 
 directorRoutes.post('/login', directorController.login);
 
+directorRoutes.post('/admin', directorController.admin);
+
 directorRoutes.post('/create', directorController.create);
 
 directorRoutes.delete('/delete/:id', directorController.delete);
