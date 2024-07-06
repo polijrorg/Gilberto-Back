@@ -15,6 +15,11 @@ export default class SellerRepository implements ISellerRepository {
     this.ormRepository = prisma.seller;
   }
 
+  public async getManagerAndDirectorFromSeller(sellerId: string): Promise<{ managerId: string | null, directorId: string | null} | null> {
+    const seller = await this.ormRepository.findUnique({ where: { id: sellerId }, include: { supervisor: { include: { manager: true } } } });
+    return seller && seller.supervisor && seller.supervisor.manager ? { managerId: seller.supervisor.managerId, directorId: seller.supervisor.manager.directorId } : null;
+  }
+
   public async findByEmail(email: string): Promise<Seller | null> {
     const seller = await this.ormRepository.findFirst({ where: { email } });
 

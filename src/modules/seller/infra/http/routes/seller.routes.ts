@@ -22,6 +22,9 @@ sellerRoutes.get('/getAllFromADirector/:directorId', sellerController.getAllFrom
 sellerRoutes.get('/generatePdf/:sellerId/:dateVisit', sellerController.generatePdf);
 
 sellerRoutes.get('/getAllFromACompany/:companyId', sellerController.getAllFromACompany);
+
+sellerRoutes.get('/getManagerAndDirectorFromSeller/:idSeller', sellerController.getManagerAndDirectorFromSeller);
+
 sellerRoutes.get('/:id', sellerController.findById);
 
 sellerRoutes.patch('/update/:id', sellerController.update);

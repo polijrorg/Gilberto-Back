@@ -4,6 +4,7 @@ import { container } from 'tsyringe';
 import CreateSellerService from '@modules/seller/services/CreateSellerService';
 import DeleteSellerService from '@modules/seller/services/DeleteSellerService';
 import FindSellerById from '@modules/seller/services/FindSellerById';
+import GetllManagerAndDirectorFromSellerService from '@modules/seller/services/GetllManagerAndDirectorFromSellerService';
 import GetAllSellerFromASupervisorService from '@modules/seller/services/GetAllSellerFromASupervisorService';
 import GetAllSellerPendenteFromASupervisorService from '@modules/seller/services/GetAllSellerPendenteFromASupervisorService';
 import GetAllSellerVisitaFromASupervisorService from '@modules/seller/services/GetAllSellerVisitaFromASupervisorService';
@@ -21,6 +22,20 @@ export default class SellerController {
     const findSellerById = container.resolve(FindSellerById);
 
     const seller = await findSellerById.execute({ id });
+
+    return res.status(200).json(seller);
+  }
+
+  public async getManagerAndDirectorFromSeller(req: Request, res: Response): Promise<Response> {
+    const {
+      idSeller,
+    } = req.params;
+
+    const getllManagerAndDirectorFromSellerService = container.resolve(GetllManagerAndDirectorFromSellerService);
+
+    const seller = await getllManagerAndDirectorFromSellerService.execute(
+      idSeller,
+    );
 
     return res.status(200).json(seller);
   }

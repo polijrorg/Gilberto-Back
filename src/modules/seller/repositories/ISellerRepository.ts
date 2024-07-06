@@ -16,6 +16,7 @@ interface ISellerRepository {
   getAllSellerFromAManager(managerId: string): Promise<Seller[] | null>;
   getAllSellerFromADirector(directorId: string): Promise<Seller[] | null>;
   getAllSellerFromACompany(companyId: string): Promise<(Seller & { supervisor: { name: string } })[] | null>;
+  getManagerAndDirectorFromSeller(sellerId: string): Promise<{ managerId: string | null, directorId: string | null} | null>;
   updateSeller(id: string, data: IUpdateSellerDTO): Promise<Seller>;
   findByEmail(email: string): Promise<Seller | null>;
   findById(id: string): Promise<Seller | null>;
