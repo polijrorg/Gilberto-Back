@@ -16,6 +16,6 @@ visitTemplateRoutes.get('/getByManager/:managerId', visitTemplateController.getV
 
 visitTemplateRoutes.get('/getByDirector/:directorId', visitTemplateController.getVisitByDirector);
 
-visitTemplateRoutes.get('/update/:id', visitTemplateController.update);
+visitTemplateRoutes.put('/update/:id', visitTemplateController.update);
 
 export default visitTemplateRoutes;
