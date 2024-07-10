@@ -4,6 +4,7 @@ import { container } from 'tsyringe';
 import CreateCategoriesService from '@modules/visitTemplate/services/CreateCategoriesService';
 import DeleteCategoriesService from '@modules/visitTemplate/services/DeleteCategoriesService';
 import GetAllCategoriesByVisitService from '@modules/visitTemplate/services/GetAllCategoriesByVisitService';
+import UpdateCategoriesService from '@modules/visitTemplate/services/UpdateCategoriesService';
 
 export default class CategoriesController {
   public async create(req: Request, res: Response): Promise<Response> {
@@ -28,6 +29,18 @@ export default class CategoriesController {
     const manager = await deleteManager.execute(id);
 
     return res.status(200).json(manager);
+  }
+
+  public async update(req: Request, res: Response): Promise<Response> {
+    const { id: idUser } = req.token;
+    const { id } = req.params;
+    const { name, comments } = req.body;
+
+    const updateCategoriesService = container.resolve(UpdateCategoriesService);
+
+    const newCategory = await updateCategoriesService.execute(id, { name, comments }, idUser);
+
+    return res.status(200).json(newCategory);
   }
 
   public async getAllCategoriesByVisit(req: Request, res: Response): Promise<Response> {
