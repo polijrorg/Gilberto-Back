@@ -3,12 +3,20 @@ import { Prisma, Categories } from '@prisma/client';
 
 import ICategoriesRepository from '@modules/visitTemplate/repositories/ICategoriesRepository';
 import ICreateCategoriesDTO from '@modules/visitTemplate/dtos/ICreateCategoriesDTO';
+import IUpdateCategoriesDTO from '@modules/visitTemplate/dtos/IUpdateCategoriesDTO';
 
 export default class CategoriesRepository implements ICategoriesRepository {
   private ormRepository: Prisma.CategoriesDelegate<Prisma.RejectOnNotFound | Prisma.RejectPerOperation | undefined>
 
   constructor() {
     this.ormRepository = prisma.categories;
+  }
+
+  public async update(id: string, data: IUpdateCategoriesDTO): Promise<Categories> {
+    return this.ormRepository.update({
+      where: { id },
+      data,
+    });
   }
 
   public async findById(id: string): Promise<Categories | null> {
