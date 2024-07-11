@@ -45,7 +45,7 @@ model Seller {
   id              String            @id @default(uuid())
   questionsGrades QuestionsGrades[]
   visit           Visit[]
-  supervisor      Supervisor        @relation(fields: [supervisorId], references: [id])
+  supervisor      Supervisor        @relation(fields: [supervisorId], references: [id], onDelete: Cascade)
   supervisorId    String
   image           String
   name            String
