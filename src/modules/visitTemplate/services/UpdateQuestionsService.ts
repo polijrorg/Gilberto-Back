@@ -21,22 +21,22 @@ export default class UpdateQuestionsService {
     private managerRepository: IManagerRepository,
   ) { }
 
-  public async execute(idCategory: string, idManger: string, data: IUpdateQuestionsDTO): Promise<Questions | undefined> {
+  public async execute(idQuestion: string, idManger: string, data: IUpdateQuestionsDTO): Promise<Questions | undefined> {
     if (idManger) {
       const manager = await this.managerRepository.findById(idManger);
 
       if (!manager) {
         throw new AppError('Manager not found', 404);
       }
-      const category = await this.categoriesRepository.findById(idCategory);
+      const question = await this.questionsRepository.findById(idQuestion);
 
-      if (!category) {
-        throw new AppError('Category not found', 404);
+      if (!question) {
+        throw new AppError('Question not found', 404);
       }
 
-      const question = await this.questionsRepository.update(idCategory, data);
+      const newQuestion = await this.questionsRepository.update(question.id, data);
 
-      return question;
+      return newQuestion;
     }
 
     return undefined;
