@@ -3,6 +3,7 @@ import { container } from 'tsyringe';
 
 import CreateQuestionsService from '@modules/visitTemplate/services/CreateQuestionsService';
 import DeleteQuestionsService from '@modules/visitTemplate/services/DeleteQuestionsService';
+import UpdateQuestionsService from '@modules/visitTemplate/services/UpdateQuestionsService';
 import GetAllQuestionsByCategoryService from '@modules/visitTemplate/services/GetAllQuestionsByCategoryService';
 
 export default class QuestionsController {
@@ -28,6 +29,18 @@ export default class QuestionsController {
     const manager = await deleteManager.execute(id);
 
     return res.status(200).json(manager);
+  }
+
+  public async update(req: Request, res: Response): Promise<Response> {
+    const { id: idUser } = req.token;
+    const { id } = req.params;
+    const { question } = req.body;
+
+    const updateQuestionsService = container.resolve(UpdateQuestionsService);
+
+    const newQuestion = await updateQuestionsService.execute(id, idUser, { question });
+
+    return res.status(200).json(newQuestion);
   }
 
   public async getAllQuestionsByCategory(req: Request, res: Response): Promise<Response> {

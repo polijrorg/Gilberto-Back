@@ -3,12 +3,20 @@ import { Prisma, Questions } from '@prisma/client';
 
 import IQuestionsRepository from '@modules/visitTemplate/repositories/IQuestionsRepository';
 import ICreateQuestionsDTO from '@modules/visitTemplate/dtos/ICreateQuestionsDTO';
+import IUpdateQuestionsDTO from '@modules/visitTemplate/dtos/IUpdateQuestionsDTO';
 
 export default class QuestionsRepository implements IQuestionsRepository {
   private ormRepository: Prisma.QuestionsDelegate<Prisma.RejectOnNotFound | Prisma.RejectPerOperation | undefined>
 
   constructor() {
     this.ormRepository = prisma.questions;
+  }
+
+  public async update(id: string, question: IUpdateQuestionsDTO): Promise<Questions> {
+    return this.ormRepository.update({
+      where: { id },
+      data: question,
+    });
   }
 
   public async findById(id: string): Promise<Questions | null> {
