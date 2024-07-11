@@ -11,13 +11,13 @@ import UpdateVisitTemplateService from '@modules/visitTemplate/services/UpdateVi
 export default class VisitTemplateController {
   public async create(req: Request, res: Response): Promise<Response> {
     const {
-      companyId, directorId, managerId,
+      name, companyId, directorId, managerId,
     } = req.body;
 
     const createManager = container.resolve(CreateVisitTemplateService);
 
     const manager = await createManager.execute({
-      companyId, directorId, managerId,
+      name, companyId, directorId, managerId,
     });
 
     return res.status(201).json(manager);
