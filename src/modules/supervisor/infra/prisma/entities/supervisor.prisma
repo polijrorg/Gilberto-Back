@@ -1,23 +1,23 @@
 model Supervisor {
-  id           String     @id @default(uuid())
-  image        String
-  name         String
-  email        String
-  password     String
-  job          String     @default("Supervisor")
-  seller       Seller[]
-  manager      Manager?   @relation(fields: [managerId], references: [id])
-  managerId    String?
-  created_at   DateTime   @default(now())
+  id         String   @id @default(uuid())
+  image      String
+  name       String
+  email      String
+  password   String
+  job        String   @default("Supervisor")
+  seller     Seller[]
+  manager    Manager? @relation(fields: [managerId], references: [id])
+  managerId  String?
+  created_at DateTime @default(now())
 }
 
 model Seller {
   id           String     @id @default(uuid())
-  supervisor   Supervisor @relation(fields: [supervisorId], references: [id])
+  supervisor   Supervisor @relation(fields: [supervisorId], references: [id], onDelete: Cascade)
   supervisorId String
 }
 
 model Manager {
-  id           String     @id @default(uuid())
-  supervisor   Supervisor[]
+  id         String       @id @default(uuid())
+  supervisor Supervisor[]
 }
