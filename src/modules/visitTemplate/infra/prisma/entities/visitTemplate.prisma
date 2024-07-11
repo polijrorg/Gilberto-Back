@@ -1,33 +1,34 @@
 model VisitTemplate {
-  id            String    @id @default(uuid())
-  company       Company?  @relation(fields: [companyId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  companyId     String?   @unique
-  manager       Manager?  @relation(fields: [managerId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  managerId     String?   @unique
-  director      Director? @relation(fields: [directorId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  directorId    String?   @unique
-  categories    Categories[]
-  created_at    DateTime  @default(now())
-  updated_at    DateTime  @updatedAt
+  id         String       @id @default(uuid())
+  name       String?
+  company    Company?     @relation(fields: [companyId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  companyId  String?      @unique
+  manager    Manager?     @relation(fields: [managerId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  managerId  String?      @unique
+  director   Director?    @relation(fields: [directorId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  directorId String?      @unique
+  categories Categories[]
+  created_at DateTime     @default(now())
+  updated_at DateTime     @updatedAt
 }
 
 model Company {
-  id            String    @id @default(uuid())
+  id            String         @id @default(uuid())
   visitTemplate VisitTemplate?
 }
 
 model Manager {
-  id            String    @id @default(uuid())
-  visitTemplate    VisitTemplate?
+  id            String         @id @default(uuid())
+  visitTemplate VisitTemplate?
 }
 
 model Director {
-  id            String    @id @default(uuid())
-  visitTemplate    VisitTemplate?
+  id            String         @id @default(uuid())
+  visitTemplate VisitTemplate?
 }
 
 model Categories {
-  id            String    @id @default(uuid())
-  visitTemplate VisitTemplate @relation(fields: [visitTemplateId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  id              String        @id @default(uuid())
+  visitTemplate   VisitTemplate @relation(fields: [visitTemplateId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   visitTemplateId String
 }

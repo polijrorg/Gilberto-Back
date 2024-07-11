@@ -18,6 +18,10 @@ export default class CreateVisitTemplateService {
   ) { }
 
   public async execute(data: ICreateVisitTemplateDTO): Promise<VisitTemplate> {
+    if (!data.companyId) {
+      throw new AppError('Company ID is missing');
+    }
+
     const sellerExists = await this.companyRepository.findById(data.companyId);
 
     if (!sellerExists) throw new AppError('A company with this Id does not exist');

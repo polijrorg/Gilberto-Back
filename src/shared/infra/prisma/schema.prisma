@@ -149,6 +149,7 @@ model ModuleGrades {
 
 model VisitTemplate {
   id         String       @id @default(uuid())
+  name       String?
   company    Company?     @relation(fields: [companyId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   companyId  String?      @unique
   manager    Manager?     @relation(fields: [managerId], references: [id], onDelete: Cascade, onUpdate: Cascade)
