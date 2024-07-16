@@ -60,7 +60,12 @@ export default class SellerRepository implements ISellerRepository {
                         grade: {
                           where: {
                             sellerId: id,
+
                           },
+                          orderBy: {
+                            created_at: 'desc',
+                          },
+                          take: 1,
                           select: {
                             grade: true,
                           },
