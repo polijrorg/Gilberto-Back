@@ -18,8 +18,14 @@ export default class QuestionsGradesRepository implements IQuestionsGradesReposi
     return seller;
   }
 
-  public async create(data: ICreateQuestionsGradesDTO): Promise<QuestionsGrades> {
-    const seller = await this.ormRepository.create({ data });
+  public async create({
+    visitId, grade, questionsId, sellerId,
+  }: ICreateQuestionsGradesDTO): Promise<QuestionsGrades> {
+    const seller = await this.ormRepository.create({
+      data: {
+        grade, questionsId, sellerId, visitId,
+      },
+    });
 
     return seller;
   }
