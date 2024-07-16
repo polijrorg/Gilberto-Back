@@ -25,7 +25,7 @@ export default (data: IDocumentTemplate): TDocumentDefinitions => ({
               const grades = question.grade.filter((grade) => grade.questionsId === question.id);
 
               return [
-                `${quesIndex + 1} - ${question.question} : ${grades.length > 0 ? grades.map((grade) => (`${(grade.grade.toFixed(2).replace('.', ','))}/5`)) : 'Não avaliado'}`,
+                `${quesIndex + 1} - ${question.question} : ${grades.length > 0 ? grades.map((grade) => (`${(grade.grade.toFixed(1).replace('.', ','))}/5`)) : 'Não avaliado'}`,
               ];
             }) ?? []),
           ],
@@ -33,4 +33,34 @@ export default (data: IDocumentTemplate): TDocumentDefinitions => ({
         }])) ?? []),
     ])) ?? []),
   ],
+  styles: {
+    header: {
+      fontSize: 18,
+      bold: true,
+      marginBottom: 20,
+      alignment: 'center',
+    },
+    subheader: {
+      fontSize: 14,
+      bold: true,
+      marginTop: 10,
+      marginBottom: 10,
+    },
+    category: {
+      fontSize: 12,
+      bold: true,
+      decoration: 'underline',
+      marginBottom: 10,
+    },
+    question: {
+      fontSize: 10,
+      italics: true,
+      marginBottom: 5,
+    },
+    grade: {
+      fontSize: 10,
+      bold: true,
+      color: 'green',
+    },
+  },
 });
