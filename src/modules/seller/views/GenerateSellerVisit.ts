@@ -25,7 +25,7 @@ export default (data: IDocumentTemplate): TDocumentDefinitions => ({
               const grades = question.grade.filter((grade) => grade.questionsId === question.id);
 
               return [
-                `${quesIndex + 1} - ${question.question} : ${grades.length > 0 ? grades.map((grade) => (`${grade.grade}/5`)) : 'Não avaliado'}`,
+                `${quesIndex + 1} - ${question.question} : ${grades.length > 0 ? grades.map((grade) => (`${(grade.grade.toFixed(2).replace('.', ','))}/5`)) : 'Não avaliado'}`,
               ];
             }) ?? []),
           ],

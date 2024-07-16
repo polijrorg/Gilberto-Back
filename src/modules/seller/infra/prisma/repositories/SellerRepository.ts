@@ -58,6 +58,9 @@ export default class SellerRepository implements ISellerRepository {
                       select: {
                         question: true,
                         grade: {
+                          where: {
+                            sellerId: id,
+                          },
                           select: {
                             grade: true,
                           },
