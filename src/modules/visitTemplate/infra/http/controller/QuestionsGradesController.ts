@@ -9,13 +9,13 @@ import UpdateQuestionsGradesService from '@modules/visitTemplate/services/Update
 export default class QuestionsGradesController {
   public async create(req: Request, res: Response): Promise<Response> {
     const {
-      grade, sellerId, questionsId,
+      grade, sellerId, questionsId, visitId,
     } = req.body;
 
     const createManager = container.resolve(CreateQuestionsGradesService);
 
     const manager = await createManager.execute({
-      grade, sellerId, questionsId,
+      grade, sellerId, questionsId, visitId,
     });
 
     return res.status(201).json(manager);

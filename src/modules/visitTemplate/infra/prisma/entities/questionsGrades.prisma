@@ -6,6 +6,13 @@ model QuestionsGrades {
   seller      Seller    @relation(fields: [sellerId], references: [id], onDelete: Cascade)
   sellerId    String
   created_at  DateTime  @default(now())
+  visitId     String
+  visit       Visit     @relation(fields: [visitId], references: [id])
+}
+
+model Visit {
+  id              String            @id @default(uuid())
+  QuestionsGrades QuestionsGrades[]
 }
 
 model Questions {

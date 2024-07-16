@@ -1,22 +1,22 @@
 model Visit {
-  id              String         @id @default(uuid())
+  id              String        @id @default(uuid())
   storeVisited    String
   dateVisited     String
-  grade           Float          @default(0)
-  comments        String         @default("")
-  seller          Seller         @relation(fields: [sellerId], references: [id], onDelete: Cascade)
+  grade           Float         @default(0)
+  comments        String        @default("")
+  seller          Seller        @relation(fields: [sellerId], references: [id], onDelete: Cascade)
   sellerId        String
-  visitTemplate   VisitTemplate  @relation(fields: [visitTemplateId], references: [id])
+  visitTemplate   VisitTemplate @relation(fields: [visitTemplateId], references: [id])
   visitTemplateId String
-  created_at      DateTime       @default(now())
+  created_at      DateTime      @default(now())
 }
 
 model VisitTemplate {
-  id              String         @id @default(uuid())
-  visit           Visit[]
+  id    String  @id @default(uuid())
+  visit Visit[]
 }
 
 model Seller {
-  id              String         @id @default(uuid())
-  visit           Visit[]
+  id    String  @id @default(uuid())
+  visit Visit[]
 }
