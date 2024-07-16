@@ -22,7 +22,7 @@ export default (data: IDocumentTemplate): TDocumentDefinitions => ({
         {
           ul: [
             ...(categoria.questions?.map((question, quesIndex) => ([
-              `${quesIndex + 1} - ${question.question} : ${question.grade.filter((grade) => grade.questionsId === question.id).map((grade) => grade.grade)}/5`,
+              `${quesIndex + 1} - ${question.question} : ${question.grade.filter((grade) => grade.questionsId === question.id).map((grade) => (grade.grade ? `${grade.grade}/5` : 'Não avaliado'))}`,
             ])) ?? []),
           ],
           marginLeft: 20,

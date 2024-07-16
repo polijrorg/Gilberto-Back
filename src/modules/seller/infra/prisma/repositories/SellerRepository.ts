@@ -36,16 +36,14 @@ export default class SellerRepository implements ISellerRepository {
     const seller = await this.ormRepository.findFirst({
       where: {
         id,
-        visit: {
-          some: {
-            dateVisited: day,
-          },
-        },
       },
       select: {
         name: true,
         email: true,
         visit: {
+          where: {
+            dateVisited: day,
+          },
           select: {
             created_at: true,
             storeVisited: true,
