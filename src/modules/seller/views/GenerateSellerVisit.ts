@@ -49,7 +49,6 @@ export default (data: IDocumentTemplate): TDocumentDefinitions => ({
     category: {
       fontSize: 12,
       bold: true,
-      decoration: 'underline',
       marginBottom: 10,
     },
     question: {
