@@ -26,9 +26,7 @@ export default (data: IDocumentTemplate): TDocumentDefinitions => ({
             ])) ?? []),
           ],
           marginLeft: 20,
-        },
-        { text: `Comentários: ${categoria.comments}` },
-      ])) ?? []),
+        }])) ?? []),
     ])) ?? []),
   ],
 });
