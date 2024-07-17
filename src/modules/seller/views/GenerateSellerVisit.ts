@@ -23,6 +23,8 @@ export default (data: IDocumentTemplate): TDocumentDefinitions => ({
           ul: [
             ...(categoria.questions?.map((question, quesIndex) => {
               const grades = sellerVisit.QuestionsGrades.filter((grade) => grade.questionsId === question.id);
+              console.log(`Processing question ${quesIndex + 1}:`, question);
+              console.log('Grades found:', grades);
 
               return [
                 `${quesIndex + 1} - ${question.question} : ${grades.length > 0 ? grades.map((grade) => (`${(grade.grade.toFixed(1).replace('.', ','))}/5`)) : 'Não avaliado'}`,
