@@ -1,16 +1,16 @@
 import {
-  Seller, Visit, VisitTemplate, Categories, Questions,
+  Questions,
+  Seller, Visit, VisitTemplate, Categories,
   QuestionsGrades,
 } from '@prisma/client';
 
 type ReceiveSellerInfosDTO =
     Seller & {
         visit: (Visit & {
+          QuestionsGrades: QuestionsGrades[]
           visitTemplate: VisitTemplate & {
             categories: (Categories & {
-              questions: (Questions & {
-                grade: QuestionsGrades[]
-              })[]
+              questions: Questions[]
             })[]
           }
         })[]

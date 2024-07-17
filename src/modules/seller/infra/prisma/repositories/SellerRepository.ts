@@ -48,6 +48,7 @@ export default class SellerRepository implements ISellerRepository {
             created_at: true,
             storeVisited: true,
             grade: true,
+            QuestionsGrades: true,
             visitTemplateId: true,
             visitTemplate: {
               select: {
@@ -57,19 +58,6 @@ export default class SellerRepository implements ISellerRepository {
                     questions: {
                       select: {
                         question: true,
-                        grade: {
-                          where: {
-                            sellerId: id,
-
-                          },
-                          orderBy: {
-                            created_at: 'desc',
-                          },
-                          take: 1,
-                          select: {
-                            grade: true,
-                          },
-                        },
                       },
                     },
                   },
