@@ -57,6 +57,7 @@ export default class SellerRepository implements ISellerRepository {
                     name: true,
                     questions: {
                       select: {
+                        id: true,
                         question: true,
                       },
                     },
