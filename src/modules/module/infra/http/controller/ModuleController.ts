@@ -4,6 +4,7 @@ import { container } from 'tsyringe';
 import CreateModuleService from '@modules/module/services/CreateModuleService';
 import DeleteModuleService from '@modules/module/services/DeleteModuleService';
 import GetAllModuleService from '@modules/module/services/GetAllModuleService';
+import GetModulesInfoService from '@modules/module/services/GetModulesInfoService';
 import UpdateModuleService from '@modules/module/services/UpdateModuleService';
 
 export default class ModuleController {
@@ -35,6 +36,14 @@ export default class ModuleController {
     const module = await getAllModule.execute();
 
     return res.status(200).json(module);
+  }
+
+  public async getAllModuleInfo(req: Request, res: Response): Promise<Response> {
+    const getAllModuleInfo = container.resolve(GetModulesInfoService);
+
+    const moduleinfo = await getAllModuleInfo.execute();
+
+    return res.status(200).json(moduleinfo);
   }
 
   public async update(req: Request, res: Response): Promise<Response> {

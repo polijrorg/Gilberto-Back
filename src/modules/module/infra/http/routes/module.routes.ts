@@ -12,6 +12,8 @@ moduleRoutes.delete('/delete/:id', moduleController.delete);
 
 moduleRoutes.get('/getAll', moduleController.getAllModule);
 
+moduleRoutes.get('/getAllModuleInfo', moduleController.getAllModuleInfo);
+
 moduleRoutes.patch('/update/:id', moduleController.update);
 
 export default moduleRoutes;

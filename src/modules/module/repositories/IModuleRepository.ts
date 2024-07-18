@@ -10,6 +10,12 @@ interface IModuleRepository {
   update(id: string, data: IUpdateModuleDTO): Promise<Module>;
   findByName(name: string): Promise<Module | null>;
   findById(id: string): Promise<Module | null>;
+  getModulesInfo(): Promise<{
+    module: string;
+    nameModule: string;
+    knowledge: number;
+    implementation: number;
+  }[] | null>;
 }
 
 export default IModuleRepository;
