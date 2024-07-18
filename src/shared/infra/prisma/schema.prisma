@@ -178,7 +178,7 @@ model Questions {
   grade        QuestionsGrades[]
   question     String
   number       Int
-  categories   Categories        @relation(fields: [categoriesId], references: [id])
+  categories   Categories        @relation(fields: [categoriesId], references: [id], onDelete: Cascade)
   categoriesId String
 }
 
