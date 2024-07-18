@@ -1,5 +1,5 @@
 model Categories {
-  id              String    @id @default(uuid())
+  id              String        @id @default(uuid())
   name            String
   number          Int
   comments        String
@@ -9,12 +9,12 @@ model Categories {
 }
 
 model Questions {
-  id              String    @id @default(uuid())
-  categories      Categories @relation(fields: [categoriesId], references: [id])
-  categoriesId    String
+  id           String     @id @default(uuid())
+  categories   Categories @relation(fields: [categoriesId], references: [id], onDelete: Cascade)
+  categoriesId String
 }
 
 model VisitTemplate {
-  id              String    @id @default(uuid())
-  categories      Categories[]
+  id         String       @id @default(uuid())
+  categories Categories[]
 }
