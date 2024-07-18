@@ -32,6 +32,13 @@ export default class CategoriesRepository implements ICategoriesRepository {
   }
 
   public async delete(id: string): Promise<Categories> {
+    await prisma.questionsGrades.deleteMany({
+      where: {
+        question: {
+          categoriesId: id,
+        },
+      },
+    });
     const seller = await this.ormRepository.delete({ where: { id } });
 
     return seller;
