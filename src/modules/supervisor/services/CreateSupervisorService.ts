@@ -4,7 +4,10 @@ import { Supervisor } from '@prisma/client';
 
 import AppError from '@shared/errors/AppError';
 
+import path from 'path';
+
 import IHashProvider from '@shared/container/providers/HashProvider/models/IHashProvider';
+import IMailProvider from '@shared/container/providers/MailProvider/models/IMailProvider';
 import ISupervisorRepository from '../repositories/ISupervisorRepository';
 import ICreateSupervisorDTO from '../dtos/ICreateSupervisorDTO';
 
@@ -16,6 +19,8 @@ export default class CreateSupervisorService {
 
     @inject('HashProvider')
     private hashProvider: IHashProvider,
+    @inject('MailProvider')
+    private mailProvider: IMailProvider,
   ) { }
 
   public async execute(data: ICreateSupervisorDTO): Promise<Supervisor> {
@@ -25,24 +30,21 @@ export default class CreateSupervisorService {
 
     const hashedPassword = await this.hashProvider.generateHash(data.password);
 
-    // eslint-disable-next-line no-param-reassign
-    data.password = hashedPassword;
+    const user = await this.supervisorRepository.create({ ...data, password: hashedPassword });
 
-    const user = await this.supervisorRepository.create(data);
-
-    /*  const templateDataFile = path.resolve(__dirname, '..', 'views', 'create_account.hbs');
+    const templateDataFile = path.resolve(__dirname, '..', 'view', 'templateEmail.hbs');
 
     await this.mailProvider.sendMail({
       to: {
-        name,
-        email,
+        name: user.name,
+        email: user.email,
       },
       subject: 'Criação de conta',
       templateData: {
         file: templateDataFile,
-        variables: { name },
+        variables: { name: user.name, email: user.email, password: data.password },
       },
-    }); */
+    });
 
     return user;
   }

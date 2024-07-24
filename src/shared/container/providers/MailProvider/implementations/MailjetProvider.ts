@@ -53,11 +53,13 @@ export default class MailjetMailProvider implements IMailProvider {
             name: templateData.variables.name,
             token: templateData.variables.token,
           },
-          Attachments: [{
-            ContentType: 'application/pdf',
-            Filename: 'relatorio_de_visita.pdf',
-            Base64Content: base64PDF,
-          }],
+          ...(base64PDF ? {
+            Attachments: [{
+              ContentType: 'application/pdf',
+              Filename: 'relatorio_de_visita.pdf',
+              Base64Content: base64PDF,
+            }],
+          } : { }),
         },
       ],
     });
