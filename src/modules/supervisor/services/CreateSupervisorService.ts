@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { inject, injectable } from 'tsyringe';
 
 import { Supervisor } from '@prisma/client';
@@ -8,6 +9,7 @@ import path from 'path';
 
 import IHashProvider from '@shared/container/providers/HashProvider/models/IHashProvider';
 import IMailProvider from '@shared/container/providers/MailProvider/models/IMailProvider';
+import IManagerRepository from '@modules/manager/repositories/IManagerRepository';
 import ISupervisorRepository from '../repositories/ISupervisorRepository';
 import ICreateSupervisorDTO from '../dtos/ICreateSupervisorDTO';
 
@@ -16,6 +18,8 @@ export default class CreateSupervisorService {
   constructor(
     @inject('SupervisorRepository')
     private supervisorRepository: ISupervisorRepository,
+    @inject('ManagerRepository')
+    private managerRepository: IManagerRepository,
 
     @inject('HashProvider')
     private hashProvider: IHashProvider,
@@ -31,7 +35,7 @@ export default class CreateSupervisorService {
     const hashedPassword = await this.hashProvider.generateHash(data.password);
 
     const user = await this.supervisorRepository.create({ ...data, password: hashedPassword });
-
+    const manager = await this.managerRepository.findById(user.managerId!);
     const templateDataFile = path.resolve(__dirname, '..', 'view', 'templateEmail.hbs');
 
     await this.mailProvider.sendMail({
@@ -42,7 +46,9 @@ export default class CreateSupervisorService {
       subject: 'Criação de conta',
       templateData: {
         file: templateDataFile,
-        variables: { name: user.name, email: user.email, password: data.password },
+        variables: {
+          name: user.name, email: user.email, password: data.password, upper: manager?.name ?? '',
+        },
       },
     });
 
