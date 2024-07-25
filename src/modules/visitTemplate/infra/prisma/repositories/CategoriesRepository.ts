@@ -45,8 +45,11 @@ export default class CategoriesRepository implements ICategoriesRepository {
   }
 
   public async getAllByVisit(visitTemplateId: string): Promise<Categories[] | null> {
-    const seller = await this.ormRepository.findMany({ where: { visitTemplateId }, orderBy: { created_at: 'asc' } });
+    const visit = await this.ormRepository.findMany({
+      where: { visitTemplateId },
+      orderBy: { created_at: 'asc' },
+    });
 
-    return seller;
+    return visit;
   }
 }
