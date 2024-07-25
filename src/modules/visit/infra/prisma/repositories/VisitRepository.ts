@@ -15,7 +15,7 @@ export default class VisitRepository implements IVisitRepository {
   }
 
   public async getAll(): Promise<Visit[] | null> {
-    const visits = await this.ormRepository.findMany();
+    const visits = await this.ormRepository.findMany({ orderBy: { created_at: 'asc' } });
     return visits;
   }
 

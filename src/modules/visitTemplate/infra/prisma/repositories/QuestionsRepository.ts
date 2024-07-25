@@ -38,7 +38,7 @@ export default class QuestionsRepository implements IQuestionsRepository {
   }
 
   public async getAllByCategories(categoriesId: string): Promise<Questions[] | null> {
-    const seller = await this.ormRepository.findMany({ where: { categoriesId }, orderBy: { number: 'asc' } });
+    const seller = await this.ormRepository.findMany({ where: { categoriesId }, orderBy: { created_at: 'asc' } });
 
     return seller;
   }

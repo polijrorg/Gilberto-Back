@@ -171,6 +171,8 @@ model Categories {
   name            String
   number          Int
   comments        String
+  created_at      DateTime      @default(now())
+  updated_at      DateTime      @updatedAt
 }
 
 model Questions {
@@ -180,6 +182,8 @@ model Questions {
   number       Int
   categories   Categories        @relation(fields: [categoriesId], references: [id], onDelete: Cascade)
   categoriesId String
+  created_at   DateTime          @default(now())
+  updated_at   DateTime          @updatedAt
 }
 
 model QuestionsGrades {

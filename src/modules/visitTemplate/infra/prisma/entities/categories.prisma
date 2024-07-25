@@ -6,6 +6,8 @@ model Categories {
   visitTemplate   VisitTemplate @relation(fields: [visitTemplateId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   visitTemplateId String
   questions       Questions[]
+  created_at      DateTime      @default(now())
+  updated_at      DateTime      @updatedAt
 }
 
 model Questions {
