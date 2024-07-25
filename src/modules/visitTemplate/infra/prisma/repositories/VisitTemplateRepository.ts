@@ -85,21 +85,21 @@ export default class VisitTemplateRepository implements IVisitTemplateRepository
   }
 
   public async getByCompany(companyId: string): Promise<VisitTemplate[] | null> {
-    const seller = await this.ormRepository.findMany({ where: { companyId } });
+    const visitTemplate = await this.ormRepository.findUnique({ where: { companyId } });
 
-    return seller;
+    return visitTemplate ? [visitTemplate] : null;
   }
 
   public async getByManager(managerId: string): Promise<VisitTemplate[] | null> {
-    const seller = await this.ormRepository.findMany({ where: { managerId } });
+    const visitTemplate = await this.ormRepository.findUnique({ where: { managerId } });
 
-    return seller;
+    return visitTemplate ? [visitTemplate] : null;
   }
 
   public async getByDirector(directorId: string): Promise<VisitTemplate[] | null> {
-    const seller = await this.ormRepository.findMany({ where: { directorId } });
+    const visitTemplate = await this.ormRepository.findUnique({ where: { directorId } });
 
-    return seller;
+    return visitTemplate ? [visitTemplate] : null;
   }
 
   public async getManagerIdBySeller(sellerId: string): Promise<string | null> {
