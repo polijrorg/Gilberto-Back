@@ -1,5 +1,3 @@
-/* eslint-disable no-await-in-loop */
-/* eslint-disable no-restricted-syntax */
 import { inject, injectable } from 'tsyringe';
 import { VisitTemplate } from '@prisma/client';
 import AppError from '@shared/errors/AppError';
@@ -22,9 +20,7 @@ export default class CreateVisitTemplateService {
     private directorRepository: IDirectorRepository,
   ) {}
 
-  private async validateCompany(companyId: string | undefined): Promise<void> {
-    if (!companyId) throw new AppError('Company ID is missing');
-
+  private async validateCompany(companyId: string): Promise<void> {
     const companyExists = await this.companyRepository.findById(companyId);
     if (!companyExists) throw new AppError('Company with this ID does not exist');
 
@@ -32,9 +28,7 @@ export default class CreateVisitTemplateService {
     if (existingByCompany) throw new AppError('A VisitTemplate with this company already exists');
   }
 
-  private async validateManager(managerId: string | undefined): Promise<void> {
-    if (!managerId) throw new AppError('Manager ID is missing');
-
+  private async validateManager(managerId: string): Promise<void> {
     const managerExists = await this.managerRepository.findById(managerId);
     if (!managerExists) throw new AppError('Manager with this ID does not exist');
 
@@ -42,9 +36,7 @@ export default class CreateVisitTemplateService {
     if (existingByManager) throw new AppError('A VisitTemplate with this manager already exists');
   }
 
-  private async validateDirector(directorId: string | undefined): Promise<void> {
-    if (!directorId) throw new AppError('Director ID is missing');
-
+  private async validateDirector(directorId: string): Promise<void> {
     const directorExists = await this.directorRepository.findById(directorId);
     if (!directorExists) throw new AppError('Director with this ID does not exist');
 
@@ -53,11 +45,27 @@ export default class CreateVisitTemplateService {
   }
 
   public async execute(data: ICreateVisitTemplateDTO): Promise<VisitTemplate> {
-    await Promise.all([
-      this.validateCompany(data.companyId),
-      this.validateManager(data.managerId),
-      this.validateDirector(data.directorId),
-    ]);
+    const { companyId, managerId, directorId } = data;
+
+    if (!companyId && !managerId && !directorId) {
+      throw new AppError('At least one of Company ID, Manager ID, or Director ID must be provided');
+    }
+
+    const validationPromises = [];
+
+    if (companyId) {
+      validationPromises.push(this.validateCompany(companyId));
+    }
+
+    if (managerId) {
+      validationPromises.push(this.validateManager(managerId));
+    }
+
+    if (directorId) {
+      validationPromises.push(this.validateDirector(directorId));
+    }
+
+    await Promise.all(validationPromises);
 
     return this.visitTemplateRepository.create(data);
   }
