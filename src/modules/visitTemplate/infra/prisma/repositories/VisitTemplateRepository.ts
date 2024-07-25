@@ -6,10 +6,13 @@ import ICreateVisitTemplateDTO from '@modules/visitTemplate/dtos/ICreateVisitTem
 import IUpdateVisitTemplateDTO from '@modules/visitTemplate/dtos/IUpdateVisitTemplateDTO';
 
 export default class VisitTemplateRepository implements IVisitTemplateRepository {
-  private ormRepository: Prisma.VisitTemplateDelegate<Prisma.RejectOnNotFound | Prisma.RejectPerOperation | undefined>
+  private ormRepository: Prisma.VisitTemplateDelegate<Prisma.RejectOnNotFound | Prisma.RejectPerOperation | undefined>;
+
+  private visitRepository: Prisma.VisitDelegate<Prisma.RejectOnNotFound | Prisma.RejectPerOperation | undefined>;
 
   constructor() {
     this.ormRepository = prisma.visitTemplate;
+    this.visitRepository = prisma.visit;
   }
 
   public async findById(id: string): Promise<VisitTemplate | null> {
@@ -25,9 +28,20 @@ export default class VisitTemplateRepository implements IVisitTemplateRepository
   }
 
   public async delete(id: string): Promise<VisitTemplate> {
-    const seller = await this.ormRepository.delete({ where: { id } });
+    await this.visitRepository.deleteMany({
+      where: {
+        visitTemplateId: id,
+      },
+    });
 
-    return seller;
+    // Depois exclua o VisitTemplate
+    const deletedVisitTemplate = await this.ormRepository.delete({
+      where: {
+        id,
+      },
+    });
+
+    return deletedVisitTemplate;
   }
 
   public async getByCompany(companyId: string): Promise<VisitTemplate[] | null> {

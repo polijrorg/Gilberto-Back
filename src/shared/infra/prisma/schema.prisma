@@ -68,7 +68,7 @@ model Visit {
   comments        String            @default("")
   seller          Seller            @relation(fields: [sellerId], references: [id], onDelete: Cascade)
   sellerId        String
-  visitTemplate   VisitTemplate     @relation(fields: [visitTemplateId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  visitTemplate   VisitTemplate     @relation(fields: [visitTemplateId], references: [id], onDelete: Cascade)
   visitTemplateId String
   created_at      DateTime          @default(now())
   actionPlan      ActionPlans?
@@ -189,13 +189,13 @@ model Questions {
 model QuestionsGrades {
   id          String    @id @default(uuid())
   grade       Float
-  question    Questions @relation(fields: [questionsId], references: [id])
+  question    Questions @relation(fields: [questionsId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   questionsId String
   seller      Seller    @relation(fields: [sellerId], references: [id], onDelete: Cascade)
   sellerId    String
   created_at  DateTime  @default(now())
   visitId     String?
-  visit       Visit?    @relation(fields: [visitId], references: [id])
+  visit       Visit?    @relation(fields: [visitId], references: [id], onDelete: Cascade)
 }
 
 enum Stage {
