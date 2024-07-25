@@ -47,8 +47,6 @@ export default class CategoriesRepository implements ICategoriesRepository {
   public async getAllByVisit(visitTemplateId: string): Promise<Categories[] | null> {
     const visit = await this.ormRepository.findMany({
       where: { visitTemplateId },
-      orderBy: [{ created_at: 'asc' }], // Use o campo correto com a ordenação desejada
-
     });
 
     return visit;
