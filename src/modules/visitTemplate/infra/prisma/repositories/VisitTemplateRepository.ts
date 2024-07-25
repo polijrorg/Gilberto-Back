@@ -25,6 +25,15 @@ export default class VisitTemplateRepository implements IVisitTemplateRepository
   }
 
   public async delete(id: string): Promise<VisitTemplate> {
+    await this.ormRepository.deleteMany({
+      where: {
+        visit: {
+          some: {
+            visitTemplateId: id,
+          },
+        },
+      },
+    });
     const deletedVisitTemplate = await this.ormRepository.delete({
       where: {
         id,
