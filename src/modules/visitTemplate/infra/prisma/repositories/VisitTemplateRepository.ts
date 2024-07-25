@@ -8,8 +8,20 @@ import IUpdateVisitTemplateDTO from '@modules/visitTemplate/dtos/IUpdateVisitTem
 export default class VisitTemplateRepository implements IVisitTemplateRepository {
   private ormRepository: Prisma.VisitTemplateDelegate<Prisma.RejectOnNotFound | Prisma.RejectPerOperation | undefined>;
 
+  private categoryRepository: Prisma.CategoriesDelegate<Prisma.RejectOnNotFound | Prisma.RejectPerOperation | undefined>;
+
+  private questionsGradesRepository: Prisma.QuestionsGradesDelegate<Prisma.RejectOnNotFound | Prisma.RejectPerOperation | undefined>;
+
+  private questionsRepository: Prisma.QuestionsDelegate<Prisma.RejectOnNotFound | Prisma.RejectPerOperation | undefined>;
+
+  private visitRepository: Prisma.VisitDelegate<Prisma.RejectOnNotFound | Prisma.RejectPerOperation | undefined>;
+
   constructor() {
     this.ormRepository = prisma.visitTemplate;
+    this.categoryRepository = prisma.categories;
+    this.questionsGradesRepository = prisma.questionsGrades;
+    this.questionsRepository = prisma.questions;
+    this.visitRepository = prisma.visit;
   }
 
   public async findById(id: string): Promise<VisitTemplate | null> {
@@ -25,15 +37,44 @@ export default class VisitTemplateRepository implements IVisitTemplateRepository
   }
 
   public async delete(id: string): Promise<VisitTemplate> {
-    await this.ormRepository.deleteMany({
+    const categories = await this.categoryRepository.findMany({
       where: {
-        visit: {
-          some: {
-            visitTemplateId: id,
-          },
-        },
+        visitTemplateId: id,
+      },
+      select: {
+        id: true,
       },
     });
+    const categoryIds = categories.map((category) => category.id);
+
+    const questions = await this.questionsRepository.findMany({
+      where: {
+        categoriesId: { in: categoryIds },
+      },
+      select: {
+        id: true,
+      },
+    });
+    const questionIds = questions.map((question) => question.id);
+
+    await this.questionsGradesRepository.deleteMany({
+      where: {
+        questionsId: { in: questionIds },
+      },
+    });
+
+    await this.questionsRepository.deleteMany({
+      where: {
+        id: { in: questionIds },
+      },
+    });
+
+    await this.categoryRepository.deleteMany({
+      where: {
+        id: { in: categoryIds },
+      },
+    });
+
     const deletedVisitTemplate = await this.ormRepository.delete({
       where: {
         id,
