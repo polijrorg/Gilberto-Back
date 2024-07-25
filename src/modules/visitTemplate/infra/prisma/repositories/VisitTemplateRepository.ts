@@ -8,11 +8,8 @@ import IUpdateVisitTemplateDTO from '@modules/visitTemplate/dtos/IUpdateVisitTem
 export default class VisitTemplateRepository implements IVisitTemplateRepository {
   private ormRepository: Prisma.VisitTemplateDelegate<Prisma.RejectOnNotFound | Prisma.RejectPerOperation | undefined>;
 
-  private visitRepository: Prisma.VisitDelegate<Prisma.RejectOnNotFound | Prisma.RejectPerOperation | undefined>;
-
   constructor() {
     this.ormRepository = prisma.visitTemplate;
-    this.visitRepository = prisma.visit;
   }
 
   public async findById(id: string): Promise<VisitTemplate | null> {
@@ -28,13 +25,6 @@ export default class VisitTemplateRepository implements IVisitTemplateRepository
   }
 
   public async delete(id: string): Promise<VisitTemplate> {
-    await this.visitRepository.deleteMany({
-      where: {
-        visitTemplateId: id,
-      },
-    });
-
-    // Depois exclua o VisitTemplate
     const deletedVisitTemplate = await this.ormRepository.delete({
       where: {
         id,
