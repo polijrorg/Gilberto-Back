@@ -6,7 +6,7 @@ model Visit {
   comments        String        @default("")
   seller          Seller        @relation(fields: [sellerId], references: [id], onDelete: Cascade)
   sellerId        String
-  visitTemplate   VisitTemplate @relation(fields: [visitTemplateId], references: [id])
+  visitTemplate   VisitTemplate @relation(fields: [visitTemplateId], references: [id], onDelete: Cascade)
   visitTemplateId String
   created_at      DateTime      @default(now())
 }
