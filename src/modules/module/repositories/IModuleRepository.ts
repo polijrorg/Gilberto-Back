@@ -1,6 +1,7 @@
 import { Module } from '@prisma/client';
 
 import ICreateModuleDTO from '../dtos/ICreateModuleDTO';
+import IResponseModuleGradeDTO from '../dtos/IResponseModuleGradeDTO';
 import IUpdateModuleDTO from '../dtos/IUpdateModule';
 
 interface IModuleRepository {
@@ -10,12 +11,9 @@ interface IModuleRepository {
   update(id: string, data: IUpdateModuleDTO): Promise<Module>;
   findByName(name: string): Promise<Module | null>;
   findById(id: string): Promise<Module | null>;
-  getModulesInfo(): Promise<{
-    module: string;
-    nameModule: string;
-    knowledge: number;
-    implementation: number;
-  }[] | null>;
+  getModulesInfoAll(): Promise<IResponseModuleGradeDTO[] | null>;
+  getModulesInfoSupervisor(supervisorId:string): Promise<IResponseModuleGradeDTO[] | null>;
+
 }
 
 export default IModuleRepository;

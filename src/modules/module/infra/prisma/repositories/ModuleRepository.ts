@@ -1,85 +1,108 @@
 import prisma from '@shared/infra/prisma/client';
 import { Prisma, Module, ModuleGrades } from '@prisma/client';
-
 import IModuleRepository from '@modules/module/repositories/IModuleRepository';
 import ICreateModuleDTO from '@modules/module/dtos/ICreateModuleDTO';
 import IUpdateModuleDTO from '@modules/module/dtos/IUpdateModule';
+import IResponseModuleGradeDTO from '@modules/module/dtos/IResponseModuleGradeDTO';
 
 export default class ModuleRepository implements IModuleRepository {
-  private ormRepository: Prisma.ModuleDelegate<Prisma.RejectOnNotFound | Prisma.RejectPerOperation | undefined>
+  private ormRepository: Prisma.ModuleDelegate<Prisma.RejectOnNotFound | Prisma.RejectPerOperation | undefined>;
 
-  private moduleGradeRepository: Prisma.ModuleGradesDelegate<Prisma.RejectOnNotFound | Prisma.RejectPerOperation | undefined>
+  private moduleGradeRepository: Prisma.ModuleGradesDelegate<Prisma.RejectOnNotFound | Prisma.RejectPerOperation | undefined>;
 
   constructor() {
     this.ormRepository = prisma.module;
     this.moduleGradeRepository = prisma.moduleGrades;
   }
 
-  public async getModulesInfo(): Promise<{ module: string; nameModule: string; knowledge: number; implementation: number; }[]> {
+  public async getModulesInfoAll(): Promise<IResponseModuleGradeDTO[] | null> {
     const modules = await this.ormRepository.findMany({
       include: {
         sellerGrades: true, // Inclui os dados da relação com ModuleGrades
       },
     });
 
-    // Mapeia os dados dos módulos para o formato desejado
-    const modulesInfo = modules.map((module: Module & { sellerGrades: ModuleGrades[] }) => ({
-      module: module.id,
-      nameModule: module.name,
-      knowledge: this.calculateAverageKnowledge(module.sellerGrades),
-      implementation: this.calculateAverageImplementation(module.sellerGrades),
-    }));
+    return this.aggregateModuleInfo(modules);
+  }
 
-    return modulesInfo;
+  public async getModulesInfoSupervisor(supervisorId: string): Promise<IResponseModuleGradeDTO[] | null> {
+    const modules = await this.ormRepository.findMany({
+      where: {
+        sellerGrades: {
+          some: {
+            seller: {
+              supervisorId,
+            },
+          },
+        },
+      },
+      include: {
+        sellerGrades: true,
+      },
+    });
+
+    return this.aggregateModuleInfo(modules);
+  }
+
+  private aggregateModuleInfo(modules: (Module & { sellerGrades: ModuleGrades[] })[]): IResponseModuleGradeDTO[] {
+    const sellerData: Record<string, { knowledgeSum: number; implementationSum: number; count: number }> = {};
+
+    modules.forEach((module) => {
+      module.sellerGrades.forEach((grade) => {
+        const { sellerId } = grade;
+        if (!sellerData[sellerId]) {
+          sellerData[sellerId] = { knowledgeSum: 0, implementationSum: 0, count: 0 };
+        }
+        sellerData[sellerId].knowledgeSum += grade.knowledgeScore;
+        sellerData[sellerId].implementationSum += grade.implementationScore;
+        sellerData[sellerId].count += 1;
+      });
+    });
+
+    return Object.keys(sellerData).map((sellerId) => {
+      const { knowledgeSum, implementationSum, count } = sellerData[sellerId];
+      return {
+        module: sellerId,
+        nameModule: 'N/A', // Pode ser ajustado para fornecer um nome de módulo adequado se necessário
+        knowledge: knowledgeSum / count,
+        implementation: implementationSum / count,
+      };
+    });
   }
 
   private calculateAverageKnowledge(grades: ModuleGrades[]): number {
     if (!grades || grades.length === 0) return 0;
-
     const totalKnowledge = grades.reduce((sum, grade) => sum + grade.knowledgeScore, 0);
     return totalKnowledge / grades.length;
   }
 
   private calculateAverageImplementation(grades: ModuleGrades[]): number {
     if (!grades || grades.length === 0) return 0;
-
     const totalImplementation = grades.reduce((sum, grade) => sum + grade.implementationScore, 0);
     return totalImplementation / grades.length;
   }
 
   public async findByName(name: string): Promise<Module | null> {
-    const seller = await this.ormRepository.findFirst({ where: { name } });
-
-    return seller;
+    return this.ormRepository.findFirst({ where: { name } });
   }
 
   public async findById(id: string): Promise<Module | null> {
-    const seller = await this.ormRepository.findFirst({ where: { id } });
-
-    return seller;
+    return this.ormRepository.findFirst({ where: { id } });
   }
 
   public async create(data: ICreateModuleDTO): Promise<Module> {
-    const seller = await this.ormRepository.create({ data });
-
-    return seller;
+    return this.ormRepository.create({ data });
   }
 
   public async delete(id: string): Promise<Module> {
-    const seller = await this.ormRepository.delete({ where: { id } });
-
-    return seller;
+    return this.ormRepository.delete({ where: { id } });
   }
 
   public async getAllModules(): Promise<Module[] | null> {
-    const seller = await this.ormRepository.findMany();
-
-    return seller;
+    return this.ormRepository.findMany();
   }
 
   public async update(id: string, data: IUpdateModuleDTO): Promise<Module> {
-    const seller = await this.ormRepository.update({ where: { id }, data });
-
-    return seller;
+    return this.ormRepository.update({ where: { id }, data });
   }
 }

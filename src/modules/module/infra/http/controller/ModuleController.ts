@@ -39,9 +39,10 @@ export default class ModuleController {
   }
 
   public async getAllModuleInfo(req: Request, res: Response): Promise<Response> {
+    const { supervisorId } = req.params;
     const getAllModuleInfo = container.resolve(GetModulesInfoService);
 
-    const moduleinfo = await getAllModuleInfo.execute();
+    const moduleinfo = await getAllModuleInfo.execute(supervisorId);
 
     return res.status(200).json(moduleinfo);
   }
