@@ -1,5 +1,5 @@
 import prisma from '@shared/infra/prisma/client';
-import { Prisma, QuestionsGrades, Seller } from '@prisma/client';
+import { Prisma, QuestionsGrades } from '@prisma/client';
 
 import IQuestionsGradesRepository from '@modules/visitTemplate/repositories/IQuestionsGradesRepository';
 import ICreateQuestionsGradesDTO from '@modules/visitTemplate/dtos/ICreateQuestionsGradesDTO';
@@ -12,7 +12,7 @@ export default class QuestionsGradesRepository implements IQuestionsGradesReposi
     this.ormRepository = prisma.questionsGrades;
   }
 
-  public async getAllByIDManager(idManager: string): Promise<(QuestionsGrades & { seller: Seller })[] | null> {
+  public async getAllByIDManager(idManager: string): Promise<(QuestionsGrades)[] | null> {
     const grades = await this.ormRepository.findMany({
       where: {
         seller: {
@@ -21,23 +21,17 @@ export default class QuestionsGradesRepository implements IQuestionsGradesReposi
           },
         },
       },
-      include: {
-        seller: true,
-      },
     });
 
     return grades;
   }
 
-  public async getAllByIDSupervisor(idSupervisor: string): Promise<(QuestionsGrades & { seller: Seller })[] | null> {
+  public async getAllByIDSupervisor(idSupervisor: string): Promise<(QuestionsGrades)[] | null> {
     const grades = await this.ormRepository.findMany({
       where: {
         seller: {
           supervisorId: idSupervisor,
         },
-      },
-      include: {
-        seller: true,
       },
     });
 

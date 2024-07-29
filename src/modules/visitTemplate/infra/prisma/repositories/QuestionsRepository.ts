@@ -12,6 +12,10 @@ export default class QuestionsRepository implements IQuestionsRepository {
     this.ormRepository = prisma.questions;
   }
 
+  public async findAll(): Promise<Questions[] | null> {
+    return this.ormRepository.findMany({});
+  }
+
   public async update(id: string, question: IUpdateQuestionsDTO): Promise<Questions> {
     return this.ormRepository.update({
       where: { id },

@@ -8,6 +8,7 @@ interface IQuestionsRepository {
   delete(id: string): Promise<Questions>;
   getAllByCategories(categoriesId: string): Promise<Questions[] | null>;
   findById(id: string): Promise<Questions | null>;
+  findAll(): Promise<Questions[] | null>;
   update(id: string, question: IUpdateQuestionsDTO): Promise<Questions>;
 }
 
