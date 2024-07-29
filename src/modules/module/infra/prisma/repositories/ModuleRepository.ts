@@ -15,10 +15,18 @@ export default class ModuleRepository implements IModuleRepository {
     this.moduleGradeRepository = prisma.moduleGrades;
   }
 
-  public async getModulesInfoAll(): Promise<IResponseModuleGradeDTO[] | null> {
+  public async getModulesInfoManager(managerId:string): Promise<IResponseModuleGradeDTO[] | null> {
     const modules = await this.ormRepository.findMany({
       include: {
-        sellerGrades: true, // Inclui os dados da relação com ModuleGrades
+        sellerGrades: {
+          where: {
+            seller: {
+              supervisor: {
+                managerId,
+              },
+            },
+          },
+        },
       },
     });
 

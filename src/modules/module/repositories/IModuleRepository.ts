@@ -11,7 +11,7 @@ interface IModuleRepository {
   update(id: string, data: IUpdateModuleDTO): Promise<Module>;
   findByName(name: string): Promise<Module | null>;
   findById(id: string): Promise<Module | null>;
-  getModulesInfoAll(): Promise<IResponseModuleGradeDTO[] | null>;
+  getModulesInfoManager(managerId:string): Promise<IResponseModuleGradeDTO[] | null>;
   getModulesInfoSupervisor(supervisorId:string): Promise<IResponseModuleGradeDTO[] | null>;
 
 }

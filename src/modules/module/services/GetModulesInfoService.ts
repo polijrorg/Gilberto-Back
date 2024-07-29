@@ -1,5 +1,6 @@
 import { inject, injectable } from 'tsyringe';
 import ISupervisorRepository from '@modules/supervisor/repositories/ISupervisorRepository';
+import IManagerRepository from '@modules/manager/repositories/IManagerRepository';
 import IModuleRepository from '../repositories/IModuleRepository';
 import IResponseModuleGradeDTO from '../dtos/IResponseModuleGradeDTO';
 
@@ -10,20 +11,33 @@ export default class GetAllModuleService {
     private moduleRepository: IModuleRepository,
     @inject('SupervisorRepository')
     private supervisorRepository: ISupervisorRepository,
+    @inject('ManagerRepository')
+    private managerRepository: IManagerRepository,
   ) {}
 
-  public async execute(supervisorId: string): Promise<{
+  public async execute(id: string): Promise<{
     sellerId: string;
     averageKnowledge: number;
     averageImplementation: number;
   }[]> {
-    const modulesInfo = supervisorId
-      ? await this.moduleRepository.getModulesInfoSupervisor(supervisorId)
-      : await this.moduleRepository.getModulesInfoAll();
+    // Verificar se o id é de um Supervisor
+    const supervisor = await this.supervisorRepository.findById(id);
+    if (supervisor) {
+      const modulesInfo = await this.moduleRepository.getModulesInfoSupervisor(id);
+      if (!modulesInfo) return [];
+      return this.aggregateSellerGrades(modulesInfo);
+    }
 
-    if (!modulesInfo) return [];
+    // Verificar se o id é de um Gerente
+    const manager = await this.managerRepository.findById(id);
+    if (manager) {
+      const modulesInfo = await this.moduleRepository.getModulesInfoManager(id);
+      if (!modulesInfo) return [];
+      return this.aggregateSellerGrades(modulesInfo);
+    }
 
-    return this.aggregateSellerGrades(modulesInfo);
+    // Se não for nem Supervisor nem Gerente, retornar um array vazio
+    return [];
   }
 
   private aggregateSellerGrades(modulesInfo: IResponseModuleGradeDTO[]): {

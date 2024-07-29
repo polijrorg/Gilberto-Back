@@ -12,7 +12,7 @@ moduleRoutes.delete('/delete/:id', moduleController.delete);
 
 moduleRoutes.get('/getAll', moduleController.getAllModule);
 
-moduleRoutes.get('/getAllModuleInfo/:supervisorId', moduleController.getAllModuleInfo);
+moduleRoutes.get('/getAllModuleInfo/:id', moduleController.getAllModuleInfo);
 
 moduleRoutes.patch('/update/:id', moduleController.update);
 
