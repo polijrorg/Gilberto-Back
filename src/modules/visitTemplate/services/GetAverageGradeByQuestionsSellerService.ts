@@ -20,7 +20,7 @@ export default class GetAverageGradeByQuestionsSellerService {
     private questionsGradesRepository: IQuestionsGradesRepository,
     @inject('QuestionsRepository')
     private questionsRepository: IQuestionsRepository,
-    @inject('SellersRepository')
+    @inject('SellerRepository')
     private sellersRepository: ISellersRepository,
   ) { }
 
