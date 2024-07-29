@@ -1,5 +1,3 @@
-// GetAllModuleService.ts
-
 import { inject, injectable } from 'tsyringe';
 import ISupervisorRepository from '@modules/supervisor/repositories/ISupervisorRepository';
 import IModuleRepository from '../repositories/IModuleRepository';
@@ -18,12 +16,12 @@ export default class GetAllModuleService {
     sellerId: string;
     averageKnowledge: number;
     averageImplementation: number;
-  }[] | null> {
+  }[]> {
     const modulesInfo = supervisorId
       ? await this.moduleRepository.getModulesInfoSupervisor(supervisorId)
       : await this.moduleRepository.getModulesInfoAll();
 
-    if (!modulesInfo) return null;
+    if (!modulesInfo) return [];
 
     return this.aggregateSellerGrades(modulesInfo);
   }
