@@ -12,6 +12,33 @@ export default class QuestionsGradesRepository implements IQuestionsGradesReposi
     this.ormRepository = prisma.questionsGrades;
   }
 
+  public async getAllByIDSeller(idSeller: string): Promise<QuestionsGrades[] | null> {
+    const currentDate = new Date();
+    const currentDay = currentDate.getDate();
+    const currentMonth = currentDate.getMonth() + 1; // getMonth() retorna 0 para janeiro
+
+    const grades = await this.ormRepository.findMany({
+      where: {
+        sellerId: idSeller,
+        AND: [
+          {
+            created_at: {
+              gte: new Date(currentDate.getFullYear(), currentMonth - 1, currentDay).toISOString().split('T')[0], // Início do dia
+            },
+          },
+          {
+            created_at: {
+              lt: new Date(currentDate.getFullYear(), currentMonth - 1, currentDay + 1).toISOString().split('T')[0], // Início do próximo dia
+            },
+          },
+        ],
+      },
+      orderBy: { created_at: 'asc' },
+    });
+
+    return grades || null;
+  }
+
   public async getAllByIDManager(idManager: string): Promise<(QuestionsGrades)[] | null> {
     const grades = await this.ormRepository.findMany({
       where: {

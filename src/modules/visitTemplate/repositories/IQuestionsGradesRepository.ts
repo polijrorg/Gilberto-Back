@@ -11,6 +11,7 @@ interface IQuestionsGradesRepository {
   update(id: string, data: IUpdateQuestionsGradesDTO): Promise<QuestionsGrades | null>;
   getAllByIDSupervisor(idSupervisor: string): Promise<(QuestionsGrades)[] | null>;
   getAllByIDManager(idManager: string): Promise<(QuestionsGrades)[] | null>;
+  getAllByIDSeller(idSeller: string): Promise<(QuestionsGrades)[] | null>;
 
 }
 

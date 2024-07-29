@@ -7,6 +7,7 @@ import GetAllQuestionsGradesBySellerService from '@modules/visitTemplate/service
 import UpdateQuestionsGradesService from '@modules/visitTemplate/services/UpdateQuestionsGradesService';
 import GetAverageGradeByQuestionsService from '@modules/visitTemplate/services/GetAverageGradeByQuestionsService ';
 import GetAverageGradeByQuestionsManagerService from '@modules/visitTemplate/services/GetAverageGradeByQuestionsManagerService';
+import GetAverageGradeByQuestionsSellerService from '@modules/visitTemplate/services/GetAverageGradeByQuestionsSellerService';
 
 export default class QuestionsGradesController {
   public async create(req: Request, res: Response): Promise<Response> {
@@ -39,6 +40,16 @@ export default class QuestionsGradesController {
     const getAverageGradeByQuestionsManagerService = container.resolve(GetAverageGradeByQuestionsManagerService);
 
     const averageGrades = await getAverageGradeByQuestionsManagerService.execute(idManager);
+
+    return res.status(200).json(averageGrades);
+  }
+
+  public async getAverageGradeByQuestionsSeller(req: Request, res: Response): Promise<Response> {
+    const { idSeller } = req.params;
+
+    const getAverageGradeByQuestionsSellerService = container.resolve(GetAverageGradeByQuestionsSellerService);
+
+    const averageGrades = await getAverageGradeByQuestionsSellerService.execute(idSeller);
 
     return res.status(200).json(averageGrades);
   }
