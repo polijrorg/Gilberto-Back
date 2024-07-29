@@ -12,9 +12,13 @@ export default class QuestionsGradesRepository implements IQuestionsGradesReposi
     this.ormRepository = prisma.questionsGrades;
   }
 
-  public async getAll(): Promise<QuestionsGrades[] | null> {
+  public async getAll(idSupervisor:string): Promise<QuestionsGrades[] | null> {
     const grades = await this.ormRepository.findMany({
-      orderBy: { created_at: 'asc' },
+      where: {
+        seller: {
+          supervisorId: idSupervisor,
+        },
+      },
     });
 
     return grades;

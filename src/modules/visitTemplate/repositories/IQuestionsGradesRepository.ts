@@ -9,7 +9,7 @@ interface IQuestionsGradesRepository {
   getAllBySeller(sellerId: string): Promise<QuestionsGrades[] | null>;
   findById(id: string): Promise<QuestionsGrades | null>;
   update(id: string, data: IUpdateQuestionsGradesDTO): Promise<QuestionsGrades | null>;
-  getAll(): Promise<QuestionsGrades[] | null>;
+  getAll(idSupervisor: string): Promise<QuestionsGrades[] | null>;
 }
 
 export default IQuestionsGradesRepository;

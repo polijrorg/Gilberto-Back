@@ -23,9 +23,11 @@ export default class QuestionsGradesController {
   }
 
   public async getAverageGradeByQuestions(req: Request, res: Response): Promise<Response> {
+    const { idSupervisor } = req.params;
+
     const getAverageGradeService = container.resolve(GetAverageGradeByQuestionsService);
 
-    const averageGrades = await getAverageGradeService.execute();
+    const averageGrades = await getAverageGradeService.execute(idSupervisor);
 
     return res.status(200).json(averageGrades);
   }

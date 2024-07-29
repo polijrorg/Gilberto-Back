@@ -21,8 +21,8 @@ export default class GetAverageGradeByQuestionsService {
     private questionsRepository: IQuestionsRepository,
   ) { }
 
-  public async execute(): Promise<IQuestionAverageGrade[]> {
-    const grades = await this.questionsGradesRepository.getAll();
+  public async execute(idSupervisor: string): Promise<IQuestionAverageGrade[]> {
+    const grades = await this.questionsGradesRepository.getAll(idSupervisor);
 
     if (!grades) {
       return [];
