@@ -13,7 +13,7 @@ interface IQuestionAverageGrade {
 }
 
 @injectable()
-export default class GetAverageGradeByQuestionsService {
+export default class GetAverageGradeByQuestionsManagerService {
   constructor(
     @inject('QuestionsGradesRepository')
     private questionsGradesRepository: IQuestionsGradesRepository,
@@ -21,8 +21,8 @@ export default class GetAverageGradeByQuestionsService {
     private questionsRepository: IQuestionsRepository,
   ) { }
 
-  public async execute(idSupervisor: string): Promise<IQuestionAverageGrade[]> {
-    const grades = await this.questionsGradesRepository.getAllByIDSupervisor(idSupervisor);
+  public async execute(idManager: string): Promise<IQuestionAverageGrade[]> {
+    const grades = await this.questionsGradesRepository.getAllByIDManager(idManager);
 
     if (!grades) {
       return [];
