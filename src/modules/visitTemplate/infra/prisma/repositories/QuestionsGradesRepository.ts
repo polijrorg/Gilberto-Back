@@ -35,7 +35,7 @@ export default class QuestionsGradesRepository implements IQuestionsGradesReposi
       },
     });
 
-    return grades || null;
+    return grades || [];
   }
 
   public async getAllByIDManager(idManager: string): Promise<(QuestionsGrades)[] | null> {

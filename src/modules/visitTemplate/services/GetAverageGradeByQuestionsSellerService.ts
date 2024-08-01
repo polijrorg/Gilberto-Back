@@ -24,43 +24,37 @@ export default class GetAverageGradeByQuestionsSellerService {
     private sellersRepository: ISellersRepository,
   ) { }
 
-  public async execute(idSeller: string): Promise<(IQuestionAverageGrade & { seller: Seller })[] | null> {
+  public async execute(idSeller: string): Promise<IQuestionAverageGrade[] | null> {
     const grades = await this.questionsGradesRepository.getAllByIDSeller(idSeller);
 
-    if (!grades) {
+    if (!grades || grades.length === 0) {
       return [];
     }
 
-    const questionGradesMap = new Map<string, { totalGrade: number; count: number, sellerIds: string[] }>();
+    // Usar um Map para agregar as notas por pergunta
+    const questionGradesMap = new Map<string, { totalGrade: number; count: number }>();
 
     grades.forEach((grade) => {
       if (!questionGradesMap.has(grade.questionsId)) {
-        questionGradesMap.set(grade.questionsId, { totalGrade: 0, count: 0, sellerIds: [] });
+        questionGradesMap.set(grade.questionsId, { totalGrade: 0, count: 0 });
       }
 
       const questionData = questionGradesMap.get(grade.questionsId)!;
       questionData.totalGrade += grade.grade;
       questionData.count += 1;
-      questionData.sellerIds.push(grade.sellerId);
     });
 
-    const result: (IQuestionAverageGrade & { seller: Seller })[] = [];
+    const result: IQuestionAverageGrade[] = [];
 
     for (const [questionId, data] of questionGradesMap) {
       const question = await this.questionsRepository.findById(questionId);
 
       if (question) {
-        for (const sellerId of data.sellerIds) {
-          const seller = await this.sellersRepository.findById(sellerId);
-          if (seller) {
-            result.push({
-              questionId,
-              questionName: question.question,
-              averageGrade: data.totalGrade / data.count,
-              seller,
-            });
-          }
-        }
+        result.push({
+          questionId,
+          questionName: question.question,
+          averageGrade: data.totalGrade / data.count,
+        });
       }
     }
 
