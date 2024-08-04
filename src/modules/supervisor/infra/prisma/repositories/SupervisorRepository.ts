@@ -1,5 +1,5 @@
 import prisma from '@shared/infra/prisma/client';
-import { Prisma, Supervisor } from '@prisma/client';
+import { Prisma, Supervisor, Manager } from '@prisma/client';
 
 import ISupervisorRepository from '@modules/supervisor/repositories/ISupervisorRepository';
 import ICreateSupervisorDTO from '@modules/supervisor/dtos/ICreateSupervisorDTO';
@@ -12,12 +12,13 @@ export default class SupervisorRepository implements ISupervisorRepository {
     this.ormRepository = prisma.supervisor;
   }
 
-  public async findById(id: string): Promise<Supervisor | null> {
+  public async findById(id: string): Promise<(Supervisor & { manager: Manager }) | null> {
     const user = await this.ormRepository.findFirst({
       where: { id },
+      include: { manager: true },
     });
 
-    return user;
+    return user as (Supervisor & { manager: Manager }) | null;
   }
 
   public async findByEmail(email: string): Promise<Supervisor | null> {

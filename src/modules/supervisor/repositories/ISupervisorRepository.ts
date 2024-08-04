@@ -1,10 +1,10 @@
-import { Supervisor } from '@prisma/client';
+import { Supervisor, Manager } from '@prisma/client';
 
 import IUpdateSupervisorDTO from '@modules/supervisor/dtos/IUpdateSupervisorDTO';
 import ICreateSupervisorDTO from '../dtos/ICreateSupervisorDTO';
 
 interface ISupervisorRepository {
-  findById(id: string): Promise<Supervisor | null>;
+  findById(id: string): Promise<(Supervisor & { manager: Manager}) | null>;
   findByEmail(email: string | undefined): Promise<Supervisor | null>;
   create(data: ICreateSupervisorDTO): Promise<Supervisor>;
   delete(id: string): Promise<Supervisor>;
