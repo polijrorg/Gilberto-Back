@@ -37,10 +37,10 @@ export default class CompanyRepository implements ICompanyRepository {
     return seller;
   }
 
-  public async getAllCompany(): Promise<Company[] | null> {
-    const seller = await this.ormRepository.findMany({ orderBy: { name: 'asc' } });
+  public async getAllCompany(): Promise<(Company & { director: Director[]})[] | null> {
+    const seller = await this.ormRepository.findMany({ orderBy: { name: 'asc' }, include: { director: true } });
 
-    return seller;
+    return seller as (Company & { director: Director[]})[];
   }
 
   public async update(id: string, data: IUpdateCompanyDTO): Promise<Company> {

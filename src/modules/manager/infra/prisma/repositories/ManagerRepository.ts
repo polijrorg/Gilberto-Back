@@ -14,10 +14,10 @@ export default class ManagerRepository implements IManagerRepository {
     this.ormRepository = prisma.manager;
   }
 
-  public async findAll(): Promise<Manager[]> {
-    const seller = await this.ormRepository.findMany();
+  public async findAll(): Promise<(Manager & {company: Company, director: Director})[]> {
+    const seller = await this.ormRepository.findMany({ include: { company: true, director: true } });
 
-    return seller;
+    return seller as (Manager & {company: Company, director: Director})[];
   }
 
   public async findById(id: string): Promise<(Manager & { company: Company, director: Director}) | null> {

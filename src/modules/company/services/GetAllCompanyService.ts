@@ -1,6 +1,6 @@
 import { inject, injectable } from 'tsyringe';
 
-import { Company } from '@prisma/client';
+import { Company, Director } from '@prisma/client';
 
 import ICompanyRepository from '../repositories/ICompanyRepository';
 
@@ -11,7 +11,7 @@ export default class GetAllCompanyService {
     private companyRepository: ICompanyRepository,
   ) { }
 
-  public async execute(): Promise<Company[] | null> {
+  public async execute(): Promise<(Company & { director: Director[]})[] | null> {
     const seller = await this.companyRepository.getAllCompany();
 
     return seller;

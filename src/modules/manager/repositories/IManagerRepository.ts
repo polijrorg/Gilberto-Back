@@ -5,7 +5,7 @@ import IUpdateManagerDTO from '../dtos/IUpdateManagerDTO';
 
 interface IManagerRepository {
   findById(id: string): Promise<(Manager & { company: Company, director: Director}) | null>;
-  findAll(): Promise<Manager[]>;
+  findAll(): Promise<(Manager & {company: Company, director: Director})[]>;
   findByEmail(email: string): Promise<Manager | null>;
   create(data: ICreateManagerDTO): Promise<Manager>;
   delete(id: string): Promise<Manager>;

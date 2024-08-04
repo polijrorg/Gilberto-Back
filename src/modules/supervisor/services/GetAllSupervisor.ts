@@ -1,6 +1,6 @@
 import { inject, injectable } from 'tsyringe';
 
-import { Supervisor } from '@prisma/client';
+import { Supervisor, Manager, Company } from '@prisma/client';
 
 import ISupervisorRepository from '../repositories/ISupervisorRepository';
 
@@ -11,9 +11,14 @@ export default class GetAllSupervisor {
     private supervisorRepository: ISupervisorRepository,
   ) { }
 
-  public async execute(): Promise<Supervisor[] | null> {
-    const supervisor = await this.supervisorRepository.findAll();
+  public async execute(): Promise<(Supervisor & {manager: Manager, company: Company})[] > {
+    const supervisors = await this.supervisorRepository.findAll();
+    const supervisorsWithManagerAndCompany = supervisors.map((supervisor) => ({
+      ...supervisor,
+      manager: supervisor.manager,
+      company: supervisor.company,
+    }));
 
-    return supervisor;
+    return supervisorsWithManagerAndCompany;
   }
 }
