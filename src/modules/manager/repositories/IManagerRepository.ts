@@ -1,10 +1,10 @@
-import { Manager } from '@prisma/client';
+import { Manager, Company, Director } from '@prisma/client';
 
 import ICreateManagerDTO from '../dtos/ICreateManagerDTO';
 import IUpdateManagerDTO from '../dtos/IUpdateManagerDTO';
 
 interface IManagerRepository {
-  findById(id: string): Promise<Manager | null>;
+  findById(id: string): Promise<(Manager & { company: Company, director: Director}) | null>;
   findByEmail(email: string): Promise<Manager | null>;
   create(data: ICreateManagerDTO): Promise<Manager>;
   delete(id: string): Promise<Manager>;
