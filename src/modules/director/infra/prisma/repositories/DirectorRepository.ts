@@ -12,6 +12,12 @@ export default class DirectorRepository implements IDirectorRepository {
     this.ormRepository = prisma.director;
   }
 
+  public async findAll(): Promise<Director[]> {
+    const directors = await this.ormRepository.findMany();
+
+    return directors;
+  }
+
   public async findById(id: string): Promise<(Director & {company: Company}) | null> {
     const seller = await this.ormRepository.findFirst({
       where: { id },

@@ -6,6 +6,7 @@ import CreateDirectorService from '@modules/director/services/CreateDirectorServ
 import DeleteDirectorService from '@modules/director/services/DeleteDirectorService';
 import FindByIdDirectorService from '@modules/director/services/FindByIdDirectorService';
 import GetAllDirectorByCompanyService from '@modules/director/services/GetAllDirectorByCompanyService';
+import FindAllDirectorService from '@modules/director/services/FindAllDirectorService';
 import UpdateDirectorService from '@modules/director/services/UpdateDirectorService';
 
 export default class ManagerController {
@@ -52,6 +53,14 @@ export default class ManagerController {
     const findByIdDirectorService = container.resolve(FindByIdDirectorService);
 
     const director = await findByIdDirectorService.execute(id);
+
+    return res.status(200).json(director);
+  }
+
+  public async findAll(req: Request, res: Response): Promise<Response> {
+    const findAllDirectorService = container.resolve(FindAllDirectorService);
+
+    const director = await findAllDirectorService.execute();
 
     return res.status(200).json(director);
   }
