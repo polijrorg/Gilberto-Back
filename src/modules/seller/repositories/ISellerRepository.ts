@@ -20,7 +20,7 @@ interface ISellerRepository {
   getManagerAndDirectorFromSeller(sellerId: string): Promise<{ managerId: string | null, directorId: string | null} | null>;
   updateSeller(id: string, data: IUpdateSellerDTO): Promise<Seller>;
   findByEmail(email: string): Promise<Seller | null>;
-  findById(id: string): Promise<Seller | null>;
+  findById(id: string): Promise<(Seller & {company: Company, supervisor: Supervisor}) | null>;
   findByIdAndData(id: string, day: string): Promise<ReceiveSellerInfosDTO | null>;
 }
 
