@@ -1,6 +1,6 @@
 import { inject, injectable } from 'tsyringe';
 
-import { Director } from '@prisma/client';
+import { Director, Company } from '@prisma/client';
 
 import IDirectorRepository from '../repositories/IDirectorRepository';
 
@@ -11,7 +11,7 @@ export default class FindByIdDirectorService {
     private directorRepository: IDirectorRepository,
   ) { }
 
-  public async execute(id: string): Promise<Director | null> {
+  public async execute(id: string): Promise<(Director & {company: Company}) | null> {
     const director = await this.directorRepository.findById(id);
 
     return director;

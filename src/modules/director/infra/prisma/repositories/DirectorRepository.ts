@@ -1,5 +1,5 @@
 import prisma from '@shared/infra/prisma/client';
-import { Prisma, Director } from '@prisma/client';
+import { Prisma, Director, Company } from '@prisma/client';
 
 import IDirectorRepository from '@modules/director/repositories/IDirectorRepository';
 import ICreateDirectorDTO from '@modules/director/dtos/ICreateDirectorDTO';
@@ -12,10 +12,15 @@ export default class DirectorRepository implements IDirectorRepository {
     this.ormRepository = prisma.director;
   }
 
-  public async findById(id: string): Promise<Director | null> {
-    const seller = await this.ormRepository.findFirst({ where: { id } });
+  public async findById(id: string): Promise<(Director & {company: Company}) | null> {
+    const seller = await this.ormRepository.findFirst({
+      where: { id },
+      include: {
+        company: true,
+      },
+    });
 
-    return seller;
+    return seller as (Director & {company: Company}) | null;
   }
 
   public async findByEmail(email: string): Promise<Director | null> {
