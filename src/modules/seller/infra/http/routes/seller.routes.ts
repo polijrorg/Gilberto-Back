@@ -27,6 +27,8 @@ sellerRoutes.get('/getManagerAndDirectorFromSeller/:idSeller', sellerController.
 
 sellerRoutes.get('/:id', sellerController.findById);
 
+sellerRoutes.get('/', sellerController.getAll);
+
 sellerRoutes.patch('/update/:id', sellerController.update);
 
 export default sellerRoutes;

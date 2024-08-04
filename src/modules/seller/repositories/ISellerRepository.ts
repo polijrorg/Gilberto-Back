@@ -9,6 +9,7 @@ import ReceiveSellerInfosDTO from '../dtos/IReceiveSellerInfosDTO';
 interface ISellerRepository {
   create(data: ICreateSellerDTO): Promise<Seller>;
   delete(id: string): Promise<Seller>;
+  getAll(): Promise<Seller[]>;
   getAllSellerFromASupervisor(supervisorId: string): Promise<Seller[] | null>;
   getAllSellerPendenteFromASupervisor(supervisorId: string): Promise<Seller[] | null>;
   getAllSellerMentoriaFromASupervisor(supervisorId: string): Promise<Seller[] | null>;
