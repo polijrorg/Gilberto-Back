@@ -14,6 +14,12 @@ export default class SupervisorRepository implements ISupervisorRepository {
     this.ormRepository = prisma.supervisor;
   }
 
+  public async findAll(): Promise<Supervisor[]> {
+    const supervisors = await this.ormRepository.findMany();
+
+    return supervisors;
+  }
+
   public async findById(id: string): Promise<(Supervisor & { manager: Manager, company: Company }) | null> {
     const user = await this.ormRepository.findFirst({
       where: { id },

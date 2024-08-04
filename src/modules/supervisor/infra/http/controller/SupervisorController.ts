@@ -4,6 +4,7 @@ import { container } from 'tsyringe';
 import CreateSupervisorService from '@modules/supervisor/services/CreateSupervisorService';
 import DeleteSupervisorService from '@modules/supervisor/services/DeleteSupervisorService';
 import FindByIdSupervisorService from '@modules/supervisor/services/FindByIdSupervisorService';
+import GetAllSupervisor from '@modules/supervisor/services/GetAllSupervisor';
 import UpdateSupervisorService from '@modules/supervisor/services/UpdateSupervisorService';
 import AuthenticateSupervisorService from '@modules/supervisor/services/AuthenticateSupervisorService';
 import GetAllSupervisorFromAManagerService from '@modules/supervisor/services/GetAllSupervisorFromAManagerService';
@@ -54,6 +55,14 @@ export default class SupervisorController {
     const findByIdSupervisorService = container.resolve(FindByIdSupervisorService);
 
     const supervisor = await findByIdSupervisorService.execute(id);
+
+    return res.status(200).json(supervisor);
+  }
+
+  public async findAll(req: Request, res: Response): Promise<Response> {
+    const getAllSupervisor = container.resolve(GetAllSupervisor);
+
+    const supervisor = await getAllSupervisor.execute();
 
     return res.status(200).json(supervisor);
   }

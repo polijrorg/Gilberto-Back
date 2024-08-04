@@ -18,6 +18,8 @@ supervisorRoutes.get('/getAllFromADirector/:directorId', supervisorController.ge
 
 supervisorRoutes.get('/getAllFromAManager/:managerId', supervisorController.getAllSupervisorFromAManager);
 
+supervisorRoutes.get('/getAll', supervisorController.findAll);
+
 supervisorRoutes.get('/:id', supervisorController.findById);
 
 supervisorRoutes.patch('/update/:id', supervisorController.update);

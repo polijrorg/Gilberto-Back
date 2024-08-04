@@ -5,6 +5,7 @@ import ICreateSupervisorDTO from '../dtos/ICreateSupervisorDTO';
 
 interface ISupervisorRepository {
   findById(id: string): Promise<(Supervisor & { manager: Manager, company: Company }) | null>;
+  findAll(): Promise<Supervisor[]>;
   findByEmail(email: string | undefined): Promise<Supervisor | null>;
   create(data: ICreateSupervisorDTO): Promise<Supervisor>;
   delete(id: string): Promise<Supervisor>;
