@@ -1,6 +1,6 @@
 import prisma from '@shared/infra/prisma/client';
 import {
-  Prisma, Seller,
+  Prisma, Seller, Supervisor, Visit, Company,
 } from '@prisma/client';
 
 import ISellerRepository from '@modules/seller/repositories/ISellerRepository';
@@ -15,10 +15,16 @@ export default class SellerRepository implements ISellerRepository {
     this.ormRepository = prisma.seller;
   }
 
-  public async getAll(): Promise<Seller[]> {
-    const sellers = await this.ormRepository.findMany();
+  public async getAll(): Promise<(Seller & { supervisor: Supervisor; visits: Visit[]; company: Company })[]> {
+    const sellers = await this.ormRepository.findMany({
+      include: {
+        company: true,
+        supervisor: true,
+        visit: true,
+      },
+    });
 
-    return sellers;
+    return sellers as unknown as (Seller & { supervisor: Supervisor; visits: Visit[]; company: Company })[];
   }
 
   public async getManagerAndDirectorFromSeller(sellerId: string): Promise<{ managerId: string | null, directorId: string | null} | null> {

@@ -1,5 +1,5 @@
 import {
-  Seller,
+  Supervisor, Seller, Visit, Company,
 } from '@prisma/client';
 
 import ICreateSellerDTO from '../dtos/ICreateSellerDTO';
@@ -9,7 +9,7 @@ import ReceiveSellerInfosDTO from '../dtos/IReceiveSellerInfosDTO';
 interface ISellerRepository {
   create(data: ICreateSellerDTO): Promise<Seller>;
   delete(id: string): Promise<Seller>;
-  getAll(): Promise<Seller[]>;
+  getAll(): Promise<(Seller & { supervisor: Supervisor; visits: Visit[]; company: Company })[]>;
   getAllSellerFromASupervisor(supervisorId: string): Promise<Seller[] | null>;
   getAllSellerPendenteFromASupervisor(supervisorId: string): Promise<Seller[] | null>;
   getAllSellerMentoriaFromASupervisor(supervisorId: string): Promise<Seller[] | null>;

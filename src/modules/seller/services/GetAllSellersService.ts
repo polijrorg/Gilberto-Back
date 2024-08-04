@@ -1,6 +1,8 @@
 import { inject, injectable } from 'tsyringe';
 
-import { Seller } from '@prisma/client';
+import {
+  Seller, Supervisor, Visit, Company,
+} from '@prisma/client';
 
 import ISellerRepository from '../repositories/ISellerRepository';
 
@@ -11,7 +13,7 @@ export default class GetAllSellerMentoriaFromASupervisorService {
     private sellerRepository: ISellerRepository,
   ) { }
 
-  public async execute(): Promise<Seller[] | null> {
+  public async execute(): Promise<(Seller & { supervisor: Supervisor; visits: Visit[]; company: Company })[] | null> {
     const seller = await this.sellerRepository.getAll();
 
     return seller;
