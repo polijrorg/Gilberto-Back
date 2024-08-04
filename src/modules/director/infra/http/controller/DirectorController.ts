@@ -4,6 +4,7 @@ import { container } from 'tsyringe';
 import AuthenticateDirectorService from '@modules/director/services/AuthenticateDirectorService';
 import CreateDirectorService from '@modules/director/services/CreateDirectorService';
 import DeleteDirectorService from '@modules/director/services/DeleteDirectorService';
+import FindByIdDirectorService from '@modules/director/services/FindByIdDirectorService';
 import GetAllDirectorByCompanyService from '@modules/director/services/GetAllDirectorByCompanyService';
 import UpdateDirectorService from '@modules/director/services/UpdateDirectorService';
 
@@ -43,6 +44,16 @@ export default class ManagerController {
     const manager = await deleteManager.execute(id);
 
     return res.status(200).json(manager);
+  }
+
+  public async findById(req: Request, res: Response): Promise<Response> {
+    const { id } = req.params;
+
+    const findByIdDirectorService = container.resolve(FindByIdDirectorService);
+
+    const director = await findByIdDirectorService.execute(id);
+
+    return res.status(200).json(director);
   }
 
   public async getAllDirectorByCompany(req: Request, res: Response): Promise<Response> {

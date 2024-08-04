@@ -14,6 +14,8 @@ directorRoutes.delete('/delete/:id', directorController.delete);
 
 directorRoutes.get('/getAll/:companyId', directorController.getAllDirectorByCompany);
 
+directorRoutes.get('/:id', directorController.findById);
+
 directorRoutes.patch('/update/:id', directorController.update);
 
 export default directorRoutes;
