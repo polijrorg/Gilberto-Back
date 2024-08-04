@@ -1,5 +1,5 @@
 import prisma from '@shared/infra/prisma/client';
-import { Prisma, Company } from '@prisma/client';
+import { Prisma, Company, Director } from '@prisma/client';
 
 import ICompanyRepository from '@modules/company/repositories/ICompanyRepository';
 import ICreateCompanyDTO from '@modules/company/dtos/ICreateCompanyDTO';
@@ -12,10 +12,10 @@ export default class CompanyRepository implements ICompanyRepository {
     this.ormRepository = prisma.company;
   }
 
-  public async findById(id: string): Promise<Company | null> {
-    const seller = await this.ormRepository.findFirst({ where: { id } });
+  public async findById(id: string): Promise<(Company & { directors: Director[]}) | null> {
+    const seller = await this.ormRepository.findFirst({ where: { id }, include: { director: true } });
 
-    return seller;
+    return seller as (Company & { directors: Director[]}) | null;
   }
 
   public async findByName(name: string | undefined): Promise<Company | null> {
