@@ -4,6 +4,7 @@ import { container } from 'tsyringe';
 import CreateManagerService from '@modules/manager/services/CreateManagerService';
 import DeleteManagerService from '@modules/manager/services/DeleteManagerService';
 import GetAllManagerByCompanyService from '@modules/manager/services/GetAllManagerByCompanyService';
+import FindAllManagerService from '@modules/manager/services/FindAllManagerService';
 import FindByIdManagerService from '@modules/manager/services/FindByIdManagerService';
 import UpdateManagerService from '@modules/manager/services/UpdateManagerService';
 import AuthenticateManagerService from '@modules/manager/services/AuthenticateManagerService';
@@ -43,6 +44,14 @@ export default class ManagerController {
     const findByIdManagerService = container.resolve(FindByIdManagerService);
 
     const manager = await findByIdManagerService.execute({ managerId: id });
+
+    return res.status(200).json(manager);
+  }
+
+  public async findAll(req: Request, res: Response): Promise<Response> {
+    const findAllManagerService = container.resolve(FindAllManagerService);
+
+    const manager = await findAllManagerService.execute();
 
     return res.status(200).json(manager);
   }

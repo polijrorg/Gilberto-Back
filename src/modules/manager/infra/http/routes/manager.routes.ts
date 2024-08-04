@@ -16,6 +16,8 @@ managerRoutes.get('/getAll/:companyId', managerController.getAllManagerByCompany
 
 managerRoutes.get('/getAll/:directorId', managerController.getAllManagerByDirector);
 
+managerRoutes.get('/getAll', managerController.findAll);
+
 managerRoutes.get('/:id', managerController.findById);
 
 managerRoutes.patch('/update/:id', managerController.update);
