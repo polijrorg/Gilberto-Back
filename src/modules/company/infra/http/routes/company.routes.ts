@@ -12,6 +12,8 @@ companyRoutes.delete('/delete/:id', companyController.delete);
 
 companyRoutes.get('/getAll', companyController.getAll);
 
+companyRoutes.get('/:id', companyController.findById);
+
 companyRoutes.patch('/update/:id', companyController.update);
 
 export default companyRoutes;

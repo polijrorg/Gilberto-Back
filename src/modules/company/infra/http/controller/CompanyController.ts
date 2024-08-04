@@ -5,6 +5,7 @@ import CreateCompanyService from '@modules/company/services/CreateCompanyService
 import DeleteCompanyService from '@modules/company/services/DeleteCompanyService';
 import GetAllCompanyService from '@modules/company/services/GetAllCompanyService';
 import UpdateCompanyService from '@modules/company/services/UpdateCompanyService';
+import GetCompanyByidService from '@modules/company/services/GetCompanyByidService';
 
 export default class CompanyController {
   public async create(req: Request, res: Response): Promise<Response> {
@@ -27,6 +28,16 @@ export default class CompanyController {
     const deleteCompany = container.resolve(DeleteCompanyService);
 
     const company = await deleteCompany.execute({ id });
+
+    return res.status(200).json(company);
+  }
+
+  public async findById(req: Request, res: Response): Promise<Response> {
+    const { id } = req.params;
+
+    const getCompanyByidService = container.resolve(GetCompanyByidService);
+
+    const company = await getCompanyByidService.execute(id);
 
     return res.status(200).json(company);
   }
