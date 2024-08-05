@@ -13,11 +13,11 @@ interface IRequest {
 export default class AuthenticateDirectorService {
   public async execute({ email, password }: IRequest): Promise<{ token: string }> {
     if (!(email === process.env.ADMINUSER)) {
-      throw new AppError('Incorrect email or password', 401);
+      throw new AppError('Incorrect email', 401);
     }
 
     if (!(password === process.env.ADMINPASSWORD)) {
-      throw new AppError('Incorrect email or password', 401);
+      throw new AppError('Incorrect password', 401);
     }
 
     const { secret, expiresIn } = authConfig.jwt;
