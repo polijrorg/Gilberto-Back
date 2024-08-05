@@ -1,4 +1,3 @@
-/* eslint-disable consistent-return */
 import { inject, injectable } from 'tsyringe';
 import AppError from '@shared/errors/AppError';
 import ICSVProvider from '@shared/container/providers/CSVProvider/models/ICsvProvider';
@@ -6,9 +5,8 @@ import ICompanyRepository from '../repositories/ICompanyRepository';
 import ICreateCompanyDTO from '../dtos/ICreateCompanyDTO';
 
 interface ICompanyDoc {
-  'Image': string;
-  'Name': string;
-  'Stage': string;
+  image: string;
+  name: string;
 }
 
 @injectable()
@@ -19,53 +17,62 @@ export default class ParseCompanyCSVService {
 
     @inject('CSVProvider')
     private csvProvider: ICSVProvider,
-  ) { }
+  ) {}
 
   public async execute(file: Express.Multer.File | undefined): Promise<ICompanyDoc[]> {
-    if (!file || !file.mimetype.includes('csv')) {
-      throw new AppError('Invalid file');
+    if (!file || file.mimetype !== 'text/csv') {
+      throw new AppError('Invalid file. Please upload a CSV file.');
     }
-    let entries;
+
+    let entries: ICompanyDoc[] = [];
 
     try {
-      entries = await this.csvProvider.parseDocument<ICompanyDoc>(file.filename, ['Image', 'Name', 'Stage']);
-    } catch (e) {
-      throw new AppError('Invalid file');
+      entries = await this.csvProvider.parseDocument<ICompanyDoc>(file.filename, ['image', 'name']);
+    } catch (error) {
+      throw new AppError('Error parsing the CSV file. Please ensure it is formatted correctly.');
     }
 
     const failedEntries: ICompanyDoc[] = [];
 
     const promises = entries.map(async (entry) => {
       try {
-        const companyName = entry.Name;
+        if (!entry.name || !entry.image) {
+          console.log('Skipping entry due to missing fields:', entry);
+          failedEntries.push(entry);
+          return;
+        }
+
+        const companyName = entry.name;
 
         const nameAlreadyExists = await this.companyRepository.findByName(companyName);
         if (nameAlreadyExists) {
+          console.log('Name already exists:', companyName);
           failedEntries.push(entry);
-          return undefined;
+          return;
         }
 
         const company: ICreateCompanyDTO = {
-          image: entry.Image,
+          image: entry.image,
           name: companyName,
-          stage: entry.Stage || 'Estágio inicial',
         };
 
         await this.companyRepository.create(company);
-      } catch (e) {
+      } catch (error) {
+        console.log('Error processing entry:', entry, 'Error:', error.message);
         failedEntries.push(entry);
-        return undefined;
       }
     });
 
     try {
       await Promise.all(promises);
 
-      if (failedEntries && failedEntries.length > 0) throw new Error();
+      if (failedEntries.length > 0) {
+        throw new AppError(`Failed to add the following companies: ${failedEntries.map((entry) => entry.name).join(', ')}`, 400);
+      }
 
       return entries;
     } catch (error) {
-      throw new AppError(`Failed to add the following companies: ${failedEntries.map((entry) => entry.Name).join(', ')}`, 400);
+      throw new AppError(`Error processing the CSV file: ${error.message}`, 400);
     }
   }
 }

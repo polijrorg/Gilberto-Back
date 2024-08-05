@@ -1,47 +1,45 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { injectable } from 'tsyringe';
-
 import { parse } from 'csv-parse';
 import path from 'path';
 import fs from 'fs';
 
 import multerConfig from '@config/multer';
-
-import ICSVProvider from '../models/ICSVProvider';
+import ICSVProvider from '../models/ICsvProvider';
 
 @injectable()
 export default class CSVParseProvider implements ICSVProvider {
-  public async parseDocument<T>(fileName: string, keys: (keyof T)[], hasHeader = true, delimiter = ','): Promise<T[]> {
+  public async parseDocument<T>(
+    fileName: string,
+    keys: (keyof T)[],
+    hasHeader = true,
+    delimiter = ',',
+  ): Promise<T[]> {
     const parser = parse({
       delimiter,
+      from_line: hasHeader ? 2 : 1, // Skip header line if present
     });
 
     const originalPath = path.resolve(multerConfig.directory, fileName);
 
     const promise = new Promise<T[]>((resolve, reject) => {
       const parsedData: T[] = [];
-      let hasSkipped = false;
-      let newKeys = [...keys];
+      let header: string[] = [];
+      let hasSkipped = !hasHeader;
 
-      parser.on('readable', async () => {
+      parser.on('readable', () => {
         let record = parser.read();
 
         if (hasHeader && !hasSkipped) {
-          newKeys = [];
-          for (let i = 0; i < keys.length; i += 1) {
-            // eslint-disable-next-line no-loop-func
-            const index = keys.findIndex((key) => record[i] === key);
-            if (index !== -1) {
-              newKeys[index] = keys[i];
-            }
-          }
-          record = parser.read();
+          header = record;
           hasSkipped = true;
+          return;
         }
 
         while (record !== null) {
           const object: Partial<T> = {};
           for (let i = 0; i < keys.length; i += 1) {
-            object[newKeys[i]] = record[i];
+            object[keys[i]] = record[i];
           }
           parsedData.push(object as T);
           record = parser.read();
@@ -50,10 +48,13 @@ export default class CSVParseProvider implements ICSVProvider {
 
       parser.on('end', () => {
         this.deleteFile(fileName);
-        return resolve(parsedData);
+        resolve(parsedData);
       });
 
-      parser.on('error', (err) => reject(err));
+      parser.on('error', (err) => {
+        this.deleteFile(fileName);
+        reject(err);
+      });
 
       fs.createReadStream(originalPath).pipe(parser);
     });
@@ -63,6 +64,10 @@ export default class CSVParseProvider implements ICSVProvider {
 
   private async deleteFile(fileName: string): Promise<void> {
     const originalPath = path.resolve(multerConfig.directory, fileName);
-    fs.promises.unlink(originalPath);
+    try {
+      await fs.promises.unlink(originalPath);
+    } catch (error) {
+      console.error(`Error deleting file ${fileName}:`, error);
+    }
   }
 }

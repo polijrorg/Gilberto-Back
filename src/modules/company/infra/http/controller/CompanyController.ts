@@ -43,16 +43,20 @@ export default class CompanyController {
     return res.status(200).json(company);
   }
 
-  public async uploadCSV(request: Request, response: Response): Promise<Response> {
-    const { file } = request;
+  public async uploadCSV(req: Request, res: Response): Promise<Response> {
+    const companyCSV = req.file;
+
+    if (!companyCSV || !companyCSV.mimetype.includes('csv')) {
+      return res.status(400).json({ error: 'Invalid file type. Please upload a CSV file.' });
+    }
 
     const parseCompanyCSVService = container.resolve(ParseCompanyCSVService);
 
     try {
-      const companies = await parseCompanyCSVService.execute(file);
-      return response.json({ companies });
+      const companies = await parseCompanyCSVService.execute(companyCSV);
+      return res.status(200).json({ companies });
     } catch (error) {
-      return response.status(400).json({ error: error.message });
+      return res.status(400).json({ error: error.message });
     }
   }
 
