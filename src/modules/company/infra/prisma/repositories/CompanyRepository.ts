@@ -25,10 +25,17 @@ export default class CompanyRepository implements ICompanyRepository {
     return seller;
   }
 
-  public async create(data: ICreateCompanyDTO): Promise<Company> {
-    const seller = await this.ormRepository.create({ data });
+  public async create({ image = '', name }: ICreateCompanyDTO): Promise<Company> {
+    // Criação do novo registro de empresa
+    const company = await this.ormRepository.create({
+      data: {
+        image, // Ordem correta dos campos
+        name,
+      },
+    });
 
-    return seller;
+    // Retornar o objeto criado
+    return company;
   }
 
   public async delete(id: string): Promise<Company> {

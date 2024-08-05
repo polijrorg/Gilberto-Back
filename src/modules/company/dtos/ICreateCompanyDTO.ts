@@ -1,5 +1,5 @@
 interface ICreateCompanyDTO {
-  image: string;
+  image?: string;
   name: string;
   stage?: string;
 }

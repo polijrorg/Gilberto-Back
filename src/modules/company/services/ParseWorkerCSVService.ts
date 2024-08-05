@@ -5,7 +5,6 @@ import ICompanyRepository from '../repositories/ICompanyRepository';
 import ICreateCompanyDTO from '../dtos/ICreateCompanyDTO';
 
 interface ICompanyDoc {
-  image: string;
   name: string;
 }
 
@@ -27,7 +26,7 @@ export default class ParseCompanyCSVService {
     let entries: ICompanyDoc[] = [];
 
     try {
-      entries = await this.csvProvider.parseDocument<ICompanyDoc>(file.filename, ['image', 'name']);
+      entries = await this.csvProvider.parseDocument<ICompanyDoc>(file.filename, ['name']);
     } catch (error) {
       throw new AppError('Error parsing the CSV file. Please ensure it is formatted correctly.');
     }
@@ -36,7 +35,7 @@ export default class ParseCompanyCSVService {
 
     const promises = entries.map(async (entry) => {
       try {
-        if (!entry.name || !entry.image) {
+        if (!entry.name) {
           console.log('Skipping entry due to missing fields:', entry);
           failedEntries.push(entry);
           return;
@@ -52,7 +51,6 @@ export default class ParseCompanyCSVService {
         }
 
         const company: ICreateCompanyDTO = {
-          image: entry.image,
           name: companyName,
         };
 
