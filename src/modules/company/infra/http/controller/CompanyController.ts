@@ -6,6 +6,7 @@ import DeleteCompanyService from '@modules/company/services/DeleteCompanyService
 import GetAllCompanyService from '@modules/company/services/GetAllCompanyService';
 import UpdateCompanyService from '@modules/company/services/UpdateCompanyService';
 import GetCompanyByidService from '@modules/company/services/GetCompanyByidService';
+import ParseCompanyCSVService from '../../../services/ParseWorkerCSVService';
 
 export default class CompanyController {
   public async create(req: Request, res: Response): Promise<Response> {
@@ -40,6 +41,19 @@ export default class CompanyController {
     const company = await getCompanyByidService.execute(id);
 
     return res.status(200).json(company);
+  }
+
+  public async uploadCSV(request: Request, response: Response): Promise<Response> {
+    const { file } = request;
+
+    const parseCompanyCSVService = container.resolve(ParseCompanyCSVService);
+
+    try {
+      const companies = await parseCompanyCSVService.execute(file);
+      return response.json({ companies });
+    } catch (error) {
+      return response.status(400).json({ error: error.message });
+    }
   }
 
   public async getAll(req: Request, res: Response): Promise<Response> {
