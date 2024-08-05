@@ -25,15 +25,11 @@ export default class ParseCompanyCSVService {
     if (!file || !file.mimetype.includes('csv')) {
       throw new AppError('Invalid file');
     }
-
-    const filePath = file.path; // Ajuste o caminho conforme a configuração do multer
-
-    let entries: ICompanyDoc[];
+    let entries;
 
     try {
-      entries = await this.csvProvider.parseDocument<ICompanyDoc>(filePath, ['Image', 'Name', 'Stage']);
+      entries = await this.csvProvider.parseDocument<ICompanyDoc>(file.filename, ['Image', 'Name', 'Stage']);
     } catch (e) {
-      console.error('Parsing error:', e);
       throw new AppError('Invalid file');
     }
 
@@ -46,7 +42,7 @@ export default class ParseCompanyCSVService {
         const nameAlreadyExists = await this.companyRepository.findByName(companyName);
         if (nameAlreadyExists) {
           failedEntries.push(entry);
-          return;
+          return undefined;
         }
 
         const company: ICreateCompanyDTO = {
@@ -57,17 +53,15 @@ export default class ParseCompanyCSVService {
 
         await this.companyRepository.create(company);
       } catch (e) {
-        console.error('Failed to create company:', e);
         failedEntries.push(entry);
+        return undefined;
       }
     });
 
     try {
       await Promise.all(promises);
 
-      if (failedEntries.length > 0) {
-        throw new Error();
-      }
+      if (failedEntries && failedEntries.length > 0) throw new Error();
 
       return entries;
     } catch (error) {
