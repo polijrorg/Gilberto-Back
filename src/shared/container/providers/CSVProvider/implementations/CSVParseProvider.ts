@@ -6,7 +6,7 @@ import fs from 'fs';
 
 import multerConfig from '@config/multer';
 
-import ICSVProvider from '../models/ICsvProvider';
+import ICSVProvider from '../models/ICSVProvider';
 
 @injectable()
 export default class CSVParseProvider implements ICSVProvider {

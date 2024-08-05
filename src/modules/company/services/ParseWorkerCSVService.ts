@@ -1,7 +1,7 @@
 /* eslint-disable consistent-return */
 import { inject, injectable } from 'tsyringe';
 import AppError from '@shared/errors/AppError';
-import ICSVProvider from '@shared/container/providers/CSVProvider/models/ICsvProvider';
+import ICSVProvider from '@shared/container/providers/CSVProvider/models/ICSVProvider';
 import ICompanyRepository from '../repositories/ICompanyRepository';
 import ICreateCompanyDTO from '../dtos/ICreateCompanyDTO';
 
