@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import { container } from 'tsyringe';
 
 import AuthenticateDirectorService from '@modules/director/services/AuthenticateDirectorService';
+import AuthenticateAdminService from '@modules/director/services/AuthenticateAdminService';
 import CreateDirectorService from '@modules/director/services/CreateDirectorService';
 import DeleteDirectorService from '@modules/director/services/DeleteDirectorService';
 import FindByIdDirectorService from '@modules/director/services/FindByIdDirectorService';
@@ -32,6 +33,21 @@ export default class ManagerController {
 
     const manager = await createManager.execute({
       image, name, email, password, companyId,
+    });
+
+    return res.status(201).json(manager);
+  }
+
+  public async adminLogin(req: Request, res: Response): Promise<Response> {
+    const {
+      email,
+      password,
+    } = req.body;
+
+    const authenticateAdminService = container.resolve(AuthenticateAdminService);
+
+    const manager = await authenticateAdminService.execute({
+      email, password,
     });
 
     return res.status(201).json(manager);
