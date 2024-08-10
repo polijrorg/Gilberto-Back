@@ -11,6 +11,7 @@ export default class ActionPlansRepository implements IActionPlansRepository {
   constructor() {
     this.ormRepository = prisma.actionPlans;
   }
+
   public async getByIdSeller(idSeller: string): Promise<ActionPlans[] | null> {
     const actionPlans = await this.ormRepository.findMany({
       where: { sellerId: idSeller },
@@ -25,8 +26,31 @@ export default class ActionPlansRepository implements IActionPlansRepository {
     return seller;
   }
 
-  public async create(data: ICreateActionPlansDTO): Promise<ActionPlans> {
-    const seller = await this.ormRepository.create({ data });
+  public async create(data: ICreateActionPlansDTO): Promise<ActionPlans & { seller: { email: string, name: string }, supervisor: { name: string } }> {
+    const seller = await this.ormRepository.create({
+      data,
+      select: {
+        seller: {
+          select: {
+            email: true,
+            name: true,
+          },
+        },
+        supervisor: {
+          select: {
+            name: true,
+          },
+        },
+      },
+    }) as ActionPlans & {
+      seller: {
+        email: string,
+        name: string
+      },
+      supervisor: {
+        name: string
+      }
+    };
 
     return seller;
   }
