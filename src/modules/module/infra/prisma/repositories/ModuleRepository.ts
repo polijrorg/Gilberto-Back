@@ -49,7 +49,15 @@ export default class ModuleRepository implements IModuleRepository {
         },
       },
       include: {
-        sellerGrades: true,
+        sellerGrades: {
+          where: {
+            seller: {
+              supervisor: {
+                id: supervisorId,
+              },
+            },
+          },
+        },
       },
     });
 
