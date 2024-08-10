@@ -22,7 +22,9 @@ export default class ModuleRepository implements IModuleRepository {
           where: {
             seller: {
               supervisor: {
-                managerId,
+                manager: {
+                  id: managerId,
+                },
               },
             },
           },
@@ -39,7 +41,9 @@ export default class ModuleRepository implements IModuleRepository {
         sellerGrades: {
           some: {
             seller: {
-              supervisorId,
+              supervisor: {
+                id: supervisorId,
+              },
             },
           },
         },
