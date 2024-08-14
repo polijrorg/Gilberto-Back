@@ -21,6 +21,7 @@ export default class GetAllModuleService {
     averageImplementation: number;
   }[]> {
     // Verificar se o id é de um Supervisor
+    // Verificar se o id é de um Supervisor
     const supervisor = await this.supervisorRepository.findById(id);
     if (supervisor) {
       console.log(`Supervisor encontrado: ${id}`);
