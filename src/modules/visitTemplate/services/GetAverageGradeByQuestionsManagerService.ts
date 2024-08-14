@@ -4,8 +4,6 @@
 import { inject, injectable } from 'tsyringe';
 
 import IQuestionsRepository from '@modules/visitTemplate/repositories/IQuestionsRepository';
-import ISellersRepository from '@modules/seller/repositories/ISellerRepository';
-import { Seller } from '@prisma/client';
 import IQuestionsGradesRepository from '../repositories/IQuestionsGradesRepository';
 
 interface IQuestionAverageGrade {
@@ -21,49 +19,48 @@ export default class GetAverageGradeByQuestionsManagerService {
     private questionsGradesRepository: IQuestionsGradesRepository,
     @inject('QuestionsRepository')
     private questionsRepository: IQuestionsRepository,
-    @inject('SellersRepository')
-    private sellersRepository: ISellersRepository,
-  ) { }
+  ) {}
 
-  public async execute(idManager: string): Promise<(IQuestionAverageGrade & { seller: Seller })[] | null> {
+  public async execute(idManager: string): Promise<IQuestionAverageGrade[] | null> {
     const grades = await this.questionsGradesRepository.getAllByIDManager(idManager);
+    const allQuestions = await this.questionsRepository.findAll();
 
-    if (!grades) {
-      return [];
+    if (!grades || grades.length === 0) {
+      return null; // Retorna null se não houver notas
     }
 
-    const questionGradesMap = new Map<string, { totalGrade: number; count: number, sellerIds: string[] }>();
+    const questionGradesMap = new Map<string, { totalGrade: number; count: number }>();
 
-    // Acumula as notas, a contagem por questão e os vendedores
-    grades.forEach((grade) => {
+    // Acumula as notas e a contagem por questão
+    for (const grade of grades) {
       if (!questionGradesMap.has(grade.questionsId)) {
-        questionGradesMap.set(grade.questionsId, { totalGrade: 0, count: 0, sellerIds: [] });
+        questionGradesMap.set(grade.questionsId, { totalGrade: 0, count: 0 });
       }
 
       const questionData = questionGradesMap.get(grade.questionsId)!;
       questionData.totalGrade += grade.grade;
       questionData.count += 1;
-      questionData.sellerIds.push(grade.sellerId); // Adiciona o SellerId
-    });
+    }
 
-    const result: (IQuestionAverageGrade & { seller: Seller })[] = [];
+    const result: IQuestionAverageGrade[] = [];
 
-    // Obtém o nome das questões, calcula a média e adiciona o Seller
-    for (const [questionId, data] of questionGradesMap) {
-      const question = await this.questionsRepository.findById(questionId);
+    // Obtém o nome das questões, calcula a média e adiciona ao resultado
+    for (const question of allQuestions) {
+      const data = questionGradesMap.get(question.id);
 
-      if (question) {
-        for (const sellerId of data.sellerIds) {
-          const seller = await this.sellersRepository.findById(sellerId); // Busca o objeto Seller
-          if (seller) {
-            result.push({
-              questionId,
-              questionName: question.question,
-              averageGrade: data.totalGrade / data.count,
-              seller,
-            });
-          }
-        }
+      if (data) {
+        result.push({
+          questionId: question.id,
+          questionName: question.question,
+          averageGrade: data.totalGrade / data.count,
+        });
+      } else {
+        // Adiciona questões sem notas
+        result.push({
+          questionId: question.id,
+          questionName: question.question,
+          averageGrade: 0,
+        });
       }
     }
 
