@@ -15,16 +15,14 @@ export default class ModuleRepository implements IModuleRepository {
     this.moduleGradeRepository = prisma.moduleGrades;
   }
 
-  public async getModulesInfoManager(managerId:string): Promise<IResponseModuleGradeDTO[] | null> {
+  public async getModulesInfoManager(managerId: string): Promise<IResponseModuleGradeDTO[] | null> {
     const modules = await this.ormRepository.findMany({
       include: {
         sellerGrades: {
           where: {
             seller: {
               supervisor: {
-                manager: {
-                  id: managerId,
-                },
+                managerId,
               },
             },
           },
@@ -41,9 +39,7 @@ export default class ModuleRepository implements IModuleRepository {
         sellerGrades: {
           some: {
             seller: {
-              supervisor: {
-                id: supervisorId,
-              },
+              supervisorId,
             },
           },
         },
@@ -88,18 +84,6 @@ export default class ModuleRepository implements IModuleRepository {
         implementation: implementationSum / count,
       };
     });
-  }
-
-  private calculateAverageKnowledge(grades: ModuleGrades[]): number {
-    if (!grades || grades.length === 0) return 0;
-    const totalKnowledge = grades.reduce((sum, grade) => sum + grade.knowledgeScore, 0);
-    return totalKnowledge / grades.length;
-  }
-
-  private calculateAverageImplementation(grades: ModuleGrades[]): number {
-    if (!grades || grades.length === 0) return 0;
-    const totalImplementation = grades.reduce((sum, grade) => sum + grade.implementationScore, 0);
-    return totalImplementation / grades.length;
   }
 
   public async findByName(name: string): Promise<Module | null> {

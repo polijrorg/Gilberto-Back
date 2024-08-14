@@ -1,6 +1,7 @@
 import { inject, injectable } from 'tsyringe';
 import ISupervisorRepository from '@modules/supervisor/repositories/ISupervisorRepository';
 import IManagerRepository from '@modules/manager/repositories/IManagerRepository';
+import AppError from '@shared/errors/AppError';
 import IModuleRepository from '../repositories/IModuleRepository';
 import IResponseModuleGradeDTO from '../dtos/IResponseModuleGradeDTO';
 
@@ -20,24 +21,25 @@ export default class GetAllModuleService {
     averageKnowledge: number;
     averageImplementation: number;
   }[]> {
-    // Verificar se o id é de um Supervisor
+    let modulesInfo: IResponseModuleGradeDTO[] | null = null;
+
+    // Verificar se o ID é de um Supervisor
     const supervisor = await this.supervisorRepository.findById(id);
     if (supervisor) {
-      const modulesInfo = await this.moduleRepository.getModulesInfoSupervisor(id);
-      if (!modulesInfo) return [];
-      return this.aggregateSellerGrades(modulesInfo);
+      modulesInfo = await this.moduleRepository.getModulesInfoSupervisor(id);
+    } else {
+      // Verificar se o ID é de um Gerente
+      const manager = await this.managerRepository.findById(id);
+      if (manager) {
+        modulesInfo = await this.moduleRepository.getModulesInfoManager(id);
+      } else {
+        throw new AppError('Supervisor or Manager not found', 400);
+      }
     }
 
-    // Verificar se o id é de um Gerente
-    const manager = await this.managerRepository.findById(id);
-    if (manager) {
-      const modulesInfo = await this.moduleRepository.getModulesInfoManager(id);
-      if (!modulesInfo) return [];
-      return this.aggregateSellerGrades(modulesInfo);
-    }
+    if (!modulesInfo) return [];
 
-    // Se não for nem Supervisor nem Gerente, retornar um array vazio
-    return [];
+    return this.aggregateSellerGrades(modulesInfo);
   }
 
   private aggregateSellerGrades(modulesInfo: IResponseModuleGradeDTO[]): {
@@ -48,12 +50,13 @@ export default class GetAllModuleService {
     const sellerData: Record<string, { knowledgeSum: number; implementationSum: number; count: number }> = {};
 
     modulesInfo.forEach((module) => {
-      if (!sellerData[module.module]) {
-        sellerData[module.module] = { knowledgeSum: 0, implementationSum: 0, count: 0 };
+      const sellerId = module.module; // Ajuste para usar o ID do vendedor como chave
+      if (!sellerData[sellerId]) {
+        sellerData[sellerId] = { knowledgeSum: 0, implementationSum: 0, count: 0 };
       }
-      sellerData[module.module].knowledgeSum += module.knowledge;
-      sellerData[module.module].implementationSum += module.implementation;
-      sellerData[module.module].count += 1;
+      sellerData[sellerId].knowledgeSum += module.knowledge;
+      sellerData[sellerId].implementationSum += module.implementation;
+      sellerData[sellerId].count += 1;
     });
 
     return Object.keys(sellerData).map((sellerId) => {
