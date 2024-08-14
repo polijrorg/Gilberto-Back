@@ -24,31 +24,24 @@ export default class GetAllModuleService {
     // Verificar se o id é de um Supervisor
     const supervisor = await this.supervisorRepository.findById(id);
     if (supervisor) {
-      console.log(`Supervisor encontrado: ${id}`);
       const modulesInfo = await this.moduleRepository.getModulesInfoSupervisor(id);
       if (!modulesInfo || modulesInfo.length === 0) {
-        console.log('Nenhum dado de módulo encontrado para o supervisor');
         return [];
       }
-      console.log('Dados de módulo encontrados para o supervisor:', modulesInfo);
       return this.aggregateSellerGrades(modulesInfo);
     }
 
     // Verificar se o id é de um Gerente
     const manager = await this.managerRepository.findById(id);
     if (manager) {
-      console.log(`Gerente encontrado: ${id}`);
       const modulesInfo = await this.moduleRepository.getModulesInfoManager(id);
       if (!modulesInfo || modulesInfo.length === 0) {
-        console.log('Nenhum dado de módulo encontrado para o gerente');
         return [];
       }
-      console.log('Dados de módulo encontrados para o gerente:', modulesInfo);
       return this.aggregateSellerGrades(modulesInfo);
     }
 
     // Se não for nem Supervisor nem Gerente, retornar um array vazio
-    console.log('ID não corresponde a nenhum Supervisor ou Gerente');
     return [];
   }
 
@@ -68,8 +61,6 @@ export default class GetAllModuleService {
       sellerData[sellerId].implementationSum += implementation;
       sellerData[sellerId].count += 1;
     });
-
-    console.log('Dados agregados por vendedor:', sellerData);
 
     return Object.keys(sellerData).map((sellerId) => {
       const { knowledgeSum, implementationSum, count } = sellerData[sellerId];
