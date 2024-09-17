@@ -15,6 +15,7 @@ import UpdateSellerService from '@modules/seller/services/UpdateSellerService';
 import GetAllSellerFromAManagerService from '@modules/seller/services/GetAllSellerFromAManagerService';
 import GetAllSellerFromADirectorService from '@modules/seller/services/GetAllSellerFromADirector';
 import GeneratePdfService from '@modules/seller/services/GeneratePdfSellerVisit';
+import ParseSellerCSVService from '@modules/seller/services/ParseSellerCSVService';
 
 export default class SellerController {
   public async findById(req: Request, res: Response): Promise<Response> {
@@ -61,6 +62,23 @@ export default class SellerController {
     });
 
     return res.status(201).json(seller);
+  }
+
+  public async uploadCSV(req: Request, res: Response): Promise<Response> {
+    const sellerCSV = req.file;
+
+    if (!sellerCSV || !sellerCSV.mimetype.includes('csv')) {
+      return res.status(400).json({ error: 'Invalid file type. Please upload a CSV file.' });
+    }
+
+    const parseSellerCSVService = container.resolve(ParseSellerCSVService);
+
+    try {
+      const sellers = await parseSellerCSVService.execute(sellerCSV);
+      return res.status(200).json({ sellers });
+    } catch (error) {
+      return res.status(400).json({ error: error.message });
+    }
   }
 
   public async delete(req: Request, res: Response): Promise<Response> {

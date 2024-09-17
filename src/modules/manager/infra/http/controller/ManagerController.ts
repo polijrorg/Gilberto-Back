@@ -9,6 +9,7 @@ import FindByIdManagerService from '@modules/manager/services/FindByIdManagerSer
 import UpdateManagerService from '@modules/manager/services/UpdateManagerService';
 import AuthenticateManagerService from '@modules/manager/services/AuthenticateManagerService';
 import GetAllManagerByDirectorService from '@modules/manager/services/GetAllManagerByDirectorService';
+import ParseManagerCSVService from '@modules/manager/services/ParseManagerCSVService';
 
 export default class ManagerController {
   public async login(req: Request, res: Response): Promise<Response> {
@@ -36,6 +37,23 @@ export default class ManagerController {
     });
 
     return res.status(201).json(manager);
+  }
+
+  public async uploadCSV(req: Request, res: Response): Promise<Response> {
+    const managerCSV = req.file;
+
+    if (!managerCSV || !managerCSV.mimetype.includes('csv')) {
+      return res.status(400).json({ error: 'Invalid file type. Please upload a CSV file.' });
+    }
+
+    const parseManagerCSVService = container.resolve(ParseManagerCSVService);
+
+    try {
+      const managers = await parseManagerCSVService.execute(managerCSV);
+      return res.status(200).json({ managers });
+    } catch (error) {
+      return res.status(400).json({ error: error.message });
+    }
   }
 
   public async findById(req: Request, res: Response): Promise<Response> {

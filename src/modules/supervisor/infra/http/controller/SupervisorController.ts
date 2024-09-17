@@ -10,6 +10,7 @@ import AuthenticateSupervisorService from '@modules/supervisor/services/Authenti
 import GetAllSupervisorFromAManagerService from '@modules/supervisor/services/GetAllSupervisorFromAManagerService';
 import GetAllSupervisorFromACompanyService from '@modules/supervisor/services/GetAllSupervisorFromACompanyService';
 import GetAllSupervisorFromADirectorService from '@modules/supervisor/services/GetAllSupervisorFromADirectorService';
+import ParseSupervisorCSVService from '@modules/supervisor/services/ParseSupervisorCSVService';
 
 export default class SupervisorController {
   public async login(req: Request, res: Response): Promise<Response> {
@@ -37,6 +38,23 @@ export default class SupervisorController {
     });
 
     return res.status(201).json(supervisor);
+  }
+
+  public async uploadCSV(req: Request, res: Response): Promise<Response> {
+    const supervisorCSV = req.file;
+
+    if (!supervisorCSV || !supervisorCSV.mimetype.includes('csv')) {
+      return res.status(400).json({ error: 'Invalid file type. Please upload a CSV file.' });
+    }
+
+    const parseSupervisorCSVService = container.resolve(ParseSupervisorCSVService);
+
+    try {
+      const supervisors = await parseSupervisorCSVService.execute(supervisorCSV);
+      return res.status(200).json({ supervisors });
+    } catch (error) {
+      return res.status(400).json({ error: error.message });
+    }
   }
 
   public async delete(req: Request, res: Response): Promise<Response> {

@@ -1,4 +1,6 @@
+import multerConfig from '@config/multer';
 import { Router } from 'express';
+import multer from 'multer';
 
 import ManagerController from '../controller/ManagerController';
 
@@ -9,6 +11,7 @@ const managerController = new ManagerController();
 managerRoutes.post('/login', managerController.login);
 
 managerRoutes.post('/create', managerController.create);
+managerRoutes.post('/csv', multer(multerConfig).single('managerCSV'), managerController.uploadCSV);
 
 managerRoutes.delete('/delete/:id', managerController.delete);
 

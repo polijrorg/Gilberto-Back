@@ -9,37 +9,38 @@ import ICSVProvider from '../models/ICsvProvider';
 
 @injectable()
 export default class CSVParseProvider implements ICSVProvider {
-  public async parseDocument<T>(
-    fileName: string,
-    keys: (keyof T)[],
-    hasHeader = true,
-    delimiter = ',',
-  ): Promise<T[]> {
+  public async parseDocument<T>(fileName: string, keys: (keyof T)[], hasHeader = true, delimiter = ','): Promise<T[]> {
     const parser = parse({
       delimiter,
-      from_line: hasHeader ? 2 : 1, // Skip header line if present
     });
 
     const originalPath = path.resolve(multerConfig.directory, fileName);
 
     const promise = new Promise<T[]>((resolve, reject) => {
       const parsedData: T[] = [];
-      let header: string[] = [];
-      let hasSkipped = !hasHeader;
+      let hasSkipped = false;
+      let newKeys = [...keys];
 
-      parser.on('readable', () => {
+      parser.on('readable', async () => {
         let record = parser.read();
 
         if (hasHeader && !hasSkipped) {
-          header = record;
+          newKeys = [];
+          for (let i = 0; i < keys.length; i += 1) {
+            // eslint-disable-next-line no-loop-func
+            const index = keys.findIndex((key) => record[i] === key);
+            if (index !== -1) {
+              newKeys[index] = keys[i];
+            }
+          }
+          record = parser.read();
           hasSkipped = true;
-          return;
         }
 
         while (record !== null) {
           const object: Partial<T> = {};
           for (let i = 0; i < keys.length; i += 1) {
-            object[keys[i]] = record[i];
+            object[newKeys[i]] = record[i];
           }
           parsedData.push(object as T);
           record = parser.read();
@@ -48,13 +49,10 @@ export default class CSVParseProvider implements ICSVProvider {
 
       parser.on('end', () => {
         this.deleteFile(fileName);
-        resolve(parsedData);
+        return resolve(parsedData);
       });
 
-      parser.on('error', (err) => {
-        this.deleteFile(fileName);
-        reject(err);
-      });
+      parser.on('error', (err) => reject(err));
 
       fs.createReadStream(originalPath).pipe(parser);
     });
