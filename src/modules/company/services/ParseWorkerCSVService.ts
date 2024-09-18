@@ -8,6 +8,11 @@ interface ICompanyDoc {
   name: string;
 }
 
+interface IFailedEntry {
+  entry: ICompanyDoc;
+  reason: string;
+}
+
 @injectable()
 export default class ParseCompanyCSVService {
   constructor(
@@ -26,18 +31,18 @@ export default class ParseCompanyCSVService {
     let entries: ICompanyDoc[] = [];
 
     try {
-      entries = await this.csvProvider.parseDocument<ICompanyDoc>(file.filename, ['name']);
+      entries = await this.csvProvider.parseDocument<ICompanyDoc>(file.filename, ['name'], true);
     } catch (error) {
       throw new AppError('Error parsing the CSV file. Please ensure it is formatted correctly.');
     }
 
-    const failedEntries: ICompanyDoc[] = [];
+    const failedEntries: IFailedEntry[] = [];
 
     const promises = entries.map(async (entry) => {
       try {
         if (!entry.name) {
           console.log('Skipping entry due to missing fields:', entry);
-          failedEntries.push(entry);
+          failedEntries.push({ entry, reason: 'Nome Vazio' });
           return;
         }
 
@@ -46,7 +51,7 @@ export default class ParseCompanyCSVService {
         const nameAlreadyExists = await this.companyRepository.findByName(companyName);
         if (nameAlreadyExists) {
           console.log('Name already exists:', companyName);
-          failedEntries.push(entry);
+          failedEntries.push({ entry, reason: 'Nome já existe' });
           return;
         }
 
@@ -57,7 +62,7 @@ export default class ParseCompanyCSVService {
         await this.companyRepository.create(company);
       } catch (error) {
         console.log('Error processing entry:', entry, 'Error:', error.message);
-        failedEntries.push(entry);
+        failedEntries.push({ entry, reason: `Erro desconechido com a seguinte mensagem: ${error.message}` });
       }
     });
 
@@ -65,12 +70,12 @@ export default class ParseCompanyCSVService {
       await Promise.all(promises);
 
       if (failedEntries.length > 0) {
-        throw new AppError(`Failed to add the following companies: ${failedEntries.map((entry) => entry.name).join(', ')}`, 400);
+        throw new AppError(`Falha em adicionar as seguintes empresas: \n${failedEntries.map((failed) => ` - ${failed.entry.name}: ${failed.reason}`).join(',\n')}`, 400);
       }
 
       return entries;
     } catch (error) {
-      throw new AppError(`Error processing the CSV file: ${error.message}`, 400);
+      throw new AppError(`Erro ao ler o CSV: ${error.message}`, 400);
     }
   }
 }

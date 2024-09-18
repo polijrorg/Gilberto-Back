@@ -2,7 +2,7 @@ model Director {
   id          String     @id @default(uuid())
   image       String
   name        String
-  email       String
+  email       String     @unique
   password    String
   job         String     @default("Diretor")
   manager     Manager[]

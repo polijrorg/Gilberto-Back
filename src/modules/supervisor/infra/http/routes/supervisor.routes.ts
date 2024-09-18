@@ -1,4 +1,6 @@
+import multerConfig from '@config/multer';
 import { Router } from 'express';
+import multer from 'multer';
 
 import SupervisorController from '../controller/SupervisorController';
 
@@ -9,6 +11,7 @@ const supervisorController = new SupervisorController();
 supervisorRoutes.post('/login', supervisorController.login);
 
 supervisorRoutes.post('/create', supervisorController.create);
+supervisorRoutes.post('/csv', multer(multerConfig).single('supervisorCSV'), supervisorController.uploadCSV);
 
 supervisorRoutes.delete('/delete/:id', supervisorController.delete);
 

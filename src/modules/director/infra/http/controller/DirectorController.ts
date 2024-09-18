@@ -9,6 +9,7 @@ import FindByIdDirectorService from '@modules/director/services/FindByIdDirector
 import GetAllDirectorByCompanyService from '@modules/director/services/GetAllDirectorByCompanyService';
 import FindAllDirectorService from '@modules/director/services/FindAllDirectorService';
 import UpdateDirectorService from '@modules/director/services/UpdateDirectorService';
+import ParseDirectorCSVService from '@modules/director/services/ParseDirectorCSVService';
 
 export default class ManagerController {
   public async login(req: Request, res: Response): Promise<Response> {
@@ -36,6 +37,23 @@ export default class ManagerController {
     });
 
     return res.status(201).json(manager);
+  }
+
+  public async uploadCSV(req: Request, res: Response): Promise<Response> {
+    const directorCSV = req.file;
+
+    if (!directorCSV || !directorCSV.mimetype.includes('csv')) {
+      return res.status(400).json({ error: 'Invalid file type. Please upload a CSV file.' });
+    }
+
+    const parseDirectorCSVService = container.resolve(ParseDirectorCSVService);
+
+    try {
+      const directors = await parseDirectorCSVService.execute(directorCSV);
+      return res.status(200).json({ directors });
+    } catch (error) {
+      return res.status(400).json({ error: error.message });
+    }
   }
 
   public async adminLogin(req: Request, res: Response): Promise<Response> {

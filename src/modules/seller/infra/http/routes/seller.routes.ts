@@ -1,4 +1,6 @@
+import multerConfig from '@config/multer';
 import { Router } from 'express';
+import multer from 'multer';
 
 import SellerController from '../controller/SellerController';
 
@@ -7,6 +9,7 @@ const sellerRoutes = Router();
 const sellerController = new SellerController();
 
 sellerRoutes.post('/create', sellerController.create);
+sellerRoutes.post('/csv', multer(multerConfig).single('sellerCSV'), sellerController.uploadCSV);
 
 sellerRoutes.delete('/delete/:id', sellerController.delete);
 

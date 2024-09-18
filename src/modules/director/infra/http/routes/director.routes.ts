@@ -1,4 +1,6 @@
+import multerConfig from '@config/multer';
 import { Router } from 'express';
+import multer from 'multer';
 
 import DirectorController from '../controller/DirectorController';
 
@@ -11,6 +13,7 @@ directorRoutes.post('/login', directorController.login);
 directorRoutes.post('/admin', directorController.adminLogin);
 
 directorRoutes.post('/create', directorController.create);
+directorRoutes.post('/csv', multer(multerConfig).single('directorCSV'), directorController.uploadCSV);
 
 directorRoutes.delete('/delete/:id', directorController.delete);
 
