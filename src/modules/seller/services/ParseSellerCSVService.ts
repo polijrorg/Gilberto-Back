@@ -53,7 +53,6 @@ export default class ParseSellerCSVService {
     const promises = entries.map(async (entry) => {
       try {
         if (!entry.name || !entry.email || !entry.companyName || !entry.supervisorEmail) {
-          console.log('Skipping entry due to missing fields:', entry);
           failedEntries.push({ entry, reason: 'Algum Campo Vazio' });
           return;
         }
@@ -64,21 +63,18 @@ export default class ParseSellerCSVService {
 
         const companyWithName = await this.companyRepository.findByName(companyName);
         if (!companyWithName) {
-          console.log('No company with name ', companyName);
           failedEntries.push({ entry, reason: `Empresa ${companyName} não encontrada` });
           return;
         }
 
         const supervisorWithEmail = await this.supervisorRepository.findByEmail(supervisorEmail);
         if (!supervisorWithEmail) {
-          console.log('Supervisor email doesn\'t exists:', supervisorEmail);
           failedEntries.push({ entry, reason: 'Email do supervisor não registrado' });
           return;
         }
 
         const sellerWithEmail = await this.sellerRepository.findByEmail(email);
-        if (!sellerWithEmail) {
-          console.log('Email already registered:', email);
+        if (sellerWithEmail) {
           failedEntries.push({ entry, reason: 'Email do vendedor já registrado' });
           return;
         }
@@ -89,12 +85,11 @@ export default class ParseSellerCSVService {
           email,
           image: '', // Não está sendo utilizado
           name,
-          stage: Stage.Visita,
+          stage: Stage.Mentoria,
         };
 
         await this.sellerRepository.create(seller);
       } catch (error) {
-        console.log('Error processing entry:', entry, 'Error:', error.message);
         failedEntries.push({ entry, reason: `Erro desconechido com a seguinte mensagem: ${error.message}` });
       }
     });
