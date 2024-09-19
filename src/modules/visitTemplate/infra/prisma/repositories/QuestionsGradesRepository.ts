@@ -71,11 +71,11 @@ export default class QuestionsGradesRepository implements IQuestionsGradesReposi
   }
 
   public async create({
-    visitId, grade, questionsId, sellerId,
+    visitId, grade, questionsId, sellerId, comments,
   }: ICreateQuestionsGradesDTO): Promise<QuestionsGrades> {
     const seller = await this.ormRepository.create({
       data: {
-        grade, questionsId, sellerId, visitId,
+        grade, questionsId, sellerId, visitId, comments,
       },
     });
 

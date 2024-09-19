@@ -196,6 +196,7 @@ model QuestionsGrades {
   created_at  DateTime  @default(now())
   visitId     String?
   visit       Visit?    @relation(fields: [visitId], references: [id], onDelete: Cascade)
+  comments    String?
 }
 
 enum Stage {
