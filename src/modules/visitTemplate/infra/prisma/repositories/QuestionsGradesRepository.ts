@@ -52,6 +52,19 @@ export default class QuestionsGradesRepository implements IQuestionsGradesReposi
     return grades;
   }
 
+  public async getAllCommentsByVisitId(visitId: string): Promise<string[]> {
+    const comments = await this.ormRepository.findMany({
+      where: {
+        visitId,
+      },
+      select: {
+        comments: true, // Seleciona apenas o campo de comentários
+      },
+    });
+
+    return comments.map((comment) => comment.comments).filter((comment) => comment !== null) as string[];
+  }
+
   public async getAllByIDSupervisor(idSupervisor: string): Promise<(QuestionsGrades)[] | null> {
     const grades = await this.ormRepository.findMany({
       where: {
@@ -78,8 +91,6 @@ export default class QuestionsGradesRepository implements IQuestionsGradesReposi
         grade, questionsId, sellerId, visitId, comments,
       },
     });
-
-    console.log(`${seller.comments} comentários`);
 
     return seller;
   }

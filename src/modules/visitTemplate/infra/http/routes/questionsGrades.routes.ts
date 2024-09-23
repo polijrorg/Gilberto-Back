@@ -10,6 +10,8 @@ questionsGradesRoutes.post('/create', questionsGradesController.create);
 
 questionsGradesRoutes.delete('/delete/:id', questionsGradesController.delete);
 
+questionsGradesRoutes.get('/getCommentsFromVisit', questionsGradesController.getGradeByVisitID);
+
 questionsGradesRoutes.get('/averageGradeByQuestions/supervisor/:idSupervisor', questionsGradesController.getAverageGradeByQuestions);
 
 questionsGradesRoutes.get('/averageGradeByQuestions/manager/:idManager', questionsGradesController.getAverageGradeByQuestionsManager);
