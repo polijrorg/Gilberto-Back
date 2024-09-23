@@ -79,7 +79,7 @@ export default class QuestionsGradesRepository implements IQuestionsGradesReposi
       },
     });
 
-    console.log(seller.comments);
+    console.log(`${seller.comments} comentários`);
 
     return seller;
   }
