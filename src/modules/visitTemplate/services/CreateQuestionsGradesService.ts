@@ -14,7 +14,7 @@ export default class CreateQuestionsGradesService {
 
   public async execute(data: ICreateQuestionsGradesDTO): Promise<QuestionsGrades> {
     const seller = await this.questionsGradesRepository.create(data);
-
+    console.log(seller);
     return seller;
   }
 }
