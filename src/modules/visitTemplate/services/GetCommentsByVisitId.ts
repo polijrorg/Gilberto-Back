@@ -6,14 +6,14 @@ import IQuestionsGradesRepository from '@modules/visitTemplate/repositories/IQue
 @injectable()
 export default class GetCommentsByVisitId {
   constructor(
-    @inject('VisitTemplateRepository')
-    private visitTemplateRepository: IQuestionsGradesRepository,
+    @inject('QuestionsGradesRepository')
+    private questionsGradesRepository: IQuestionsGradesRepository,
     @inject('DirectorRepository')
     private directorRepository: IDirectorRepository,
   ) { }
 
   public async execute(visitId: string): Promise<string[] | null> {
-    const comments = await this.visitTemplateRepository.getAllCommentsByVisitId(visitId);
+    const comments = await this.questionsGradesRepository.getAllCommentsByVisitId(visitId);
 
     return comments;
   }
