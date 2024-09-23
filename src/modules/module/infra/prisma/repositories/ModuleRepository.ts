@@ -21,6 +21,9 @@ export default class ModuleRepository implements IModuleRepository {
         sellerGrades: {
           where: {
             seller: {
+              stage: {
+                equals: 'Mentoria',
+              },
               supervisor: {
                 managerId,
               },
@@ -40,6 +43,9 @@ export default class ModuleRepository implements IModuleRepository {
           some: {
             seller: {
               supervisorId,
+              stage: {
+                equals: 'Mentoria',
+              },
             },
           },
         },
