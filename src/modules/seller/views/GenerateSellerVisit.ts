@@ -23,8 +23,6 @@ export default (data: IDocumentTemplate): TDocumentDefinitions => ({
           ul: [
 
             ...(categoria.questions?.map((question, quesIndex) => {
-              console.log('Grades found:', sellerVisit.QuestionsGrades);
-              console.log(question.id);
               const grades = sellerVisit.QuestionsGrades.filter((grade) => (grade.questionsId === question.id));
 
               return [
