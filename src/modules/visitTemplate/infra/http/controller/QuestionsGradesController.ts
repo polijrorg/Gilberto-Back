@@ -12,13 +12,13 @@ import GetAverageGradeByQuestionsSellerService from '@modules/visitTemplate/serv
 export default class QuestionsGradesController {
   public async create(req: Request, res: Response): Promise<Response> {
     const {
-      grade, sellerId, questionsId, visitId, coments,
+      grade, sellerId, questionsId, visitId, comments,
     } = req.body;
 
     const createManager = container.resolve(CreateQuestionsGradesService);
 
     const manager = await createManager.execute({
-      grade, sellerId, questionsId, visitId, coments,
+      grade, sellerId, questionsId, visitId, comments,
     });
 
     return res.status(201).json(manager);

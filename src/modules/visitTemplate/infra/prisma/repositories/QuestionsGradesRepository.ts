@@ -79,6 +79,8 @@ export default class QuestionsGradesRepository implements IQuestionsGradesReposi
       },
     });
 
+    console.log(seller.comments);
+
     return seller;
   }
 

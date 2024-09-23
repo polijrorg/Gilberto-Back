@@ -12,9 +12,12 @@ export default class CreateQuestionsGradesService {
     private questionsGradesRepository: IQuestionsGradesRepository,
   ) { }
 
-  public async execute(data: ICreateQuestionsGradesDTO): Promise<QuestionsGrades> {
-    const seller = await this.questionsGradesRepository.create(data);
-    console.log(seller);
+  public async execute({
+    grade, questionsId, sellerId, visitId, comments,
+  }: ICreateQuestionsGradesDTO): Promise<QuestionsGrades> {
+    const seller = await this.questionsGradesRepository.create({
+      grade, questionsId, sellerId, visitId, comments,
+    });
     return seller;
   }
 }

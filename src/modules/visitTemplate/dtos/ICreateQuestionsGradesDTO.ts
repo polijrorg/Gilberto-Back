@@ -3,7 +3,7 @@ interface ICreateQuestionsGradesDTO {
   questionsId: string;
   grade: number;
   visitId: string;
-  coments?: string
+  comments?: string
 }
 
 export default ICreateQuestionsGradesDTO;
