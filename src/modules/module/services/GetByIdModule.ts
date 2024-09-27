@@ -1,21 +1,21 @@
 import { inject, injectable } from 'tsyringe';
 
-import { ModuleGrades } from '@prisma/client';
+import { Module } from '@prisma/client';
 
-import IModuleGradesRepository from '../repositories/IModuleGradesRepository';
+import IModuleRepository from '../repositories/IModuleRepository';
 
 @injectable()
 export default class GetByIdModule {
   constructor(
-    @inject('ModuleGradesRepository')
-    private moduleGradesRepository: IModuleGradesRepository,
+    @inject('ModuleRepository')
+    private moduleRepository: IModuleRepository,
   ) { }
 
-  public async execute(moduleId: string): Promise<ModuleGrades> {
-    const seller = await this.moduleGradesRepository.findById(moduleId);
+  public async execute(moduleId: string): Promise<Module> {
+    const seller = await this.moduleRepository.findById(moduleId);
 
     if (!seller) {
-      throw new Error('ModuleGrades not found');
+      throw new Error('Module not found');
     }
 
     return seller;
