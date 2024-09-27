@@ -5,6 +5,7 @@ import CreateModuleService from '@modules/module/services/CreateModuleService';
 import DeleteModuleService from '@modules/module/services/DeleteModuleService';
 import GetAllModuleService from '@modules/module/services/GetAllModuleService';
 import GetModulesInfoService from '@modules/module/services/GetModulesInfoService';
+import GetByIdModule from '@modules/module/services/GetByIdModule';
 import UpdateModuleService from '@modules/module/services/UpdateModuleService';
 
 export default class ModuleController {
@@ -43,6 +44,15 @@ export default class ModuleController {
     const getAllModuleInfo = container.resolve(GetModulesInfoService);
 
     const moduleinfo = await getAllModuleInfo.execute(id);
+
+    return res.status(200).json(moduleinfo);
+  }
+
+  public async getByIdModule(req: Request, res: Response): Promise<Response> {
+    const { id } = req.params;
+    const getByIdModule = container.resolve(GetByIdModule);
+
+    const moduleinfo = await getByIdModule.execute(id);
 
     return res.status(200).json(moduleinfo);
   }

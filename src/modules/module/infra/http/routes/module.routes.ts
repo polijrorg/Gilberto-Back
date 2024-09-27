@@ -15,5 +15,6 @@ moduleRoutes.get('/getAll', moduleController.getAllModule);
 moduleRoutes.get('/getAllModuleInfo/:id', moduleController.getAllModuleInfo);
 
 moduleRoutes.patch('/update/:id', moduleController.update);
+moduleRoutes.get('/:id', moduleController.getByIdModule);
 
 export default moduleRoutes;
