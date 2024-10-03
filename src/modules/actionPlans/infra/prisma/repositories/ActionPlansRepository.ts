@@ -31,9 +31,19 @@ export default class ActionPlansRepository implements IActionPlansRepository {
     const createdActionPlan = await this.ormRepository.create({ data });
 
     // Consulta o registro criado e seleciona os campos necessários
-    const seller = await this.ormRepository.findUnique({
+    const actionPlanWithDetails = await this.ormRepository.findUnique({
       where: { id: createdActionPlan.id },
       select: {
+        id: true,
+        prize: true,
+        comments: true,
+        title: true,
+        sellerId: true,
+        done: true,
+        supervisorId: true,
+        visitId: true,
+        moduleId: true,
+        created_at: true,
         seller: {
           select: {
             email: true,
@@ -48,17 +58,17 @@ export default class ActionPlansRepository implements IActionPlansRepository {
         },
       },
     }) as ActionPlans & {
-        seller: {
-            email: string,
-            name: string
-        },
-        supervisor: {
-            name: string,
-            email: string
-        }
+      seller: {
+        email: string,
+        name: string
+      },
+      supervisor: {
+        name: string,
+        email: string
+      }
     };
 
-    return seller;
+    return actionPlanWithDetails;
   }
 
   public async delete(id: string): Promise<ActionPlans> {
