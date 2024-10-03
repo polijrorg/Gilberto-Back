@@ -19,7 +19,7 @@ export default class CreateActionPlansService {
   public async execute(data: ICreateActionPlansDTO): Promise<ActionPlans & { seller: { email: string, name: string }, supervisor: { name: string } }> {
     const actionPlan = await this.actionPlansRepository.create(data);
     const templateDataFile = path.resolve(__dirname, '..', 'views', 'createActionPlan.hbs');
-
+    console.log(actionPlan);
     await this.mailProvider.sendMail({
       to: {
         name: actionPlan.seller.name,
