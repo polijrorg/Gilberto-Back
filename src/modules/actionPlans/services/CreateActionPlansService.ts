@@ -38,6 +38,26 @@ export default class CreateActionPlansService {
       },
     });
 
+    const templateDataFileSupervisor = path.resolve(__dirname, '..', 'views', 'createActionPlanSupervisor.hbs');
+
+    await this.mailProvider.sendMail({
+      to: {
+        name: actionPlan.supervisor.name,
+        email: actionPlan.supervisor.email,
+      },
+      subject: 'Plano de Ação',
+      templateData: {
+        file: templateDataFileSupervisor,
+        variables: {
+          nameSeller: actionPlan.seller.name,
+          nameSupervisor: actionPlan.supervisor.name,
+          title: actionPlan.title,
+          comments: actionPlan.comments,
+          prize: actionPlan.prize,
+        },
+      },
+    });
+
     return actionPlan;
   }
 }

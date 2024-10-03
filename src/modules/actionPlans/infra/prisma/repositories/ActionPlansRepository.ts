@@ -26,9 +26,13 @@ export default class ActionPlansRepository implements IActionPlansRepository {
     return seller;
   }
 
-  public async create(data: ICreateActionPlansDTO): Promise<ActionPlans & { seller: { email: string, name: string }, supervisor: { name: string } }> {
-    const seller = await this.ormRepository.create({
-      data,
+  public async create(data: ICreateActionPlansDTO): Promise<ActionPlans & { seller: { email: string, name: string }, supervisor: { email: string, name: string } }> {
+    // Cria o registro
+    const createdActionPlan = await this.ormRepository.create({ data });
+
+    // Consulta o registro criado e seleciona os campos necessários
+    const seller = await this.ormRepository.findUnique({
+      where: { id: createdActionPlan.id },
       select: {
         seller: {
           select: {
@@ -39,17 +43,19 @@ export default class ActionPlansRepository implements IActionPlansRepository {
         supervisor: {
           select: {
             name: true,
+            email: true,
           },
         },
       },
     }) as ActionPlans & {
-      seller: {
-        email: string,
-        name: string
-      },
-      supervisor: {
-        name: string
-      }
+        seller: {
+            email: string,
+            name: string
+        },
+        supervisor: {
+            name: string,
+            email: string
+        }
     };
 
     return seller;
