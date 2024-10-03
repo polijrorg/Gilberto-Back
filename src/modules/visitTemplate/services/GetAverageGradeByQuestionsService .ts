@@ -41,6 +41,10 @@ export default class GetAverageGradeByQuestionsService {
     const result: IQuestionAverageGrade[] = [];
 
     // Obtém o nome das questões, calcula a média e adiciona ao resultado
+    if (!allQuestions) {
+      throw new Error('No questions found');
+    }
+
     for (const question of allQuestions) {
       const data = questionGradesMap.get(question.id);
 

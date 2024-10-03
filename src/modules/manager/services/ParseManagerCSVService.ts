@@ -4,6 +4,8 @@ import ICSVProvider from '@shared/container/providers/CSVProvider/models/ICsvPro
 import ICompanyRepository from '@modules/company/repositories/ICompanyRepository';
 import IDirectorRepository from '@modules/director/repositories/IDirectorRepository';
 import IHashProvider from '@shared/container/providers/HashProvider/models/IHashProvider';
+import path from 'path';
+import IMailProvider from '@shared/container/providers/MailProvider/models/IMailProvider';
 import ICreateManagerDTO from '../dtos/ICreateManagerDTO';
 import IManagerRepository from '../repositories/IManagerRepository';
 
@@ -36,6 +38,9 @@ export default class ParseManagerCSVService {
 
     @inject('HashProvider')
     private hashProvider: IHashProvider,
+
+    @inject('MailProvider')
+    private mailProvider: IMailProvider,
   ) {}
 
   public async execute(file: Express.Multer.File | undefined): Promise<ICsvManager[]> {
@@ -100,6 +105,22 @@ export default class ParseManagerCSVService {
         };
 
         await this.managerRepository.create(manager);
+
+        const templateDataFile = path.resolve(__dirname, '..', 'view', 'templateEmail.hbs');
+
+        await this.mailProvider.sendMail({
+          to: {
+            name: manager.name,
+            email: manager.email,
+          },
+          subject: 'Criação de conta',
+          templateData: {
+            file: templateDataFile,
+            variables: {
+              name: manager.name, email: manager.email, password: manager.password, upper: directorEmail ?? '',
+            },
+          },
+        });
       } catch (error) {
         console.log('Error processing entry:', entry, 'Error:', error.message);
         failedEntries.push({ entry, reason: `Erro desconechido com a seguinte mensagem: ${error.message}` });

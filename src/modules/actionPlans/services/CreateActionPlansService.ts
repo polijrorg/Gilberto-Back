@@ -23,7 +23,7 @@ export default class CreateActionPlansService {
     await this.mailProvider.sendMail({
       to: {
         name: actionPlan.seller.name,
-        email: 'pedrogomes18@usp.br', // actionPlan.seller.email
+        email: actionPlan.seller.email,
       },
       subject: 'Plano de Ação',
       templateData: {

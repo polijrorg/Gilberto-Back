@@ -20,9 +20,11 @@ model ActionPlans {
   supervisor   Supervisor @relation(fields: [supervisorId], references: [id], onDelete: Cascade)
   visitId      String?    @unique
   visit        Visit?     @relation(fields: [visitId], references: [id], onDelete: Cascade)
-  moduleId     String?    @unique
+  moduleId     String?
   module       Module?    @relation(fields: [moduleId], references: [id], onDelete: Cascade)
   created_at   DateTime   @default(now())
+
+  @@unique([sellerId, moduleId])
 }
 
 model Supervisor {
@@ -80,7 +82,7 @@ model Module {
   name         String
   companies    ModuleCompany[]
   created_at   DateTime        @default(now())
-  actionPlan   ActionPlans?
+  actionPlan   ActionPlans[]
 }
 
 model Company {

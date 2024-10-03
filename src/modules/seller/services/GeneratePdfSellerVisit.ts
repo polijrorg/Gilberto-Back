@@ -34,18 +34,34 @@ export default class GetAllSellerFromACompanyService {
     if (!supervisor) throw new AppError('No supervisor on this seller');
 
     const templateDataFile = path.resolve(__dirname, '..', 'views', 'templateDataFile.hbs');
+    const templateDataFileSupervisor = path.resolve(__dirname, '..', 'views', 'templateDataFileSupervisor.hbs');
 
     const base64PDF = await this.pdfProvider.createPDFtoBase64(pdf_template({ sellerVisits: visitExists, day }));
 
     await this.mailProvider.sendMail({
       to: {
         name: visitExists.name,
-        email: 'pedrogomes18@usp.br',
+        email: visitExists.email,
       },
       subject: 'Relatório de Visita',
       templateData: {
         file: templateDataFile,
         variables: { nameSeller: visitExists.name, nameSupervisor: supervisor.name, day },
+      },
+      base64PDF,
+    });
+
+    await this.mailProvider.sendMail({
+      to: {
+        name: supervisor.name,
+        email: supervisor.email,
+      },
+      subject: 'Relatório de Visita',
+      templateData: {
+        file: templateDataFileSupervisor,
+        variables: {
+          nameSeller: visitExists.name, day, nameSupervisor: supervisor.name,
+        },
       },
       base64PDF,
     });

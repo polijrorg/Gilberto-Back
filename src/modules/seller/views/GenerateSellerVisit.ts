@@ -12,7 +12,7 @@ export default (data: IDocumentTemplate): TDocumentDefinitions => ({
   content: [
     { text: `Relatório de Visita - ${data.sellerVisits.name} - Dia ${data.day}`, style: 'header' },
     ...(data.sellerVisits.visit?.map((sellerVisit, index) => ([
-      { text: `Visita ${index + 1}: Loja ${sellerVisit.storeVisited} - Horário: ${sellerVisit.created_at.getHours()}:${sellerVisit.created_at.getMinutes()} - Nota Geral: ${sellerVisit.grade}/5`, style: 'subheader' },
+      { text: `Visita ${index + 1}: Loja ${sellerVisit.storeVisited} - Horário: ${sellerVisit.created_at.getHours()}:${sellerVisit.created_at.getMinutes()}`, style: 'subheader' },
       ...(sellerVisit.visitTemplate.categories?.map((categoria, catIndex) => ([
         {
           text: `${catIndex + 1} - ${categoria.name}`,

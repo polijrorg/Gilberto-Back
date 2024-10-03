@@ -10,9 +10,11 @@ model ActionPlans {
   supervisor   Supervisor @relation(fields: [supervisorId], references: [id], onDelete: Cascade)
   visitId      String?    @unique
   visit        Visit?     @relation(fields: [visitId], references: [id], onDelete: Cascade)
-  moduleId     String?    @unique
+  moduleId     String?
   module       Module?    @relation(fields: [moduleId], references: [id], onDelete: Cascade)
   created_at   DateTime   @default(now())
+
+  @@unique([sellerId, moduleId])
 }
 
 model Supervisor {
@@ -31,6 +33,6 @@ model Visit {
 }
 
 model Module {
-  id         String       @id @default(uuid())
-  actionPlan ActionPlans?
+  id         String        @id @default(uuid())
+  actionPlan ActionPlans[]
 }
