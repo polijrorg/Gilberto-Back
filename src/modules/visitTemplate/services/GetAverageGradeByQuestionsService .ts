@@ -1,69 +1,74 @@
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
-/* eslint-disable no-await-in-loop */
-/* eslint-disable no-restricted-syntax */
 import { inject, injectable } from 'tsyringe';
 
-import IQuestionsRepository from '@modules/visitTemplate/repositories/IQuestionsRepository';
+import ICategoriesRepository from '@modules/visitTemplate/repositories/ICategoriesRepository';
+import { QuestionsGrades, Categories } from '@prisma/client';
+import AppError from '@shared/errors/AppError';
 import IQuestionsGradesRepository from '../repositories/IQuestionsGradesRepository';
 
-interface IQuestionAverageGrade {
-  questionId: string;
-  questionName: string;
+interface ICategoryAverageGrade {
+  categoryId: string;
+  categoryName: string;
   averageGrade: number;
 }
 
 @injectable()
-export default class GetAverageGradeByQuestionsService {
+export default class GetAverageGradeByCategoriesService {
   constructor(
     @inject('QuestionsGradesRepository')
     private questionsGradesRepository: IQuestionsGradesRepository,
-    @inject('QuestionsRepository')
-    private questionsRepository: IQuestionsRepository,
+
+    @inject('CategoriesRepository')
+    private categoriesRepository: ICategoriesRepository,
   ) {}
 
-  public async execute(idSupervisor: string): Promise<IQuestionAverageGrade[]> {
+  public async execute(idSupervisor: string): Promise<ICategoryAverageGrade[]> {
     const grades = await this.questionsGradesRepository.getAllByIDSupervisor(idSupervisor);
-    const allQuestions = await this.questionsRepository.findAll();
+    const allCategories = await this.categoriesRepository.findAll();
 
-    const questionGradesMap = new Map<string, { totalGrade: number; count: number }>();
+    if (!grades || grades.length === 0) {
+      throw new AppError('No grades found for this supervisor');
+    }
 
-    // Acumula as notas e a contagem por questão
-    grades?.forEach((grade) => {
-      if (!questionGradesMap.has(grade.questionsId)) {
-        questionGradesMap.set(grade.questionsId, { totalGrade: 0, count: 0 });
+    if (!allCategories || allCategories.length === 0) {
+      throw new AppError('No categories found');
+    }
+
+    const categoryGradesMap = this.mapGradesToCategories(grades);
+    return this.calculateAverageGrades(allCategories, categoryGradesMap);
+  }
+
+  private mapGradesToCategories(grades: (QuestionsGrades & { question: { categories: Categories } })[]): Map<string, { totalGrade: number; count: number }> {
+    const categoryGradesMap = new Map<string, { totalGrade: number; count: number }>();
+
+    grades.forEach((grade) => {
+      const categoryId = grade.question.categories.id;
+
+      if (!categoryGradesMap.has(categoryId)) {
+        categoryGradesMap.set(categoryId, { totalGrade: 0, count: 0 });
       }
 
-      const questionData = questionGradesMap.get(grade.questionsId)!;
-      questionData.totalGrade += grade.grade;
-      questionData.count += 1;
+      const currentGradeData = categoryGradesMap.get(categoryId);
+      if (currentGradeData) {
+        currentGradeData.totalGrade += grade.grade;
+        currentGradeData.count += 1;
+      }
     });
 
-    const result: IQuestionAverageGrade[] = [];
+    return categoryGradesMap;
+  }
 
-    // Obtém o nome das questões, calcula a média e adiciona ao resultado
-    if (!allQuestions) {
-      throw new Error('No questions found');
-    }
+  private calculateAverageGrades(
+    categories: Categories[],
+    categoryGradesMap: Map<string, { totalGrade: number; count: number }>,
+  ): ICategoryAverageGrade[] {
+    return categories.map((category) => {
+      const gradeData = categoryGradesMap.get(category.id);
 
-    for (const question of allQuestions) {
-      const data = questionGradesMap.get(question.id);
-
-      if (data) {
-        result.push({
-          questionId: question.id,
-          questionName: question.question,
-          averageGrade: data.totalGrade / data.count,
-        });
-      } else {
-        // Adiciona questões sem notas
-        result.push({
-          questionId: question.id,
-          questionName: question.question,
-          averageGrade: 0,
-        });
-      }
-    }
-
-    return result;
+      return {
+        categoryId: category.id,
+        categoryName: category.name,
+        averageGrade: gradeData ? gradeData.totalGrade / gradeData.count : 0,
+      };
+    });
   }
 }

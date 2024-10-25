@@ -1,4 +1,4 @@
-import { QuestionsGrades } from '@prisma/client';
+import { QuestionsGrades, Categories } from '@prisma/client';
 
 import ICreateQuestionsGradesDTO from '../dtos/ICreateQuestionsGradesDTO';
 import IUpdateQuestionsGradesDTO from '../dtos/IUpdateQuestionsGradesDTO';
@@ -10,7 +10,7 @@ interface IQuestionsGradesRepository {
   getAllCommentsByVisitId(visitId: string): Promise<string[]>;
   findById(id: string): Promise<QuestionsGrades | null>;
   update(id: string, data: IUpdateQuestionsGradesDTO): Promise<QuestionsGrades | null>;
-  getAllByIDSupervisor(idSupervisor: string): Promise<(QuestionsGrades)[] | null>;
+  getAllByIDSupervisor(idSupervisor: string): Promise<(QuestionsGrades & { question: { categories: Categories } })[] | null>;
   getAllByIDManager(idManager: string): Promise<(QuestionsGrades)[] | null>;
   getAllByIDSeller(idSeller: string): Promise<(QuestionsGrades)[] | null>;
 

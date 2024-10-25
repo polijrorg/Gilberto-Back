@@ -1,5 +1,5 @@
 import prisma from '@shared/infra/prisma/client';
-import { Prisma, QuestionsGrades } from '@prisma/client';
+import { Prisma, QuestionsGrades, Categories } from '@prisma/client';
 
 import IQuestionsGradesRepository from '@modules/visitTemplate/repositories/IQuestionsGradesRepository';
 import ICreateQuestionsGradesDTO from '@modules/visitTemplate/dtos/ICreateQuestionsGradesDTO';
@@ -65,11 +65,18 @@ export default class QuestionsGradesRepository implements IQuestionsGradesReposi
     return comments.map((comment) => comment.comments).filter((comment) => comment !== null) as string[];
   }
 
-  public async getAllByIDSupervisor(idSupervisor: string): Promise<(QuestionsGrades)[] | null> {
+  public async getAllByIDSupervisor(idSupervisor: string): Promise<(QuestionsGrades & { question: { categories: Categories } })[] | null> {
     const grades = await this.ormRepository.findMany({
       where: {
         seller: {
           supervisorId: idSupervisor,
+        },
+      },
+      include: {
+        question: {
+          include: {
+            categories: true,
+          },
         },
       },
     });
