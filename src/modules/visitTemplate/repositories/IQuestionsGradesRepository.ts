@@ -11,7 +11,7 @@ interface IQuestionsGradesRepository {
   findById(id: string): Promise<QuestionsGrades | null>;
   update(id: string, data: IUpdateQuestionsGradesDTO): Promise<QuestionsGrades | null>;
   getAllByIDSupervisor(idSupervisor: string): Promise<(QuestionsGrades & { question: { categories: Categories } })[] | null>;
-  getAllByIDManager(idManager: string): Promise<(QuestionsGrades)[] | null>;
+  getAllByIDManager(idManager: string): Promise<(QuestionsGrades & { question: { categories: Categories } })[] | null>;
   getAllByIDSeller(idSeller: string): Promise<(QuestionsGrades)[] | null>;
 
 }

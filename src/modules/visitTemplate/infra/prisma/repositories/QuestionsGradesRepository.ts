@@ -38,12 +38,19 @@ export default class QuestionsGradesRepository implements IQuestionsGradesReposi
     return grades || [];
   }
 
-  public async getAllByIDManager(idManager: string): Promise<(QuestionsGrades)[] | null> {
+  public async getAllByIDManager(idManager: string): Promise<(QuestionsGrades & { question: { categories: Categories } })[] | null> {
     const grades = await this.ormRepository.findMany({
       where: {
         seller: {
           supervisor: {
             managerId: idManager,
+          },
+        },
+      },
+      include: {
+        question: {
+          include: {
+            categories: true,
           },
         },
       },
