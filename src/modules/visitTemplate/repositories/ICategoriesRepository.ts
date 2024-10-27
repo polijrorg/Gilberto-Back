@@ -8,7 +8,7 @@ interface ICategoriesRepository {
   delete(id: string): Promise<Categories>;
   getAllByVisit(visitTemplateId: string): Promise<Categories[] | null>;
   findById(id: string): Promise<Categories | null>;
-  findAll(): Promise<Categories[] | null>;
+  findAll(idTemplate: string): Promise<Categories[] | null>;
   update(id: string, data: IUpdateCategoriesDTO): Promise<Categories>;
 }
 

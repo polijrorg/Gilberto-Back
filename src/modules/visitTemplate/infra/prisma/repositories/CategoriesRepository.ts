@@ -12,8 +12,12 @@ export default class CategoriesRepository implements ICategoriesRepository {
     this.ormRepository = prisma.categories;
   }
 
-  public async findAll(): Promise<Categories[] | null> {
-    return this.ormRepository.findMany();
+  public async findAll(idTemplate: string): Promise<Categories[] | null> {
+    return this.ormRepository.findMany({
+      where: {
+        visitTemplateId: idTemplate,
+      },
+    });
   }
 
   public async update(id: string, data: IUpdateCategoriesDTO): Promise<Categories> {

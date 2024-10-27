@@ -12,9 +12,9 @@ questionsGradesRoutes.delete('/delete/:id', questionsGradesController.delete);
 
 questionsGradesRoutes.get('/getCommentsFromVisit/:idVisit', questionsGradesController.getGradeByVisitID);
 
-questionsGradesRoutes.get('/averageGradeByQuestions/supervisor/:idSupervisor', questionsGradesController.getAverageGradeByQuestions);
+questionsGradesRoutes.get('/averageGradeByQuestions/supervisor/:idSupervisor/:idTemplate', questionsGradesController.getAverageGradeByQuestions);
 
-questionsGradesRoutes.get('/averageGradeByQuestions/manager/:idManager', questionsGradesController.getAverageGradeByQuestionsManager);
+questionsGradesRoutes.get('/averageGradeByQuestions/manager/:idManager/:idTemplate', questionsGradesController.getAverageGradeByQuestionsManager);
 
 questionsGradesRoutes.get('/averageGradeByQuestions/seller/:idSeller', questionsGradesController.getAverageGradeByQuestionsSeller);
 

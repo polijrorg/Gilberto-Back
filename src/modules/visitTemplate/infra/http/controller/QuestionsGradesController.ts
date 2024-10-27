@@ -26,21 +26,21 @@ export default class QuestionsGradesController {
   }
 
   public async getAverageGradeByQuestions(req: Request, res: Response): Promise<Response> {
-    const { idSupervisor } = req.params;
+    const { idSupervisor, idTemplate } = req.params;
 
     const getAverageGradeService = container.resolve(GetAverageGradeByQuestionsService);
 
-    const averageGrades = await getAverageGradeService.execute(idSupervisor);
+    const averageGrades = await getAverageGradeService.execute(idSupervisor, idTemplate);
 
     return res.status(200).json(averageGrades);
   }
 
   public async getAverageGradeByQuestionsManager(req: Request, res: Response): Promise<Response> {
-    const { idManager } = req.params;
+    const { idManager, idTemplate } = req.params;
 
     const getAverageGradeByQuestionsManagerService = container.resolve(GetAverageGradeByQuestionsManagerService);
 
-    const averageGrades = await getAverageGradeByQuestionsManagerService.execute(idManager);
+    const averageGrades = await getAverageGradeByQuestionsManagerService.execute(idManager, idTemplate);
 
     return res.status(200).json(averageGrades);
   }

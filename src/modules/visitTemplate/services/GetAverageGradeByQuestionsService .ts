@@ -21,9 +21,9 @@ export default class GetAverageGradeByCategoriesService {
     private categoriesRepository: ICategoriesRepository,
   ) {}
 
-  public async execute(idSupervisor: string): Promise<ICategoryAverageGrade[]> {
+  public async execute(idSupervisor: string, idTemplate: string): Promise<ICategoryAverageGrade[]> {
     const grades = await this.questionsGradesRepository.getAllByIDSupervisor(idSupervisor);
-    const allCategories = await this.categoriesRepository.findAll();
+    const allCategories = await this.categoriesRepository.findAll(idTemplate);
 
     if (!grades || grades.length === 0) {
       throw new AppError('No grades found for this supervisor');
