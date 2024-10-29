@@ -12,7 +12,7 @@ interface IQuestionsGradesRepository {
   update(id: string, data: IUpdateQuestionsGradesDTO): Promise<QuestionsGrades | null>;
   getAllByIDSupervisor(idSupervisor: string): Promise<(QuestionsGrades & { question: { categories: Categories } })[] | null>;
   getAllByIDManager(idManager: string): Promise<(QuestionsGrades & { question: { categories: Categories } })[] | null>;
-  getAllByIDSeller(idSeller: string): Promise<(QuestionsGrades)[] | null>;
+  getAllByIDSeller(idSeller: string): Promise<(QuestionsGrades & { question: { categories: Categories } })[] | null>;
 
 }
 

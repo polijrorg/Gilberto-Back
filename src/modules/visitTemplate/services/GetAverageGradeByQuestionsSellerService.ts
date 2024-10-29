@@ -2,14 +2,14 @@
 /* eslint-disable no-await-in-loop */
 /* eslint-disable no-restricted-syntax */
 import { inject, injectable } from 'tsyringe';
-import IQuestionsRepository from '@modules/visitTemplate/repositories/IQuestionsRepository';
-import ISellersRepository from '@modules/seller/repositories/ISellerRepository';
-import { Seller } from '@prisma/client';
+import AppError from '@shared/errors/AppError';
+import { QuestionsGrades, Categories } from '@prisma/client';
 import IQuestionsGradesRepository from '../repositories/IQuestionsGradesRepository';
+import ICategoriesRepository from '../repositories/ICategoriesRepository';
 
-interface IQuestionAverageGrade {
-  questionId: string;
-  questionName: string;
+interface ICategoryAverageGrade {
+  categoryId: string;
+  categoryName: string;
   averageGrade: number;
 }
 
@@ -18,46 +18,58 @@ export default class GetAverageGradeByQuestionsSellerService {
   constructor(
     @inject('QuestionsGradesRepository')
     private questionsGradesRepository: IQuestionsGradesRepository,
-    @inject('QuestionsRepository')
-    private questionsRepository: IQuestionsRepository,
-    @inject('SellerRepository')
-    private sellersRepository: ISellersRepository,
+    @inject('CategoriesRepository')
+    private categoriesRepository: ICategoriesRepository,
   ) { }
 
-  public async execute(idSeller: string): Promise<IQuestionAverageGrade[] | null> {
+  public async execute(idSeller: string, idTemplate: string): Promise<ICategoryAverageGrade[] | null> {
     const grades = await this.questionsGradesRepository.getAllByIDSeller(idSeller);
+    const allCategories = await this.categoriesRepository.findAll(idTemplate);
 
     if (!grades || grades.length === 0) {
-      return [];
+      throw new AppError('No grades found for this Seller');
     }
 
-    // Usar um Map para agregar as notas por pergunta
-    const questionGradesMap = new Map<string, { totalGrade: number; count: number }>();
+    if (!allCategories || allCategories.length === 0) {
+      throw new AppError('No categories found');
+    }
+
+    const categoryGradesMap = this.mapGradesToCategories(grades);
+    return this.calculateAverageGrades(allCategories, categoryGradesMap);
+  }
+
+  private mapGradesToCategories(grades: (QuestionsGrades & { question: { categories: Categories } })[]): Map<string, { totalGrade: number; count: number }> {
+    const categoryGradesMap = new Map<string, { totalGrade: number; count: number }>();
 
     grades.forEach((grade) => {
-      if (!questionGradesMap.has(grade.questionsId)) {
-        questionGradesMap.set(grade.questionsId, { totalGrade: 0, count: 0 });
+      const categoryId = grade.question.categories.id;
+
+      if (!categoryGradesMap.has(categoryId)) {
+        categoryGradesMap.set(categoryId, { totalGrade: 0, count: 0 });
       }
 
-      const questionData = questionGradesMap.get(grade.questionsId)!;
-      questionData.totalGrade += grade.grade;
-      questionData.count += 1;
+      const currentGradeData = categoryGradesMap.get(categoryId);
+      if (currentGradeData) {
+        currentGradeData.totalGrade += grade.grade;
+        currentGradeData.count += 1;
+      }
     });
 
-    const result: IQuestionAverageGrade[] = [];
+    return categoryGradesMap;
+  }
 
-    for (const [questionId, data] of questionGradesMap) {
-      const question = await this.questionsRepository.findById(questionId);
+  private calculateAverageGrades(
+    categories: Categories[],
+    categoryGradesMap: Map<string, { totalGrade: number; count: number }>,
+  ): ICategoryAverageGrade[] {
+    return categories.map((category) => {
+      const gradeData = categoryGradesMap.get(category.id);
 
-      if (question) {
-        result.push({
-          questionId,
-          questionName: question.question,
-          averageGrade: data.totalGrade / data.count,
-        });
-      }
-    }
-
-    return result;
+      return {
+        categoryId: category.id,
+        categoryName: category.name,
+        averageGrade: gradeData ? gradeData.totalGrade / gradeData.count : 0,
+      };
+    });
   }
 }

@@ -16,7 +16,7 @@ questionsGradesRoutes.get('/averageGradeByQuestions/supervisor/:idSupervisor/:id
 
 questionsGradesRoutes.get('/averageGradeByQuestions/manager/:idManager/:idTemplate', questionsGradesController.getAverageGradeByQuestionsManager);
 
-questionsGradesRoutes.get('/averageGradeByQuestions/seller/:idSeller', questionsGradesController.getAverageGradeByQuestionsSeller);
+questionsGradesRoutes.get('/averageGradeByQuestions/seller/:idSeller/:idTemplate', questionsGradesController.getAverageGradeByQuestionsSeller);
 
 questionsGradesRoutes.get('/getAllBySeller/:sellerId', questionsGradesController.getAllQuestionsGradesBySeller);
 

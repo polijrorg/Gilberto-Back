@@ -12,13 +12,12 @@ export default class QuestionsGradesRepository implements IQuestionsGradesReposi
     this.ormRepository = prisma.questionsGrades;
   }
 
-  public async getAllByIDSeller(idSeller: string): Promise<QuestionsGrades[] | null> {
+  public async getAllByIDSeller(idSeller: string): Promise<(QuestionsGrades & { question: { categories: Categories } })[] | null> {
     const currentDate = new Date();
     const currentDay = currentDate.getDate();
     const currentMonth = currentDate.getMonth();
     const currentYear = currentDate.getFullYear();
 
-    // Criação do início e do fim do dia atual
     const startOfDay = new Date(currentYear, currentMonth, currentDay);
     const endOfDay = new Date(currentYear, currentMonth, currentDay + 1);
 
@@ -26,12 +25,19 @@ export default class QuestionsGradesRepository implements IQuestionsGradesReposi
       where: {
         sellerId: idSeller,
         created_at: {
-          gte: startOfDay, // Início do dia
-          lt: endOfDay, // Início do próximo dia
+          gte: startOfDay,
+          lt: endOfDay,
         },
       },
       orderBy: {
         created_at: 'asc',
+      },
+      include: {
+        question: {
+          include: {
+            categories: true,
+          },
+        },
       },
     });
 
