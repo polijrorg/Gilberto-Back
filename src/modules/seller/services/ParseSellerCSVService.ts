@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { inject, injectable } from 'tsyringe';
 import AppError from '@shared/errors/AppError';
 import ICSVProvider from '@shared/container/providers/CSVProvider/models/ICsvProvider';
@@ -12,6 +13,7 @@ interface ICsvSeller {
   email: string;
   companyName: string;
   supervisorEmail: string;
+  stage?: 'Visita' | 'Mentoria' | 'Pendente';
 }
 
 interface IFailedEntry {
@@ -43,7 +45,7 @@ export default class ParseSellerCSVService {
     let entries: ICsvSeller[] = [];
 
     try {
-      entries = await this.csvProvider.parseDocument<ICsvSeller>(file.filename, ['name', 'email', 'companyName', 'supervisorEmail'], true);
+      entries = await this.csvProvider.parseDocument<ICsvSeller>(file.filename, ['name', 'email', 'companyName', 'supervisorEmail', 'stage'], true);
     } catch (error) {
       throw new AppError('Error parsing the CSV file. Please ensure it is formatted correctly.');
     }
@@ -58,7 +60,7 @@ export default class ParseSellerCSVService {
         }
 
         const {
-          email, name, companyName, supervisorEmail,
+          email, name, companyName, supervisorEmail, stage,
         } = entry;
 
         const companyWithName = await this.companyRepository.findByName(companyName);
@@ -85,11 +87,11 @@ export default class ParseSellerCSVService {
           email,
           image: '', // Não está sendo utilizado
           name,
-          stage: Stage.Mentoria,
+          stage: stage ?? Stage.Mentoria,
         };
 
         await this.sellerRepository.create(seller);
-      } catch (error) {
+      } catch (error: any) {
         failedEntries.push({ entry, reason: `Erro desconechido com a seguinte mensagem: ${error.message}` });
       }
     });
@@ -102,7 +104,7 @@ export default class ParseSellerCSVService {
       }
 
       return entries;
-    } catch (error) {
+    } catch (error: any) {
       throw new AppError(`Erro ao ler o CSV: ${error.message}`, 400);
     }
   }

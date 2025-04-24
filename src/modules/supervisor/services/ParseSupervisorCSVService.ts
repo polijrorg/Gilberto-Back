@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { inject, injectable } from 'tsyringe';
 import AppError from '@shared/errors/AppError';
 import ICSVProvider from '@shared/container/providers/CSVProvider/models/ICsvProvider';
@@ -12,6 +13,7 @@ import ISupervisorRepository from '../repositories/ISupervisorRepository';
 interface ICsvSupervisor {
   name: string;
   email: string;
+  password: string;
   companyName: string;
   managerEmail?: string;
 }
@@ -51,7 +53,7 @@ export default class ParseSupervisorCSVService {
     let entries: ICsvSupervisor[] = [];
 
     try {
-      entries = await this.csvProvider.parseDocument<ICsvSupervisor>(file.filename, ['name', 'email', 'companyName', 'managerEmail'], true);
+      entries = await this.csvProvider.parseDocument<ICsvSupervisor>(file.filename, ['name', 'email', 'companyName', 'managerEmail', 'password'], true);
     } catch (error) {
       throw new AppError('Error parsing the CSV file. Please ensure it is formatted correctly.');
     }
@@ -67,7 +69,7 @@ export default class ParseSupervisorCSVService {
         }
 
         const {
-          email, name, companyName, managerEmail,
+          email, name, companyName, managerEmail, password,
         } = entry;
 
         const companyWithName = await this.companyRepository.findByName(companyName);
@@ -92,8 +94,6 @@ export default class ParseSupervisorCSVService {
           failedEntries.push({ entry, reason: 'Email do supervisor já registrado' });
           return;
         }
-
-        const password = this.makePassword(8);
 
         const supervisor: ICreateSupervisorDTO = {
           companyId: companyWithName.id,
@@ -121,7 +121,7 @@ export default class ParseSupervisorCSVService {
             },
           },
         });
-      } catch (error) {
+      } catch (error: any) {
         console.log('Error processing entry:', entry, 'Error:', error.message);
         failedEntries.push({ entry, reason: `Erro desconechido com a seguinte mensagem: ${error.message}` });
       }
@@ -135,20 +135,8 @@ export default class ParseSupervisorCSVService {
       }
 
       return entries;
-    } catch (error) {
+    } catch (error: any) {
       throw new AppError(`Erro ao ler o CSV: ${error.message}`, 400);
     }
-  }
-
-  private makePassword(length: number): string {
-    let result = '';
-    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    const charactersLength = characters.length;
-    let counter = 0;
-    while (counter < length) {
-      result += characters.charAt(Math.floor(Math.random() * charactersLength));
-      counter += 1;
-    }
-    return result;
   }
 }

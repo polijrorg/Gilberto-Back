@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { inject, injectable } from 'tsyringe';
 import AppError from '@shared/errors/AppError';
 import ICSVProvider from '@shared/container/providers/CSVProvider/models/ICsvProvider';
@@ -60,7 +61,7 @@ export default class ParseCompanyCSVService {
         };
 
         await this.companyRepository.create(company);
-      } catch (error) {
+      } catch (error: any) {
         console.log('Error processing entry:', entry, 'Error:', error.message);
         failedEntries.push({ entry, reason: `Erro desconechido com a seguinte mensagem: ${error.message}` });
       }
@@ -74,7 +75,7 @@ export default class ParseCompanyCSVService {
       }
 
       return entries;
-    } catch (error) {
+    } catch (error: any) {
       throw new AppError(`Erro ao ler o CSV: ${error.message}`, 400);
     }
   }

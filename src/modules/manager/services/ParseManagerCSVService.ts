@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { inject, injectable } from 'tsyringe';
 import AppError from '@shared/errors/AppError';
 import ICSVProvider from '@shared/container/providers/CSVProvider/models/ICsvProvider';
@@ -12,6 +13,7 @@ import IManagerRepository from '../repositories/IManagerRepository';
 interface ICsvManager {
   name: string;
   email: string;
+  password: string;
   companyName: string;
   directorEmail?: string;
 }
@@ -51,7 +53,7 @@ export default class ParseManagerCSVService {
     let entries: ICsvManager[] = [];
 
     try {
-      entries = await this.csvProvider.parseDocument<ICsvManager>(file.filename, ['name', 'email', 'companyName', 'directorEmail'], true);
+      entries = await this.csvProvider.parseDocument<ICsvManager>(file.filename, ['name', 'email', 'password', 'companyName', 'directorEmail'], true);
     } catch (error) {
       throw new AppError('Error parsing the CSV file. Please ensure it is formatted correctly.');
     }
@@ -67,7 +69,7 @@ export default class ParseManagerCSVService {
         }
 
         const {
-          email, name, companyName, directorEmail,
+          email, name, companyName, directorEmail, password,
         } = entry;
 
         const companyWithName = await this.companyRepository.findByName(companyName);
@@ -92,8 +94,6 @@ export default class ParseManagerCSVService {
           failedEntries.push({ entry, reason: 'Email já registrado' });
           return;
         }
-
-        const password = this.makePassword(8);
 
         const manager: ICreateManagerDTO = {
           companyId: companyWithName.id,
@@ -121,7 +121,7 @@ export default class ParseManagerCSVService {
             },
           },
         });
-      } catch (error) {
+      } catch (error: any) {
         console.log('Error processing entry:', entry, 'Error:', error.message);
         failedEntries.push({ entry, reason: `Erro desconechido com a seguinte mensagem: ${error.message}` });
       }
@@ -135,20 +135,8 @@ export default class ParseManagerCSVService {
       }
 
       return entries;
-    } catch (error) {
+    } catch (error: any) {
       throw new AppError(`Erro ao ler o CSV: ${error.message}`, 400);
     }
-  }
-
-  private makePassword(length: number): string {
-    let result = '';
-    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    const charactersLength = characters.length;
-    let counter = 0;
-    while (counter < length) {
-      result += characters.charAt(Math.floor(Math.random() * charactersLength));
-      counter += 1;
-    }
-    return result;
   }
 }
