@@ -53,7 +53,7 @@ export default class ParseSupervisorCSVService {
     let entries: ICsvSupervisor[] = [];
 
     try {
-      entries = await this.csvProvider.parseDocument<ICsvSupervisor>(file.filename, ['name', 'email', 'companyName', 'managerEmail', 'password'], true);
+      entries = await this.csvProvider.parseDocument<ICsvSupervisor>(file.filename, ['name', 'email', 'password', 'companyName', 'managerEmail'], true);
     } catch (error) {
       throw new AppError('Error parsing the CSV file. Please ensure it is formatted correctly.');
     }
@@ -62,14 +62,14 @@ export default class ParseSupervisorCSVService {
 
     const promises = entries.map(async (entry) => {
       try {
-        if (!entry.name || !entry.email || !entry.companyName) {
+        if (!entry.name || !entry.email || !entry.companyName || !entry.managerEmail) {
           console.log('Skipping entry due to missing fields:', entry);
           failedEntries.push({ entry, reason: 'Algum Campo Vazio' });
           return;
         }
 
         const {
-          email, name, companyName, managerEmail, password,
+          name, email, companyName, managerEmail, password,
         } = entry;
 
         const companyWithName = await this.companyRepository.findByName(companyName);
