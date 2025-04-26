@@ -1,30 +1,39 @@
 model VisitTemplate {
-  id         String       @id @default(uuid())
-  name       String?
-  company    Company?     @relation(fields: [companyId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  companyId  String?
-  manager    Manager?     @relation(fields: [managerId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  managerId  String?
-  director   Director?    @relation(fields: [directorId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  directorId String?
-  categories Categories[]
-  created_at DateTime     @default(now())
-  updated_at DateTime     @updatedAt
+  id          String        @id @default(uuid())
+  name        String?
+  company     Company?      @relation(fields: [companyId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  companyId   String?
+  manager     Manager?      @relation(fields: [managerId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  managerId   String?
+  director    Director?     @relation(fields: [directorId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  directorId  String?
+  categories  Categories[]
+  selectedByCompany  Company?  @relation("SelectedVisitTemplateCompany")
+  selectedByManager  Manager?  @relation("SelectedVisitTemplateManager")
+  selectedByDirector Director? @relation("SelectedVisitTemplateDirector")
+  created_at  DateTime     @default(now())
+  updated_at  DateTime     @updatedAt
 }
 
 model Company {
-  id            String         @id @default(uuid())
-  visitTemplate VisitTemplate[]
+  id                     String          @id @default(uuid())
+  visitTemplate          VisitTemplate[]
+  selectedVisitTemplate  VisitTemplate?   @relation("SelectedVisitTemplateCompany", fields: [selectedVisitTemplateId], references: [id])
+  selectedVisitTemplateId String?        @unique
 }
 
 model Manager {
-  id            String         @id @default(uuid())
-  visitTemplate VisitTemplate[]
+  id                     String          @id @default(uuid())
+  visitTemplate          VisitTemplate[]
+  selectedVisitTemplate  VisitTemplate?   @relation("SelectedVisitTemplateManager", fields: [selectedVisitTemplateId], references: [id])
+  selectedVisitTemplateId String?        @unique
 }
 
 model Director {
-  id            String         @id @default(uuid())
-  visitTemplate VisitTemplate[]
+  id                     String          @id @default(uuid())
+  visitTemplate          VisitTemplate[]
+  selectedVisitTemplate  VisitTemplate?   @relation("SelectedVisitTemplateDirector", fields: [selectedVisitTemplateId], references: [id])
+  selectedVisitTemplateId String?        @unique
 }
 
 model Categories {
