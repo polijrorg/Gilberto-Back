@@ -87,7 +87,7 @@ model Module {
 
 model Company {
   id            String          @id @default(uuid())
-  visitTemplate VisitTemplate?
+  visitTemplate VisitTemplate[]
   seller        Seller[]
   manager       Manager[]
   director      Director[]
@@ -101,7 +101,7 @@ model Company {
 
 model Manager {
   id            String         @id @default(uuid())
-  visitTemplate VisitTemplate?
+  visitTemplate VisitTemplate[]
   supervisor    Supervisor[]
   image         String
   name          String
@@ -117,7 +117,7 @@ model Manager {
 
 model Director {
   id            String         @id @default(uuid())
-  visitTemplate VisitTemplate?
+  visitTemplate VisitTemplate[]
   manager       Manager[]
   image         String
   name          String
@@ -154,11 +154,11 @@ model VisitTemplate {
   id         String       @id @default(uuid())
   name       String?
   company    Company?     @relation(fields: [companyId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  companyId  String?      @unique
+  companyId  String?
   manager    Manager?     @relation(fields: [managerId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  managerId  String?      @unique
+  managerId  String?
   director   Director?    @relation(fields: [directorId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  directorId String?      @unique
+  directorId String?
   categories Categories[]
   created_at DateTime     @default(now())
   updated_at DateTime     @updatedAt
