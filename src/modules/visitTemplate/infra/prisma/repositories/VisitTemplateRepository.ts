@@ -85,21 +85,57 @@ export default class VisitTemplateRepository implements IVisitTemplateRepository
   }
 
   public async getByCompany(companyId: string): Promise<VisitTemplate[] | null> {
-    const visitTemplate = await this.ormRepository.findUnique({ where: { companyId } });
+    const visitTemplate = await this.ormRepository.findMany({ where: { companyId } });
 
-    return visitTemplate ? [visitTemplate] : null;
+    return visitTemplate || null;
   }
 
   public async getByManager(managerId: string): Promise<VisitTemplate[] | null> {
-    const visitTemplate = await this.ormRepository.findUnique({ where: { managerId } });
+    const visitTemplate = await this.ormRepository.findMany({ where: { managerId } });
 
-    return visitTemplate ? [visitTemplate] : null;
+    return visitTemplate || null;
   }
 
   public async getByDirector(directorId: string): Promise<VisitTemplate[] | null> {
-    const visitTemplate = await this.ormRepository.findUnique({ where: { directorId } });
+    const visitTemplate = await this.ormRepository.findMany({ where: { directorId } });
 
-    return visitTemplate ? [visitTemplate] : null;
+    return visitTemplate || null;
+  }
+
+  public async getSelectedByCompany(
+    companyId: string,
+  ): Promise<VisitTemplate[] | null> {
+    const templates = await this.ormRepository.findMany({
+      where: {
+        selectedByCompany: { id: companyId },
+      },
+    });
+
+    return templates.length > 0 ? templates : null;
+  }
+
+  public async getSelectedByManager(
+    managerId: string,
+  ): Promise<VisitTemplate[] | null> {
+    const templates = await this.ormRepository.findMany({
+      where: {
+        selectedByManager: { id: managerId },
+      },
+    });
+
+    return templates.length > 0 ? templates : null;
+  }
+
+  public async getSelectedByDirector(
+    directorId: string,
+  ): Promise<VisitTemplate[] | null> {
+    const templates = await this.ormRepository.findMany({
+      where: {
+        selectedByDirector: { id: directorId },
+      },
+    });
+
+    return templates.length > 0 ? templates : null;
   }
 
   public async getManagerIdBySeller(sellerId: string): Promise<string | null> {
