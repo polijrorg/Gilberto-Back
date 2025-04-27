@@ -23,25 +23,16 @@ export default class CreateVisitTemplateService {
   private async validateCompany(companyId: string): Promise<void> {
     const companyExists = await this.companyRepository.findById(companyId);
     if (!companyExists) throw new AppError('Company with this ID does not exist');
-
-    const existingByCompany = await this.visitTemplateRepository.getByCompany(companyId);
-    if (existingByCompany) throw new AppError('A VisitTemplate with this company already exists');
   }
 
   private async validateManager(managerId: string): Promise<void> {
     const managerExists = await this.managerRepository.findById(managerId);
     if (!managerExists) throw new AppError('Manager with this ID does not exist');
-
-    const existingByManager = await this.visitTemplateRepository.getByManager(managerId);
-    if (existingByManager) throw new AppError('A VisitTemplate with this manager already exists');
   }
 
   private async validateDirector(directorId: string): Promise<void> {
     const directorExists = await this.directorRepository.findById(directorId);
     if (!directorExists) throw new AppError('Director with this ID does not exist');
-
-    const existingByDirector = await this.visitTemplateRepository.getByDirector(directorId);
-    if (existingByDirector) throw new AppError('A VisitTemplate with this director already exists');
   }
 
   public async execute(data: ICreateVisitTemplateDTO): Promise<VisitTemplate> {
