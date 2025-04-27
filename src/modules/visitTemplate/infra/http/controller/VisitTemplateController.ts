@@ -12,6 +12,7 @@ import GetSelectedVisitByManagerService from '@modules/visitTemplate/services/Ge
 import GetSelectedVisitByDirectorService from '@modules/visitTemplate/services/GetSelectedVisitByManagerService';
 import SelectVisitTemplateForCompanyService from '@modules/visitTemplate/services/SelectVisitTemplateForCompanyService';
 import SelectVisitTemplateForManagerService from '@modules/visitTemplate/services/SelectVisitTemplateForManagerService';
+import SelectVisitTemplateForDirectorService from '@modules/visitTemplate/services/SelectVisitTemplateForDirectorService';
 
 export default class VisitTemplateController {
   public async create(req: Request, res: Response): Promise<Response> {
@@ -38,6 +39,33 @@ export default class VisitTemplateController {
     return res.status(200).json(manager);
   }
 
+  public async selectForCompany(req: Request, res: Response): Promise<Response> {
+    const { companyId, templateId } = req.body;
+
+    const selectService = container.resolve(SelectVisitTemplateForCompanyService);
+    const company = await selectService.execute({ companyId, templateId });
+
+    return res.status(200).json(company);
+  }
+
+  public async selectForManager(req: Request, res: Response): Promise<Response> {
+    const { managerId, templateId } = req.body;
+
+    const selectService = container.resolve(SelectVisitTemplateForManagerService);
+    const manager = await selectService.execute({ managerId, templateId });
+
+    return res.status(200).json(manager);
+  }
+
+  public async selectForDirector(req: Request, res: Response): Promise<Response> {
+    const { directorId, templateId } = req.body;
+
+    const selectService = container.resolve(SelectVisitTemplateForDirectorService);
+    const director = await selectService.execute({ directorId, templateId });
+
+    return res.status(200).json(director);
+  }
+
   public async getVisitByCompany(req: Request, res: Response): Promise<Response> {
     const { companyId } = req.params;
 
@@ -55,24 +83,6 @@ export default class VisitTemplateController {
     const template = await getSelected.execute(companyId);
 
     return res.status(200).json(template);
-  }
-
-  public async selectForCompany(req: Request, res: Response): Promise<Response> {
-    const { companyId, templateId } = req.body;
-
-    const selectService = container.resolve(SelectVisitTemplateForCompanyService);
-    const company = await selectService.execute({ companyId, templateId });
-
-    return res.status(200).json(company);
-  }
-
-  public async selectForManager(req: Request, res: Response): Promise<Response> {
-    const { managerId, templateId } = req.body;
-
-    const selectService = container.resolve(SelectVisitTemplateForManagerService);
-    const manager = await selectService.execute({ managerId, templateId });
-
-    return res.status(200).json(manager);
   }
 
   public async getVisitByManager(req: Request, res: Response): Promise<Response> {
