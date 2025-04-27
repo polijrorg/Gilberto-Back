@@ -10,6 +10,7 @@ visitTemplateRoutes.post('/create', visitTemplateController.create);
 
 visitTemplateRoutes.delete('/delete/:id', visitTemplateController.delete);
 
+visitTemplateRoutes.post('/selectForCompany/', visitTemplateController.selectForCompany);
 visitTemplateRoutes.get('/getByCompany/:companyId', visitTemplateController.getVisitByCompany);
 visitTemplateRoutes.get('/getSelectedByCompany/:companyId', visitTemplateController.getSelectedVisitByCompany);
 

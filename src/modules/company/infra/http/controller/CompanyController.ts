@@ -70,10 +70,14 @@ export default class CompanyController {
 
   public async update(req: Request, res: Response): Promise<Response> {
     const { id } = req.params;
-    const { name, image, stage } = req.body;
+    const {
+      name, image, stage, selectedVisitTemplateId,
+    } = req.body;
     const updateCompany = container.resolve(UpdateCompanyService);
 
-    const company = await updateCompany.execute(id, { name, image, stage });
+    const company = await updateCompany.execute(id, {
+      name, image, stage, selectedVisitTemplateId,
+    });
 
     return res.status(200).json(company);
   }

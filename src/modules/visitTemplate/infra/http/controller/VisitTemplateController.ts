@@ -10,6 +10,7 @@ import UpdateVisitTemplateService from '@modules/visitTemplate/services/UpdateVi
 import GetSelectedVisitByCompanyService from '@modules/visitTemplate/services/GetSelectedVisitByCompanyService';
 import GetSelectedVisitByManagerService from '@modules/visitTemplate/services/GetSelectedVisitByDirectorService';
 import GetSelectedVisitByDirectorService from '@modules/visitTemplate/services/GetSelectedVisitByManagerService';
+import SelectVisitTemplateForCompanyService from '@modules/visitTemplate/services/SelectVisitTemplateForCompanyService';
 
 export default class VisitTemplateController {
   public async create(req: Request, res: Response): Promise<Response> {
@@ -53,6 +54,15 @@ export default class VisitTemplateController {
     const template = await getSelected.execute(companyId);
 
     return res.status(200).json(template);
+  }
+
+  public async selectForCompany(req: Request, res: Response): Promise<Response> {
+    const { companyId, templateId } = req.body;
+
+    const selectService = container.resolve(SelectVisitTemplateForCompanyService);
+    const company = await selectService.execute({ companyId, templateId });
+
+    return res.status(200).json(company);
   }
 
   public async getVisitByManager(req: Request, res: Response): Promise<Response> {
