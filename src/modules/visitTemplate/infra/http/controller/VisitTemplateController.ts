@@ -11,6 +11,7 @@ import GetSelectedVisitByCompanyService from '@modules/visitTemplate/services/Ge
 import GetSelectedVisitByManagerService from '@modules/visitTemplate/services/GetSelectedVisitByDirectorService';
 import GetSelectedVisitByDirectorService from '@modules/visitTemplate/services/GetSelectedVisitByManagerService';
 import SelectVisitTemplateForCompanyService from '@modules/visitTemplate/services/SelectVisitTemplateForCompanyService';
+import SelectVisitTemplateForManagerService from '@modules/visitTemplate/services/SelectVisitTemplateForManagerService';
 
 export default class VisitTemplateController {
   public async create(req: Request, res: Response): Promise<Response> {
@@ -63,6 +64,15 @@ export default class VisitTemplateController {
     const company = await selectService.execute({ companyId, templateId });
 
     return res.status(200).json(company);
+  }
+
+  public async selectForManager(req: Request, res: Response): Promise<Response> {
+    const { managerId, templateId } = req.body;
+
+    const selectService = container.resolve(SelectVisitTemplateForManagerService);
+    const manager = await selectService.execute({ managerId, templateId });
+
+    return res.status(200).json(manager);
   }
 
   public async getVisitByManager(req: Request, res: Response): Promise<Response> {

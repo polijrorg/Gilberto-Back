@@ -107,13 +107,13 @@ export default class ManagerController {
   public async update(req: Request, res: Response): Promise<Response> {
     const { id } = req.params;
     const {
-      image, name, email, password,
+      image, name, email, password, selectedVisitTemplateId,
     } = req.body;
 
     const updateManager = container.resolve(UpdateManagerService);
 
     const manager = await updateManager.execute(id, {
-      image, name, email, password,
+      image, name, email, password, selectedVisitTemplateId,
     });
 
     return res.status(200).json(manager);

@@ -14,6 +14,7 @@ visitTemplateRoutes.post('/selectForCompany/', visitTemplateController.selectFor
 visitTemplateRoutes.get('/getByCompany/:companyId', visitTemplateController.getVisitByCompany);
 visitTemplateRoutes.get('/getSelectedByCompany/:companyId', visitTemplateController.getSelectedVisitByCompany);
 
+visitTemplateRoutes.post('/selectForManager/', visitTemplateController.selectForManager);
 visitTemplateRoutes.get('/getByManager/:managerId', visitTemplateController.getVisitByManager);
 visitTemplateRoutes.get('/getSelectedByManager/:managerId', visitTemplateController.getSelectedVisitByManager);
 
